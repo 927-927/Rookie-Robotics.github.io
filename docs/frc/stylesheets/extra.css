@@ -1,0 +1,147 @@
+/* ---------------------------------------------------------------
+   Sidebar toggle (button added by javascripts/sidebar-toggle.js)
+   --------------------------------------------------------------- */
+
+/* Extra classes outrank Material's .md-header__button:not([hidden]) */
+.md-header__inner .md-header__button.rb-sidebar-toggle {
+  display: none;
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* Below this width Material turns the nav into a drawer with its own button */
+@media screen and (min-width: 76.25em) {
+  .md-header__inner .md-header__button.rb-sidebar-toggle {
+    display: inline-block;
+  }
+
+  .rb-sidebar-hidden .md-sidebar--primary {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Item list: photo and text side by side, alternating sides
+   --------------------------------------------------------------- */
+
+.md-typeset .item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  gap: 1.5rem 2rem;
+  align-items: center;
+  padding: 2rem 0;
+  border-top: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.md-typeset .item-list > .item:first-child {
+  border-top: 0;
+}
+
+.md-typeset .item-list > .item:nth-child(even) {
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+}
+
+.md-typeset .item-list > .item:nth-child(even) .item__photo {
+  order: 2;
+}
+
+.md-typeset .item__photo p {
+  margin: 0;
+}
+
+.md-typeset .item__photo img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  border-radius: 0.5rem;
+  /* Product photos are shot on white, so pad them with white */
+  background: #fff;
+}
+
+.md-typeset .item__photo .item__credit {
+  margin-top: 0.4em;
+  font-size: 0.64rem;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--md-default-fg-color--light);
+}
+
+.md-typeset .item__text > :first-child {
+  margin-top: 0;
+}
+
+.md-typeset .item__text > :last-child {
+  margin-bottom: 0;
+}
+
+.md-typeset .item__aka {
+  margin-top: -0.4em;
+  color: var(--md-default-fg-color--light);
+}
+
+/* Small tables inside an item shouldn't stretch to the column edge */
+.md-typeset .item__text .md-typeset__table {
+  display: block;
+}
+
+/* Stack photo above text on narrow screens */
+@media screen and (max-width: 44.9375em) {
+  .md-typeset .item,
+  .md-typeset .item-list > .item:nth-child(even) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .md-typeset .item-list > .item:nth-child(even) .item__photo {
+    order: 0;
+  }
+}
+
+/* Thumbnails in the terminal → tool → photo table */
+.md-typeset img.table-photo {
+  display: block;
+  width: 7rem;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  border-radius: 0.3rem;
+  background: #fff;
+}
+
+/* ---------------------------------------------------------------
+   Step photo: a photo floated beside one step of a numbered list
+   --------------------------------------------------------------- */
+
+.md-typeset img.step-photo {
+  float: right;
+  width: 40%;
+  max-width: 16rem;
+  margin: 0 0 1rem 1.5rem;
+  border-radius: 0.5rem;
+}
+
+/* Portrait photos get narrower so they don't tower over the step */
+.md-typeset img.step-photo--tall {
+  max-width: 10rem;
+}
+
+/* Start the next step below the photo */
+.md-typeset li:has(img.step-photo) + li {
+  clear: both;
+}
+
+/* Keep a photo on the last step inside the list */
+.md-typeset ol:has(img.step-photo)::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+/* Stay beside the text on narrow screens, so the step number stays on top */
+@media screen and (max-width: 44.9375em) {
+  .md-typeset img.step-photo {
+    width: 45%;
+    margin: 0.2rem 0 0.5rem 1rem;
+  }
+}

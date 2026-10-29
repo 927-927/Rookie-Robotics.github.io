@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+  <!-- Apply the saved sidebar state before first paint so the nav doesn't flash -->
+  <script>
+    try {
+      if (localStorage.getItem("rbedu.sidebar") === "hidden") {
+        document.documentElement.classList.add("rb-sidebar-hidden")
+      }
+    } catch (e) {}
+  </script>
+{% endblock %}
