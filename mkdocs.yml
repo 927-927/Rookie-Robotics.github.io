@@ -1,7 +1,7 @@
 site_name: RookieRobotics
-site_url: https://rookie-robotics.github.io/
-repo_url: https://github.com/Rookie-Robotics/Rookie-Robotics.github.io
-repo_name: Rookie-Robotics/Rookie-Robotics.github.io
+site_url: https://927-927.github.io/Rookie-Robotics.github.io/
+repo_url: https://github.com/927-927/Rookie-Robotics.github.io
+repo_name: 927-927/Rookie-Robotics.github.io
 
 theme:
   name: material

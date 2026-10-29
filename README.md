@@ -54,8 +54,8 @@ Without this, FRC changes show up here within about an hour. To have them show
 up as soon as 927-927.github.io deploys:
 
 1. Create a [fine-grained personal access token](https://github.com/settings/personal-access-tokens/new)
-   with **Resource owner** set to `Rookie-Robotics`, access to only
-   `Rookie-Robotics/Rookie-Robotics.github.io`, and the
+   with **Resource owner** set to `927-927`, access to only
+   `927-927/Rookie-Robotics.github.io`, and the
    **Contents: Read and write** permission.
 2. In 927-927.github.io, go to **Settings → Secrets and variables → Actions**
    and add it as a secret named `ROOKIEROBOTICS_TOKEN`.
@@ -70,10 +70,14 @@ up as soon as 927-927.github.io deploys:
              curl -fsS -X POST
              -H "Authorization: Bearer ${{ secrets.ROOKIEROBOTICS_TOKEN }}"
              -H "Accept: application/vnd.github+json"
-             https://api.github.com/repos/Rookie-Robotics/Rookie-Robotics.github.io/dispatches
+             https://api.github.com/repos/927-927/Rookie-Robotics.github.io/dispatches
              -d '{"event_type":"frc-docs-updated"}'
    ```
 
 ## GitHub Pages setup
 
 In this repo's **Settings → Pages**, set **Source** to **GitHub Actions**.
+
+The site is published at <https://927-927.github.io/Rookie-Robotics.github.io/>.
+If it moves (a different repo name or a custom domain), update `site_url` in
+`mkdocs.yml` to match, or the 404 page loses its styles.
