@@ -18,6 +18,7 @@ import re
 import shutil
 import sys
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import yaml
 
@@ -39,23 +40,41 @@ _NavLoader.add_multi_constructor(
 )
 
 
-def read_source_nav(source: Path) -> list:
-    config = yaml.load((source / "mkdocs.yml").read_text(encoding="utf-8"), _NavLoader)
-    nav = config.get("nav")
-    if not nav:
-        sys.exit(f"{source / 'mkdocs.yml'} has no nav section")
-    return nav
+def load_config(mkdocs_yml: Path) -> dict:
+    return yaml.load(mkdocs_yml.read_text(encoding="utf-8"), _NavLoader)
 
 
-def prefix_paths(entry):
+def site_root(config: dict) -> str:
+    """The path a site is served under, from its site_url ("/" if unset)."""
+    return urlsplit(config.get("site_url") or "/").path.rstrip("/") + "/"
+
+
+def prefix_paths(entry, source_root: str, dest_root: str):
     if isinstance(entry, str):
-        return entry if "://" in entry else PREFIX + entry
+        if "://" in entry:
+            return entry
+        # Links like /software/page/#heading are absolute URLs on the source
+        # site, so point them at the same page under this site's frc/ folder.
+        if entry.startswith("/"):
+            if entry.startswith(source_root):
+                return dest_root + PREFIX + entry[len(source_root):]
+            return entry
+        return PREFIX + entry
     if isinstance(entry, list):
-        return [prefix_paths(item) for item in entry]
-    return {title: prefix_paths(value) for title, value in entry.items()}
+        return [prefix_paths(item, source_root, dest_root) for item in entry]
+    return {
+        title: prefix_paths(value, source_root, dest_root)
+        for title, value in entry.items()
+    }
 
 
-def build_frc_nav(source_nav: list) -> list:
+def build_frc_nav(source_config: dict) -> list:
+    source_nav = source_config.get("nav")
+    if not source_nav:
+        sys.exit("The source mkdocs.yml has no nav section")
+    source_root = site_root(source_config)
+    dest_root = site_root(load_config(MKDOCS_YML))
+
     # The source's home page becomes the FRC section's own page
     # (navigation.indexes shows it when you click "FRC" in the sidebar).
     home, rest = [], []
@@ -63,7 +82,7 @@ def build_frc_nav(source_nav: list) -> list:
         target = item if isinstance(item, str) else next(iter(item.values()))
         (home if target == "index.md" else rest).append(item)
     nav = [PREFIX + "index.md"] if home else []
-    return nav + [prefix_paths(item) for item in rest]
+    return nav + [prefix_paths(item, source_root, dest_root) for item in rest]
 
 
 def quote(value: str) -> str:
@@ -118,7 +137,7 @@ def main() -> None:
     if not (source / "docs").is_dir() or not (source / "mkdocs.yml").is_file():
         sys.exit(f"{source} doesn't look like the FRC docs repo (no docs/ or mkdocs.yml)")
 
-    frc_nav = build_frc_nav(read_source_nav(source))
+    frc_nav = build_frc_nav(load_config(source / "mkdocs.yml"))
     copy_docs(source)
     write_nav(frc_nav)
     print(f"Synced {source / 'docs'} -> {DEST_DOCS.relative_to(ROOT)}")

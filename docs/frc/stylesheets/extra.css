@@ -145,3 +145,265 @@
     margin: 0.2rem 0 0.5rem 1rem;
   }
 }
+
+/* ---------------------------------------------------------------
+   Code window: a small VS Code-style file explorer and editor
+   (switching files is done by javascripts/code-window.js)
+   --------------------------------------------------------------- */
+
+.md-typeset .vscode {
+  --vscode-chrome: #f8f8f8;
+  --vscode-border: #e5e5e5;
+  --vscode-hover: #ececec;
+  --vscode-selected: #e4e6f1;
+  --vscode-accent: #005fb8;
+  --vscode-fg: #3b3b3b;
+  --vscode-fg-muted: #6f6f6f;
+  margin: 1em 0 1.5em;
+  border: 1px solid var(--vscode-border);
+  border-radius: 0.4rem;
+  overflow: hidden;
+  background: var(--md-code-bg-color);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .vscode {
+  --vscode-chrome: #181818;
+  --vscode-border: #2b2b2b;
+  --vscode-hover: #2a2d2e;
+  --vscode-selected: #37373d;
+  --vscode-accent: #0078d4;
+  --vscode-fg: #cccccc;
+  --vscode-fg-muted: #9d9d9d;
+}
+
+/* Title bar with window buttons */
+.md-typeset .vscode__titlebar {
+  position: relative;
+  padding: 0.3rem 3rem;
+  border-bottom: 1px solid var(--vscode-border);
+  background: var(--vscode-chrome);
+  color: var(--vscode-fg-muted);
+  font-size: 0.6rem;
+  text-align: center;
+}
+
+.md-typeset .vscode__titlebar::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0.7rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #ff5f57;
+  box-shadow: 0.75rem 0 0 #febc2e, 1.5rem 0 0 #28c840;
+  transform: translateY(-50%);
+}
+
+.md-typeset .vscode__body {
+  display: grid;
+  grid-template-columns: 10rem minmax(0, 1fr);
+}
+
+/* Explorer */
+.md-typeset .vscode__sidebar {
+  padding-bottom: 0.5rem;
+  border-right: 1px solid var(--vscode-border);
+  background: var(--vscode-chrome);
+  color: var(--vscode-fg);
+  font-size: 0.65rem;
+}
+
+.md-typeset .vscode__heading {
+  padding: 0.45rem 0.7rem;
+  color: var(--vscode-fg-muted);
+  font-size: 0.55rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.md-typeset .vscode__folder,
+.md-typeset .vscode__file {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: 100%;
+  padding: 0.15rem 0.5rem 0.15rem calc(0.5rem + var(--depth, 0) * 0.7rem);
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+/* Open-folder chevron */
+.md-typeset .vscode__folder::before {
+  content: "";
+  flex: none;
+  width: 0.3rem;
+  height: 0.3rem;
+  margin: 0 0.15rem 0.15rem;
+  border-right: 1.5px solid currentcolor;
+  border-bottom: 1.5px solid currentcolor;
+  transform: rotate(45deg);
+}
+
+/* Files line up under their folder's name, past the chevron */
+.md-typeset .vscode__file {
+  padding-left: calc(1.45rem + var(--depth, 0) * 0.7rem);
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.md-typeset .vscode__file:hover {
+  background: var(--vscode-hover);
+}
+
+.md-typeset .vscode__file.is-active {
+  background: var(--vscode-selected);
+}
+
+.md-typeset .vscode__file:focus-visible {
+  outline: 1px solid var(--vscode-accent);
+  outline-offset: -1px;
+}
+
+/* Java file icon */
+.md-typeset .vscode__file::before,
+.md-typeset .vscode__tab::before {
+  content: "J";
+  flex: none;
+  width: 0.7rem;
+  color: #cc3e44;
+  font-family: var(--md-code-font-family);
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Editor: tab, breadcrumbs, then the code */
+.md-typeset .vscode__editor {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.md-typeset .vscode__tabs {
+  display: flex;
+  border-bottom: 1px solid var(--vscode-border);
+  background: var(--vscode-chrome);
+  font-size: 0.65rem;
+}
+
+.md-typeset .vscode__tab {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: -1px;
+  padding: 0.35rem 0.9rem 0.35rem 0.7rem;
+  border-top: 1px solid var(--vscode-accent);
+  border-right: 1px solid var(--vscode-border);
+  background: var(--md-code-bg-color);
+  color: var(--vscode-fg);
+}
+
+.md-typeset .vscode__crumbs {
+  overflow: hidden;
+  padding: 0.25rem 0.9rem 0;
+  color: var(--vscode-fg-muted);
+  font-size: 0.6rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.md-typeset .vscode__panes {
+  flex: 1;
+}
+
+/* Stack every file in one grid cell so the window keeps the height of the
+   longest one, and only show the open one */
+.md-typeset .vscode--ready .vscode__panes {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.md-typeset .vscode--ready .vscode__pane {
+  grid-area: 1 / 1;
+  visibility: hidden;
+}
+
+.md-typeset .vscode--ready .vscode__pane.is-active {
+  visibility: visible;
+}
+
+.md-typeset .vscode__pane {
+  display: flex;
+  flex-direction: column;
+}
+
+.md-typeset .vscode__pane > .highlight {
+  flex: 1;
+  margin: 0;
+}
+
+.md-typeset .vscode__pane .highlighttable {
+  margin: 0;
+}
+
+/* A little smaller than other code, so most lines fit beside the explorer */
+.md-typeset .vscode__pane .highlight code,
+.md-typeset .vscode__pane .highlighttable .linenos {
+  font-size: 0.8em;
+}
+
+.md-typeset .vscode__pane .highlighttable .linenos,
+.md-typeset .vscode__pane pre > code {
+  border-radius: 0;
+}
+
+.md-typeset .vscode__pane pre > code {
+  padding-right: 0.8em;
+  padding-left: 0.8em;
+}
+
+/* What the file does, under the code */
+.md-typeset .vscode__note {
+  padding: 0.55rem 0.9rem;
+  border-top: 1px solid var(--vscode-border);
+  background: var(--vscode-chrome);
+  font-size: 0.7rem;
+}
+
+.md-typeset .vscode__note > :first-child {
+  margin-top: 0;
+}
+
+.md-typeset .vscode__note > :last-child {
+  margin-bottom: 0;
+}
+
+/* Without the script, show every file one after another, each with its path */
+.md-typeset .vscode:not(.vscode--ready) .vscode__tabs,
+.md-typeset .vscode:not(.vscode--ready) .vscode__crumbs {
+  display: none;
+}
+
+.md-typeset .vscode:not(.vscode--ready) .vscode__pane::before {
+  content: attr(data-path);
+  padding: 0.35rem 0.9rem;
+  background: var(--vscode-chrome);
+  color: var(--vscode-fg-muted);
+  font-size: 0.6rem;
+}
+
+/* Explorer above the editor on narrow screens */
+@media screen and (max-width: 44.9375em) {
+  .md-typeset .vscode__body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .md-typeset .vscode__sidebar {
+    border-right: 0;
+    border-bottom: 1px solid var(--vscode-border);
+  }
+}

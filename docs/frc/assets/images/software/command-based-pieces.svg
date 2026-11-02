@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 450" width="1100" height="450">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="#5b6770"/>
+</marker>
+<marker id="arrow-light" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="#8796a5"/>
+</marker>
+</defs>
+<style>
+text { font-family: Roboto, Helvetica, Arial, sans-serif; fill: #1f2a33; }
+.mono, .mono text { font-family: "Roboto Mono", Consolas, Menlo, monospace; }
+.label { font-size: 16px; font-weight: bold; fill: #5b6770; letter-spacing: 2px; }
+.muted, .muted text { fill: #5b6770; }
+</style>
+<rect width="1100" height="450" rx="16" fill="#ffffff"/>
+
+<!-- Scheduler -->
+<rect x="40" y="28" width="1020" height="78" rx="12" fill="#37474f"/>
+<text x="550" y="59" text-anchor="middle" class="label" style="fill:#ffffff;font-size:17px">COMMAND SCHEDULER</text>
+<text x="550" y="88" text-anchor="middle" font-size="17" style="fill:#cfd8dc">runs every loop · starts and stops commands · gives each subsystem to one command at a time</text>
+
+<line x1="175" y1="108" x2="175" y2="144" stroke="#8796a5" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrow-light)"/>
+<text x="163" y="132" text-anchor="end" font-size="16" class="muted">checks it</text>
+<line x1="550" y1="108" x2="550" y2="144" stroke="#8796a5" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrow-light)"/>
+<text x="538" y="132" text-anchor="end" font-size="16" class="muted">runs it</text>
+<line x1="925" y1="108" x2="925" y2="144" stroke="#8796a5" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrow-light)"/>
+<text x="913" y="132" text-anchor="end" font-size="16" class="muted">one command at a time</text>
+
+<!-- Trigger -->
+<rect x="40" y="150" width="270" height="170" rx="12" fill="#fff6d6" stroke="#c9a400" stroke-width="2"/>
+<text x="175" y="182" text-anchor="middle" class="label" style="fill:#8a6d00">TRIGGER</text>
+<circle cx="82" cy="231" r="23" fill="#2e9d43"/>
+<text x="82" y="239" text-anchor="middle" font-size="23" font-weight="bold" style="fill:#ffffff">A</text>
+<text x="118" y="228" class="mono" font-size="20" font-weight="bold">driver.a()</text>
+<text x="118" y="252" font-size="17">true while A is held</text>
+<line x1="56" y1="274" x2="294" y2="274" stroke="#e5d38a" stroke-width="1.5"/>
+<text x="175" y="302" text-anchor="middle" class="mono muted" font-size="16">RobotContainer.java</text>
+
+<line x1="312" y1="235" x2="409" y2="235" stroke="#5b6770" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="362" y="223" text-anchor="middle" class="mono" font-size="16" font-weight="bold">whileTrue</text>
+
+<!-- Command -->
+<rect x="415" y="150" width="270" height="170" rx="12" fill="#dfeafb" stroke="#2f6fb5" stroke-width="2"/>
+<text x="550" y="182" text-anchor="middle" class="label" style="fill:#245a94">COMMAND</text>
+<text x="550" y="228" text-anchor="middle" class="mono" font-size="20" font-weight="bold">intake.runIn()</text>
+<text x="550" y="252" text-anchor="middle" font-size="17">motor at 80 %, every loop</text>
+<line x1="431" y1="274" x2="669" y2="274" stroke="#a9c4e8" stroke-width="1.5"/>
+<text x="550" y="302" text-anchor="middle" class="mono muted" font-size="16">Intake.java</text>
+
+<line x1="687" y1="235" x2="784" y2="235" stroke="#5b6770" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="737" y="223" text-anchor="middle" class="mono" font-size="16" font-weight="bold">requires</text>
+
+<!-- Subsystem -->
+<rect x="790" y="150" width="270" height="170" rx="12" fill="#e0f2e4" stroke="#2e9d43" stroke-width="2"/>
+<text x="925" y="182" text-anchor="middle" class="label" style="fill:#1b6a2b">SUBSYSTEM</text>
+<text x="925" y="230" text-anchor="middle" font-size="24" font-weight="bold">Intake</text>
+<text x="925" y="253" text-anchor="middle" font-size="17">owns the intake motor</text>
+<line x1="806" y1="274" x2="1044" y2="274" stroke="#a8d8b2" stroke-width="1.5"/>
+<text x="925" y="302" text-anchor="middle" class="mono muted" font-size="16">Intake.java</text>
+
+<!-- Default command -->
+<line x1="925" y1="320" x2="925" y2="354" stroke="#2e9d43" stroke-width="2" stroke-dasharray="5 4"/>
+<rect x="790" y="354" width="270" height="76" rx="10" fill="#f4fbf5" stroke="#2e9d43" stroke-width="2" stroke-dasharray="6 5"/>
+<text x="925" y="385" text-anchor="middle" class="mono" font-size="18" font-weight="bold">intake.stop()</text>
+<text x="925" y="411" text-anchor="middle" font-size="17">runs when the Intake is free</text>
+<text x="772" y="398" text-anchor="end" class="label">DEFAULT COMMAND</text>
+</svg>
