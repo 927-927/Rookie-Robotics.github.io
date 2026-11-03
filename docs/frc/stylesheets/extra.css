@@ -22,6 +22,13 @@
   }
 }
 
+/* A narrower table of contents than Material's 12.1rem, so pages get more room */
+@media screen and (min-width: 60em) {
+  .md-sidebar--secondary {
+    width: 10rem;
+  }
+}
+
 /* ---------------------------------------------------------------
    Item list: photo and text side by side, alternating sides
    --------------------------------------------------------------- */
@@ -59,6 +66,12 @@
   border-radius: 0.5rem;
   /* Product photos are shot on white, so pad them with white */
   background: #fff;
+}
+
+/* Field photos fill their own frame, so keep their shape instead of padding them */
+.md-typeset .item-list--photos .item__photo img {
+  aspect-ratio: auto;
+  background: none;
 }
 
 .md-typeset .item__photo .item__credit {
@@ -203,6 +216,11 @@
 .md-typeset .vscode__body {
   display: grid;
   grid-template-columns: 10rem minmax(0, 1fr);
+}
+
+/* For projects with long file names */
+.md-typeset .vscode--wide .vscode__body {
+  grid-template-columns: 12.5rem minmax(0, 1fr);
 }
 
 /* Explorer */

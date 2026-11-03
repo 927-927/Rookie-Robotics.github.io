@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 410" width="1100" height="410">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="#5b6770"/>
+</marker>
+</defs>
+<style>
+text { font-family: Roboto, Helvetica, Arial, sans-serif; fill: #1f2a33; }
+.mono, .mono text { font-family: "Roboto Mono", Consolas, Menlo, monospace; }
+.label { font-size: 16px; font-weight: bold; fill: #5b6770; letter-spacing: 2px; }
+.muted, .muted text { fill: #5b6770; }
+.btn text { font-size: 12px; font-weight: bold; fill: #ffffff; text-anchor: middle; }
+.state { font-family: "Roboto Mono", Consolas, Menlo, monospace; font-size: 15px; font-weight: bold; }
+.bind { font-family: "Roboto Mono", Consolas, Menlo, monospace; font-size: 14px; }
+</style>
+<rect width="1100" height="410" rx="16" fill="#ffffff"/>
+
+<!-- ============ Controller ============ -->
+<!-- bumpers -->
+<rect x="110" y="96" width="90" height="24" rx="12" fill="#cfd8dc" stroke="#37474f" stroke-width="2.5"/>
+<text x="155" y="113" text-anchor="middle" font-size="13" font-weight="bold" class="muted">LB</text>
+<rect x="294" y="90" width="102" height="34" rx="17" fill="#ffe0b2"/>
+<rect x="300" y="96" width="90" height="24" rx="12" fill="#2f6fb5" stroke="#1f2a33" stroke-width="2.5"/>
+<text x="345" y="113" text-anchor="middle" font-size="13" font-weight="bold" style="fill:#ffffff">RB</text>
+<g stroke="#ff9800" stroke-width="3" stroke-linecap="round">
+<line x1="345" y1="82" x2="345" y2="70"/>
+<line x1="322" y1="84" x2="314" y2="74"/>
+<line x1="368" y1="84" x2="376" y2="74"/>
+</g>
+
+<!-- body -->
+<path d="M120,150 Q140,118 200,118 H300 Q360,118 380,150 L425,280 Q435,318 400,322 Q372,325 350,295 L325,262 H175 L150,295 Q128,325 100,322 Q65,318 75,280 Z" fill="#eceff1" stroke="#37474f" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="165" cy="185" r="24" fill="#37474f"/>
+<circle cx="165" cy="185" r="15" fill="#546e7a"/>
+<circle cx="290" cy="240" r="22" fill="#37474f"/>
+<circle cx="290" cy="240" r="14" fill="#546e7a"/>
+<path d="M199,226 h12 v-12 h12 v12 h12 v12 h-12 v12 h-12 v-12 h-12 z" fill="#37474f"/>
+<circle cx="230" cy="168" r="6" fill="#90a4ae"/>
+<circle cx="270" cy="168" r="6" fill="#90a4ae"/>
+<g class="btn">
+<circle cx="335" cy="160" r="12" fill="#f9a825"/><text x="335" y="164">Y</text>
+<circle cx="310" cy="185" r="12" fill="#1e88e5"/><text x="310" y="189">X</text>
+<circle cx="360" cy="185" r="12" fill="#e53935"/><text x="360" y="189">B</text>
+<circle cx="335" cy="210" r="12" fill="#43a047"/><text x="335" y="214">A</text>
+</g>
+
+<!-- bindings -->
+<text x="70" y="358" class="bind"><tspan font-weight="bold">RB</tspan> → SCORE_ON_MOVE</text>
+<text x="240" y="358" class="bind"><tspan font-weight="bold">RT</tspan> → PASS</text>
+<text x="70" y="384" class="bind"><tspan font-weight="bold">Start</tspan> → HOME</text>
+<text x="240" y="384" class="bind"><tspan font-weight="bold">let go</tspan> → DEFAULT_STATE</text>
+
+<!-- ============ Arrow ============ -->
+<path d="M398,104 C500,60 600,70 714,150" fill="none" stroke="#5b6770" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="560" y="122" text-anchor="middle" font-size="15" font-weight="bold">RB pressed: onTrue</text>
+<text x="560" y="144" text-anchor="middle" class="mono" font-size="14">setWantedStateCommand(…)</text>
+<text x="560" y="166" text-anchor="middle" font-size="14" class="muted">turns the dial, then ends</text>
+
+<!-- ============ Dial ============ -->
+<text x="820" y="44" text-anchor="middle" class="label">SUPERSTRUCTURE WANTED STATE</text>
+<circle cx="820" cy="215" r="112" fill="#37474f"/>
+<g stroke="#ffffff" stroke-width="3" stroke-linecap="round">
+<line x1="820" y1="117" x2="820" y2="107"/>
+<line x1="904.9" y1="264" x2="913.5" y2="269"/>
+<line x1="820" y1="313" x2="820" y2="323"/>
+<line x1="735.1" y1="264" x2="726.5" y2="269"/>
+</g>
+<line x1="904.9" y1="166" x2="913.5" y2="161" stroke="#ff9800" stroke-width="4" stroke-linecap="round"/>
+<circle cx="820" cy="215" r="94" fill="#f5f7f8"/>
+<circle cx="820" cy="215" r="52" fill="#546e7a"/>
+<circle cx="820" cy="215" r="44" fill="none" stroke="#78909c" stroke-width="2" stroke-dasharray="3 5"/>
+<line x1="820" y1="215" x2="894" y2="172.3" stroke="#ff9800" stroke-width="10" stroke-linecap="round"/>
+<circle cx="820" cy="215" r="12" fill="#37474f"/>
+
+<text x="820" y="88" text-anchor="middle" class="state">DEFAULT_STATE</text>
+<rect x="926" y="146" width="134" height="28" rx="14" fill="#fff6d6" stroke="#c9a400" stroke-width="1.5"/>
+<text x="993" y="165" text-anchor="middle" class="state" style="fill:#8a6d00">SCORE_ON_MOVE</text>
+<text x="932" y="286" class="state">PASS</text>
+<text x="708" y="286" text-anchor="end" class="state">HOME</text>
+<text x="820" y="352" text-anchor="middle" font-size="15" class="muted">+ 8 more states</text>
+<text x="820" y="386" text-anchor="middle" font-size="15" class="muted">every loop, the robot does what the dial points at</text>
+</svg>

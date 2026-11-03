@@ -1,5 +1,7 @@
 // Adds a header button that hides/shows the left navigation on desktop.
 // On narrower screens Material already turns the nav into a drawer with its own button.
+// Clicking the code in a code window (javascripts/code-window.js) hides the nav too,
+// so long lines fit.
 (function () {
   var KEY = "rbedu.sidebar"
   var HIDDEN = "rb-sidebar-hidden"
@@ -39,4 +41,17 @@
 
   anchor.insertAdjacentElement("afterend", button)
   render(button)
+
+  // Not saved, so the next page shows the nav again
+  var desktop = window.matchMedia("(min-width: 76.25em)")
+  document.addEventListener("click", function (event) {
+    var editor = event.target.closest(".vscode__editor")
+    if (!editor || !desktop.matches || root.classList.contains(HIDDEN)) return
+
+    // The page reflows when the nav goes, so keep the code where it was on screen
+    var top = editor.getBoundingClientRect().top
+    root.classList.add(HIDDEN)
+    render(button)
+    window.scrollBy(0, editor.getBoundingClientRect().top - top)
+  })
 })()

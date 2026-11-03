@@ -1,6 +1,7 @@
 # Software
 
-Programming the robot with WPILib. The first two topics link to lessons on
+Programming the robot with WPILib. Java basics, Command-based skeleton and
+Complex command-based link to lessons on
 [frcsoftware.org](https://frcsoftware.org/).
 
 <div class="grid cards" markdown>
@@ -30,6 +31,15 @@ Programming the robot with WPILib. The first two topics link to lessons on
     loop for you, the three pieces it works with, and the simplest example.
 
     [:octicons-arrow-right-24: Time-based to command-based](time-based-to-command-based.md)
+
+-   :material-sitemap-outline:{ .lg .middle } __Complex command-based__
+
+    ---
+
+    A full competition robot with state machines and a superstructure,
+    from frcsoftware.org's Stage 2.
+
+    [:octicons-arrow-right-24: Complex command-based](complex-command-based.md)
 
 -   :material-compare-horizontal:{ .lg .middle } __Command-based styles__
 

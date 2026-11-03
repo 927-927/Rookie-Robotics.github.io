@@ -74,9 +74,10 @@ nav:
           - Java basics: frc/software/java-basics.md
           - Command-based skeleton: frc/software/command-based-skeleton.md
           - Time-based to command-based: frc/software/time-based-to-command-based.md
+          - Complex command-based: frc/software/complex-command-based.md
           - Command-based styles:
               - frc/software/command-based-styles/index.md
-              - Team 2910: "/Rookie-Robotics.github.io/frc/software/command-based-styles/#team-2910"
+              - Team 2910: frc/software/command-based-styles/team-2910.md
               - Team 1678: "/Rookie-Robotics.github.io/frc/software/command-based-styles/#team-1678"
               - Team 8214: "/Rookie-Robotics.github.io/frc/software/command-based-styles/#team-8214"
   # <<< FRC nav
