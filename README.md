@@ -38,9 +38,17 @@ changes, and redeploys the site:
 - when you click **Run workflow** on the Actions tab,
 - when 927-927.github.io tells it to (optional, see below).
 
-Only the docs and the nav are synced. If you change other settings in
-927-927.github.io's `mkdocs.yml` (theme features, markdown extensions),
-copy them into this `mkdocs.yml` by hand.
+Only the docs and the nav are synced, and anything 927-927.github.io's
+`exclude_docs` leaves off its own site (like `Team_analysis/`) isn't copied. If
+you change other settings in 927-927.github.io's `mkdocs.yml` (theme features,
+markdown extensions, new stylesheets or scripts), copy them into this
+`mkdocs.yml` by hand.
+
+To update right away, open Claude Code in this folder and type `/frc_update`
+(or run `claude /frc_update` from a terminal here). It pulls the newest
+927-927.github.io from GitHub into `.frc-source/`, syncs, carries over any
+`mkdocs.yml` settings that changed, checks that the site builds, then commits
+and pushes. The steps are in `.claude/commands/frc_update.md`.
 
 To sync by hand from a local checkout:
 

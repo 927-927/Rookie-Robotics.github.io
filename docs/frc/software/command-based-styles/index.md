@@ -9,16 +9,16 @@ structures used by some of the best teams in FRC.
 
 <div class="item" markdown>
 <div class="item__photo" markdown>
-![Re•Blitz, Team 2910's 2026 robot, shooting fuel into the hub at a REBUILT event](../../assets/images/software/team-2910-robot.jpg)
+![Team 2910's 2026 robot shooting fuel into the hub at a REBUILT event](../../assets/images/software/team-2910-robot.jpg)
 
-Photo: Team 2910, via [Chief Delphi](https://www.chiefdelphi.com/t/2910-cad-and-tech-binder-release-2026/521705/1)
+Photo via [Chief Delphi](https://www.chiefdelphi.com/uploads/default/optimized/4X/a/3/8/a381d4698fcc264f7bf9b9dca2f7fb35d2751692_2_1380x920.jpeg)
 { .item__credit }
 </div>
 <div class="item__text" markdown>
 
 ## Team 2910
 
-Jack in the Bot · Re•Blitz, their 2026 robot
+Jack in the Bot · 2026 robot
 { .item__aka }
 
 Every subsystem is a state machine, built on shared roller and servo base
@@ -35,7 +35,7 @@ SuperStructure coordinates the rest. Their code is on GitHub at
 <div class="item__photo" markdown>
 ![Limestone, Team 1678's 2026 robot, shooting fuel into the hub at a REBUILT event](../../assets/images/software/team-1678-robot.jpg)
 
-Photo: Team 1678, from their [README](https://github.com/frc1678/C2026-Public)
+Photo: [Team 1678's README](https://github.com/frc1678/C2026-Public)
 { .item__credit }
 </div>
 <div class="item__text" markdown>
@@ -55,14 +55,14 @@ Coming soon. Their code is on GitHub at
 <div class="item__photo" markdown>
 ![MACK, Team 8214's 2026 offseason robot, on the field with fuel around it](../../assets/images/software/team-8214-robot.jpg)
 
-Photo: Team 8214, from their [README](https://github.com/nirobotics/ni-8214-2026-public)
+Photo: [Team 8214's README](https://github.com/nirobotics/ni-8214-2026-public)
 { .item__credit }
 </div>
 <div class="item__text" markdown>
 
 ## Team 8214
 
-Cyber Unicorn · MACK, their 2026 offseason robot
+Next Innovation · MACK, their 2026 offseason robot
 { .item__aka }
 
 Coming soon. Their code is on GitHub at
@@ -72,20 +72,3 @@ Coming soon. Their code is on GitHub at
 </div>
 
 </div>
-
-??? info "Photo credits"
-
-    - **Re•Blitz, Team 2910:** from Team 2910's
-      [CAD and Tech Binder Release 2026](https://www.chiefdelphi.com/t/2910-cad-and-tech-binder-release-2026/521705/1)
-      on Chief Delphi, posted by Kylie_Liu
-    - **Limestone, Team 1678:** from the README of Team 1678's
-      [C2026-Public](https://github.com/frc1678/C2026-Public) repository on
-      GitHub
-    - **MACK, Team 8214:** from the README of Team 8214's
-      [ni-8214-2026-public](https://github.com/nirobotics/ni-8214-2026-public)
-      repository on GitHub
-
-    The photos belong to the teams. They're shown here, made smaller, only
-    to introduce each team's code. To have a photo changed or removed,
-    [open an issue](https://github.com/927-927/927-927.github.io/issues) on
-    this site's repository.

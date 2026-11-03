@@ -6,6 +6,8 @@ Usage:
 What it does:
   1. Replaces docs/frc/ with the source repo's docs/ folder (pages, images,
      stylesheets and scripts), so deleted pages are deleted here too.
+     Anything the source's exclude_docs keeps off its own site (working
+     notes) isn't copied.
   2. Rebuilds the FRC part of the sidebar in mkdocs.yml from the source
      repo's nav, between the "FRC nav" marker comments.
 
@@ -20,6 +22,7 @@ import sys
 from pathlib import Path
 from urllib.parse import urlsplit
 
+import pathspec
 import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -124,10 +127,25 @@ def write_nav(frc_nav: list) -> None:
     )
 
 
-def copy_docs(source: Path) -> None:
+def copy_docs(source: Path, exclude_docs: str) -> None:
+    # exclude_docs uses .gitignore syntax, the same way MkDocs reads it
+    spec = pathspec.GitIgnoreSpec.from_lines((exclude_docs or "").splitlines())
+    docs = source / "docs"
+
+    def ignore(folder: str, names: list) -> list:
+        rel = Path(folder).relative_to(docs).as_posix()
+        skipped = []
+        for name in names:
+            path = name if rel == "." else f"{rel}/{name}"
+            if (Path(folder) / name).is_dir():
+                path += "/"
+            if spec.match_file(path):
+                skipped.append(name)
+        return skipped
+
     if DEST_DOCS.exists():
         shutil.rmtree(DEST_DOCS)
-    shutil.copytree(source / "docs", DEST_DOCS)
+    shutil.copytree(docs, DEST_DOCS, ignore=ignore)
 
 
 def main() -> None:
@@ -137,8 +155,9 @@ def main() -> None:
     if not (source / "docs").is_dir() or not (source / "mkdocs.yml").is_file():
         sys.exit(f"{source} doesn't look like the FRC docs repo (no docs/ or mkdocs.yml)")
 
-    frc_nav = build_frc_nav(load_config(source / "mkdocs.yml"))
-    copy_docs(source)
+    source_config = load_config(source / "mkdocs.yml")
+    frc_nav = build_frc_nav(source_config)
+    copy_docs(source, source_config.get("exclude_docs"))
     write_nav(frc_nav)
     print(f"Synced {source / 'docs'} -> {DEST_DOCS.relative_to(ROOT)}")
 
