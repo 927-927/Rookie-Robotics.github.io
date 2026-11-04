@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 490" width="1100" height="490">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="#5b6770"/>
+</marker>
+</defs>
+<style>
+text { font-family: Roboto, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", Helvetica, Arial, sans-serif; fill: #1f2a33; }
+.mono, .mono text { font-family: "Roboto Mono", Consolas, Menlo, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", monospace; }
+.label { font-size: 17px; font-weight: bold; fill: #5b6770; letter-spacing: 2px; }
+.muted, .muted text { fill: #5b6770; }
+.band { fill: #f5f7f8; stroke: #e3e8eb; stroke-width: 2; }
+.step { stroke-width: 2; }
+.num { fill: #ffffff; font-size: 16px; font-weight: bold; text-anchor: middle; }
+.title { font-size: 18px; font-weight: bold; }
+.phrase { font-size: 16px; fill: #5b6770; }
+.down { stroke: #5b6770; stroke-width: 2.5; }
+</style>
+<rect width="1100" height="490" rx="16" fill="#ffffff"/>
+
+<!-- ============ Once ============ -->
+<rect x="40" y="24" width="1020" height="170" rx="14" class="band"/>
+<text x="64" y="72" class="label">执行一次</text>
+<text x="64" y="98" font-size="15" class="muted">按下按钮</text>
+<text x="64" y="118" font-size="15" class="muted">的时候</text>
+
+<rect x="250" y="38" width="610" height="62" rx="10" class="step" fill="#fff6d6" stroke="#c9a400"/>
+<circle cx="282" cy="69" r="16" fill="#c9a400"/><text x="282" y="75" class="num">1</text>
+<text x="314" y="65" class="title">触发器调用</text>
+<text x="314" y="88" class="phrase">操作手按下按钮，它的绑定运行一个命令</text>
+
+<line x1="282" y1="102" x2="282" y2="114" class="down" marker-end="url(#arrow)"/>
+
+<rect x="250" y="118" width="610" height="62" rx="10" class="step" fill="#dfeafb" stroke="#2f6fb5"/>
+<circle cx="282" cy="149" r="16" fill="#2f6fb5"/><text x="282" y="155" class="num">2</text>
+<text x="314" y="145" class="title">设置期望状态</text>
+<text x="314" y="168" class="phrase">命令设置机器人应该做什么，然后立刻结束</text>
+
+<!-- ============ Every loop ============ -->
+<rect x="40" y="208" width="1020" height="258" rx="14" class="band"/>
+<line x1="282" y1="182" x2="282" y2="222" class="down" marker-end="url(#arrow)"/>
+<text x="64" y="256" class="label">每次循环</text>
+<text x="64" y="282" font-size="15" class="muted">在每个子系统的</text>
+<text x="64" y="302" font-size="15" class="mono muted">periodic()</text>
+
+<rect x="250" y="226" width="610" height="62" rx="10" class="step" fill="#ffffff" stroke="#8796a5"/>
+<circle cx="282" cy="257" r="16" fill="#5b6770"/><text x="282" y="263" class="num">3</text>
+<text x="314" y="253" class="title">期望状态 → 系统状态</text>
+<text x="314" y="276" class="phrase">子系统选出这一次循环真正要做的事</text>
+
+<line x1="282" y1="290" x2="282" y2="302" class="down" marker-end="url(#arrow)"/>
+
+<rect x="250" y="306" width="610" height="62" rx="10" class="step" fill="#ffffff" stroke="#8796a5"/>
+<circle cx="282" cy="337" r="16" fill="#5b6770"/><text x="282" y="343" class="num">4</text>
+<text x="314" y="333" class="title">执行状态</text>
+<text x="314" y="356" class="phrase">运行这个系统状态对应的代码</text>
+
+<line x1="282" y1="370" x2="282" y2="382" class="down" marker-end="url(#arrow)"/>
+
+<rect x="250" y="386" width="610" height="62" rx="10" class="step" fill="#ffffff" stroke="#8796a5"/>
+<circle cx="282" cy="417" r="16" fill="#5b6770"/><text x="282" y="423" class="num">5</text>
+<text x="314" y="413" class="title">状态函数调用子系统代码</text>
+<text x="314" y="436" class="phrase">这段代码设置下一层的期望状态，或者设置电机</text>
+
+<!-- repeat one layer down -->
+<path d="M862,417 H925 V257 H868" fill="none" stroke="#e8710a" stroke-width="3" stroke-dasharray="7 5"/>
+<path d="M876,251 L864,257 L876,263 z" fill="#e8710a"/>
+<text x="942" y="312" font-size="15" font-weight="bold" style="fill:#b85c00">然后在下一层</text>
+<text x="942" y="332" font-size="15" style="fill:#b85c00">再来一遍，</text>
+<text x="942" y="352" font-size="15" style="fill:#b85c00">直到有电机</text>
+<text x="942" y="372" font-size="15" style="fill:#b85c00">动起来</text>
+</svg>

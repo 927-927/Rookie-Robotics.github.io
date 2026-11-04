@@ -22,6 +22,26 @@
   }
 }
 
+/* ---------------------------------------------------------------
+   Language toggle (overrides/partials/alternate.html)
+   --------------------------------------------------------------- */
+
+.md-header__inner .md-header__button.rb-lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.2rem;
+  white-space: nowrap;
+}
+
+.md-header__inner .rb-lang-toggle svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  fill: currentcolor;
+}
+
 /* A narrower table of contents than Material's 12.1rem, so pages get more room */
 @media screen and (min-width: 60em) {
   .md-sidebar--secondary {

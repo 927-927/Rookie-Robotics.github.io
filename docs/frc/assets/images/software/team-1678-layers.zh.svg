@@ -1,0 +1,187 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 1102" width="1100" height="1102">
+<defs>
+<marker id="arrow-light" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="#8796a5"/>
+</marker>
+<marker id="arrow-dark" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="#37474f"/>
+</marker>
+</defs>
+<style>
+text { font-family: Roboto, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", Helvetica, Arial, sans-serif; fill: #1f2a33; }
+.mono, .mono text { font-family: "Roboto Mono", Consolas, Menlo, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", monospace; }
+.label { font-size: 16px; font-weight: bold; fill: #5b6770; letter-spacing: 2px; }
+.muted, .muted text { fill: #5b6770; }
+.band { fill: #f5f7f8; }
+.badge circle { fill: #37474f; }
+.badge text { fill: #ffffff; font-size: 15px; font-weight: bold; text-anchor: middle; }
+.box { fill: #ffffff; stroke: #8796a5; stroke-width: 2; }
+.box-plain { fill: #ffffff; stroke: #607d8b; stroke-width: 2; }
+.box-flywheel { fill: #ffffff; stroke: #2e9d43; stroke-width: 2; }
+.box-servo { fill: #ffffff; stroke: #2f6fb5; stroke-width: 2; }
+.group-plain { fill: #f1f4f6; stroke: #607d8b; stroke-width: 2; }
+.group-flywheel { fill: #f4fbf5; stroke: #2e9d43; stroke-width: 2; }
+.group-servo { fill: #f3f7fd; stroke: #2f6fb5; stroke-width: 2; }
+.hardware { fill: #eceff1; stroke: #90a4ae; stroke-width: 1.5; }
+.chip text { font-size: 14px; text-anchor: middle; }
+.plain rect { fill: #e3e9ed; stroke: #607d8b; stroke-width: 1.5; }
+.plain text { fill: #37474f; }
+.servo rect { fill: #dfeafb; stroke: #2f6fb5; stroke-width: 1.5; }
+.servo text { fill: #245a94; }
+.ctre rect { fill: #eceff1; stroke: #90a4ae; stroke-width: 1.5; }
+.ctre text { fill: #455a64; }
+.link { stroke: #8796a5; stroke-width: 2; stroke-dasharray: 5 4; }
+.call { stroke: #37474f; stroke-width: 2.5; }
+.step { font-size: 14px; }
+</style>
+<rect width="1100" height="1102" rx="16" fill="#ffffff"/>
+
+<!-- Column headings -->
+<text x="60" y="50" class="label">各层</text>
+<text x="800" y="50" class="label">跟着调角板走</text>
+<line x1="785" y1="30" x2="785" y2="1074" stroke="#cfd8dc" stroke-width="2" stroke-dasharray="4 6"/>
+
+<!-- ============ 1: Robot subsystems ============ -->
+<rect x="40" y="68" width="1020" height="128" rx="12" class="band"/>
+<g class="badge"><circle cx="74" cy="97" r="13"/><text x="74" y="102">1</text></g>
+<text x="96" y="103" class="label">机器人子系统</text>
+<text x="314" y="103" font-size="15" class="muted">只有命名的设定值和一个构造函数，约 20 行</text>
+
+<rect x="60" y="118" width="165" height="62" rx="10" class="box-plain"/>
+<text x="142.5" y="144" text-anchor="middle" class="mono" font-size="14" font-weight="bold">HopperRollers</text>
+<text x="142.5" y="167" text-anchor="middle" font-size="14" style="fill:#37474f">继承父类</text>
+
+<rect x="241" y="118" width="165" height="62" rx="10" class="box-flywheel"/>
+<text x="323.5" y="144" text-anchor="middle" class="mono" font-size="14" font-weight="bold">Shooter</text>
+<text x="323.5" y="167" text-anchor="middle" font-size="14" style="fill:#1b6a2b">继承 flywheel</text>
+
+<rect x="422" y="118" width="165" height="62" rx="10" class="box-servo"/>
+<text x="504.5" y="144" text-anchor="middle" class="mono" font-size="14" font-weight="bold">IntakeDeploy</text>
+<text x="504.5" y="167" text-anchor="middle" font-size="14" style="fill:#245a94">继承 servo</text>
+
+<rect x="603" y="118" width="165" height="62" rx="10" class="box-servo"/>
+<text x="685.5" y="144" text-anchor="middle" class="mono" font-size="14" font-weight="bold">Hood</text>
+<text x="685.5" y="167" text-anchor="middle" font-size="14" style="fill:#245a94">继承 servo</text>
+
+<text x="800" y="104" class="mono step" font-weight="bold">Hood</text>
+<text x="800" y="128" class="step muted"><tspan class="mono">Hood.STOW</tspan> 是一个命名的 Setpoint。</text>
+<text x="800" y="150" class="step muted">一个命令请求它：</text>
+<text x="800" y="174" class="mono step">setpointCommand(Hood.STOW)</text>
+
+<!-- 1 to 2 -->
+<line x1="233.5" y1="198" x2="233.5" y2="232" class="link" marker-end="url(#arrow-light)"/>
+<line x1="596.5" y1="198" x2="596.5" y2="232" class="link" marker-end="url(#arrow-light)"/>
+<text x="415" y="221" text-anchor="middle" class="mono muted" font-size="15">继承</text>
+<line x1="925" y1="198" x2="925" y2="232" class="call" marker-end="url(#arrow-dark)"/>
+
+<!-- ============ 2: Base classes ============ -->
+<rect x="40" y="236" width="1020" height="284" rx="12" class="band"/>
+<g class="badge"><circle cx="74" cy="265" r="13"/><text x="74" y="270">2</text></g>
+<text x="96" y="271" class="label">基类</text>
+<text x="258" y="271" font-size="15" class="muted">在 <tspan class="mono" font-size="14">frc/lib/bases</tspan> 里：一个共同的父类，每种机构一个子类</text>
+
+<rect x="60" y="286" width="347" height="96" rx="12" class="group-flywheel"/>
+<text x="233.5" y="312" text-anchor="middle" class="mono" font-size="15" font-weight="bold">FlywheelMotorSubsystem</text>
+<text x="233.5" y="336" text-anchor="middle" font-size="14" class="muted">增加 <tspan class="mono">nearVelocity()</tspan></text>
+<text x="233.5" y="358" text-anchor="middle" font-size="14" class="muted">和一个是否转到速的检查</text>
+
+<rect x="423" y="286" width="347" height="96" rx="12" class="group-servo"/>
+<text x="596.5" y="312" text-anchor="middle" class="mono" font-size="15" font-weight="bold">ServoMotorSubsystem</text>
+<text x="596.5" y="336" text-anchor="middle" font-size="14" class="muted">增加 <tspan class="mono">nearPosition()</tspan>、归零、软限位</text>
+<g class="chip servo mono"><rect x="471" y="348" width="251" height="26" rx="13"/><text x="596.5" y="366">+ CoupledServoMotorSubsystem</text></g>
+
+<line x1="233.5" y1="384" x2="233.5" y2="408" class="link" marker-end="url(#arrow-light)"/>
+<line x1="596.5" y1="384" x2="596.5" y2="408" class="link" marker-end="url(#arrow-light)"/>
+<text x="415" y="401" text-anchor="middle" class="mono muted" font-size="15">继承</text>
+
+<rect x="60" y="412" width="710" height="92" rx="12" class="group-plain"/>
+<text x="415" y="438" text-anchor="middle" class="mono" font-size="15" font-weight="bold">MotorSubsystem</text>
+<text x="415" y="460" text-anchor="middle" font-size="14" class="muted">共同的父类：持有 io、读取传感器、在线调 PID</text>
+<g class="chip plain mono"><rect x="131" y="470" width="142" height="26" rx="13"/><text x="202" y="488">applySetpoint()</text></g>
+<g class="chip plain mono"><rect x="283" y="470" width="159" height="26" rx="13"/><text x="362.5" y="488">setpointCommand()</text></g>
+<g class="chip plain mono"><rect x="452" y="470" width="209" height="26" rx="13"/><text x="556.5" y="488">followSetpointCommand()</text></g>
+<text x="671" y="488" font-size="15" class="muted">…</text>
+
+<text x="800" y="272" class="mono step" font-weight="bold">MotorSubsystem</text>
+<text x="800" y="298" class="step muted"><tspan class="mono">setpointCommand()</tspan> 是一个</text>
+<text x="800" y="320" class="step muted"><tspan class="mono">runOnce</tspan>，它调用</text>
+<text x="800" y="344" class="mono step">io.applySetpoint(STOW);</text>
+<text x="800" y="370" class="step muted">然后马上结束。伺服基类</text>
+<text x="800" y="392" class="step muted">还会更新它的归零标记。</text>
+
+<!-- 2 to 3 -->
+<line x1="415" y1="522" x2="415" y2="556" class="link" marker-end="url(#arrow-light)"/>
+<text x="430" y="545" font-size="15" class="muted">只有一个 <tspan class="mono">io</tspan>，由共同的父类持有</text>
+<line x1="925" y1="522" x2="925" y2="556" class="call" marker-end="url(#arrow-dark)"/>
+
+<!-- ============ 3: MotorIO ============ -->
+<rect x="40" y="560" width="1020" height="188" rx="12" class="band"/>
+<g class="badge"><circle cx="74" cy="589" r="13"/><text x="74" y="594">3</text></g>
+<text x="96" y="595" class="label">MOTOR IO</text>
+<text x="207" y="595" font-size="15" class="muted">一个抽象类，里面有 <tspan class="mono" font-size="14">Setpoint</tspan> 类</text>
+
+<rect x="60" y="610" width="347" height="122" rx="12" class="box"/>
+<text x="233.5" y="636" text-anchor="middle" class="mono" font-size="15" font-weight="bold">MotorIO</text>
+<text x="233.5" y="658" text-anchor="middle" font-size="14" class="muted">记住当前的设定值</text>
+<g class="chip ctre mono"><rect x="129" y="670" width="209" height="26" rx="13"/><text x="233.5" y="688">applySetpoint(setpoint)</text></g>
+<text x="233.5" y="718" text-anchor="middle" font-size="14" class="muted">让电机动起来的唯一公开方法</text>
+
+<rect x="423" y="610" width="347" height="122" rx="12" class="box"/>
+<text x="596.5" y="636" text-anchor="middle" class="mono" font-size="15" font-weight="bold">Setpoint</text>
+<text x="596.5" y="658" text-anchor="middle" font-size="14" class="muted">控制模式 + 目标值 + 要调用的方法</text>
+<g class="chip ctre mono"><rect x="483.5" y="670" width="226" height="26" rx="13"/><text x="596.5" y="688">withMotionMagicSetpoint()</text></g>
+<text x="596.5" y="718" text-anchor="middle" font-size="14" class="muted">每种模式一个工厂方法</text>
+
+<text x="800" y="596" class="mono step" font-weight="bold">MotorIO</text>
+<text x="800" y="622" class="step muted">记住 <tspan class="mono">STOW</tspan>，然后运行</text>
+<text x="800" y="644" class="step muted"><tspan class="mono">STOW</tspan> 指定要调用的方法：</text>
+<text x="800" y="668" class="mono step">setMotionMagicSetpoint(</text>
+<text x="800" y="688" class="mono step" xml:space="preserve">    kMinAngle);</text>
+
+<!-- 3 to 4 -->
+<line x1="233.5" y1="750" x2="233.5" y2="784" class="link" marker-end="url(#arrow-light)"/>
+<line x1="596.5" y1="750" x2="596.5" y2="784" class="link" marker-end="url(#arrow-light)"/>
+<text x="415" y="773" text-anchor="middle" font-size="15" class="muted">由它实现</text>
+<line x1="925" y1="750" x2="925" y2="784" class="call" marker-end="url(#arrow-dark)"/>
+
+<!-- ============ 4: IO implementations ============ -->
+<rect x="40" y="788" width="1020" height="136" rx="12" class="band"/>
+<g class="badge"><circle cx="74" cy="817" r="13"/><text x="74" y="822">4</text></g>
+<text x="96" y="823" class="label">IO 实现</text>
+<text x="320" y="823" font-size="15" class="muted">在每个常量文件里用 <tspan class="mono" font-size="14">Robot.isReal()</tspan> 选择</text>
+
+<rect x="60" y="838" width="347" height="66" rx="12" class="box"/>
+<text x="233.5" y="865" text-anchor="middle" class="mono" font-size="15" font-weight="bold">MotorIOTalonFX</text>
+<text x="233.5" y="889" text-anchor="middle" font-size="14" class="muted">机器人上 · 还会设置从动电机</text>
+
+<rect x="423" y="838" width="347" height="66" rx="12" class="box"/>
+<text x="596.5" y="865" text-anchor="middle" class="mono" font-size="15" font-weight="bold">MotorIOTalonFXSim</text>
+<text x="596.5" y="889" text-anchor="middle" font-size="14" class="muted">仿真中 · 继承 MotorIOTalonFX</text>
+
+<text x="800" y="824" class="mono step" font-weight="bold">MotorIOTalonFX</text>
+<text x="800" y="850" class="mono step">setControl(requestGetter</text>
+<text x="800" y="870" class="mono step" xml:space="preserve">  .getMotionMagicRequest(…));</text>
+<text x="800" y="894" class="step muted">把它发给主 TalonFX</text>
+
+<!-- 4 to 5 -->
+<line x1="233.5" y1="926" x2="233.5" y2="960" class="link" marker-end="url(#arrow-light)"/>
+<line x1="596.5" y1="926" x2="596.5" y2="960" class="link" marker-end="url(#arrow-light)"/>
+<text x="415" y="949" text-anchor="middle" font-size="15" class="muted">驱动</text>
+<line x1="925" y1="926" x2="925" y2="960" class="call" marker-end="url(#arrow-dark)"/>
+
+<!-- ============ 5: Hardware ============ -->
+<rect x="40" y="964" width="1020" height="110" rx="12" class="band"/>
+<g class="badge"><circle cx="74" cy="993" r="13"/><text x="74" y="998">5</text></g>
+<text x="96" y="999" class="label">硬件</text>
+<text x="220" y="999" font-size="15" class="muted">真正动起来的东西，或者仿真中它的模型</text>
+
+<rect x="60" y="1014" width="347" height="46" rx="12" class="hardware"/>
+<text x="233.5" y="1042" text-anchor="middle" font-size="15"><tspan class="mono" font-weight="bold">TalonFX</tspan>：主电机 + 从动电机</text>
+
+<rect x="423" y="1014" width="347" height="46" rx="12" class="hardware"/>
+<text x="596.5" y="1042" text-anchor="middle" font-size="15"><tspan class="mono" font-weight="bold">PivotSim</tspan>, <tspan class="mono" font-weight="bold">RollerSim</tspan>：物理模型</text>
+
+<text x="800" y="1004" font-size="15" font-weight="bold">TalonFX 自己把调角板</text>
+<text x="800" y="1026" font-size="15" font-weight="bold">保持在这个角度，</text>
+<text x="800" y="1048" font-size="15" font-weight="bold">机器人代码里不需要循环。</text>
+</svg>

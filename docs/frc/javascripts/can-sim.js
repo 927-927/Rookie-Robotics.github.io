@@ -8,6 +8,53 @@
 (function () {
   var NS = "http://www.w3.org/2000/svg"
 
+  // The diagram's own text, by page language. The captions come from the
+  // page's list, so they're already in the page's language.
+  var STRINGS = {
+    en: {
+      resistance: "Animated diagram: measuring the resistance of a CAN bus with a multimeter",
+      continuity: "Animated diagram: finding a broken CAN wire with a multimeter's continuity setting",
+      split: "Animated diagram: opening joints on a CAN bus and watching the Krakens' status lights",
+      builtIn: "built in",
+      brk: "break",
+      shortCircuit: "short",
+      open: "open",
+      kraken: function (n) { return "Kraken " + n },
+      robotOn: "Robot on, disabled",
+      robotOff: "Robot off",
+      prev: "Previous step",
+      next: "Next step",
+      play: "Play",
+      pause: "Pause",
+      step: function (n) { return "Step " + n },
+      count: function (n, total) { return "Step " + n + " of " + total },
+      // How long each caption stays up while playing, per character
+      msPerChar: 32,
+    },
+    zh: {
+      resistance: "动画示意图：用万用表测量 CAN 总线的电阻",
+      continuity: "动画示意图：用万用表的通断档找出断掉的 CAN 线",
+      split: "动画示意图：打开 CAN 总线上的接头，观察 Kraken 的状态灯",
+      builtIn: "内置",
+      brk: "断点",
+      shortCircuit: "短路",
+      open: "打开",
+      kraken: function (n) { return "Kraken " + n },
+      robotOn: "机器人已开机，禁用",
+      robotOff: "机器人已断电",
+      prev: "上一步",
+      next: "下一步",
+      play: "播放",
+      pause: "暂停",
+      step: function (n) { return "第 " + n + " 步" },
+      count: function (n, total) { return "第 " + n + " 步，共 " + total + " 步" },
+      // Chinese packs more into each character, so give each one longer
+      msPerChar: 90,
+    },
+  }
+  var lang = (document.documentElement.lang || "en").slice(0, 2).toLowerCase()
+  var T = STRINGS[lang] || STRINGS.en
+
   // Layout, in SVG units
   var W = 1040
   var Y = 140 // yellow wire
@@ -40,8 +87,7 @@
   var SCENES = {
     resistance: {
       meter: true,
-      label:
-        "Animated diagram: measuring the resistance of a CAN bus with a multimeter",
+      label: T.resistance,
       steps: [
         { mode: "ohm" },
         { mode: "ohm", red: AT.startY, black: AT.startG, reading: 120.4, verdict: "bad" },
@@ -57,8 +103,7 @@
     },
     continuity: {
       meter: true,
-      label:
-        "Animated diagram: finding a broken CAN wire with a multimeter's continuity setting",
+      label: T.continuity,
       steps: [
         { mode: "cont", resistor: "bench" },
         {
@@ -89,8 +134,7 @@
     },
     split: {
       meter: false,
-      label:
-        "Animated diagram: opening joints on a CAN bus and watching the Krakens' status lights",
+      label: T.split,
       steps: [
         { robot: "on", leds: ALL_RED },
         { robot: "on", leds: ["orange", "orange", "red", "red"], open: [1] },
@@ -163,7 +207,7 @@
     el("rect", { x: 16, y: 100, width: 140, height: 130, rx: 12, fill: "#e8eef3", stroke: "#8796a5", "stroke-width": 2 }, svg)
     label("roboRIO", { x: 28, y: 132, class: "can-sim__title" }, svg)
     label("120 Ω", { x: 28, y: 190, class: "can-sim__strong" }, svg)
-    label("built in", { x: 28, y: 209, class: "can-sim__small" }, svg)
+    label(T.builtIn, { x: 28, y: 209, class: "can-sim__small" }, svg)
 
     // Wires, cut at each joint
     var wires = el("g", {}, svg)
@@ -194,7 +238,7 @@
     copper(broken, BREAK_X - 10, G)
     copper(broken, BREAK_X + 5, G)
     el("circle", { cx: BREAK_X, cy: G, r: 17, class: "can-sim__marker-ring" }, broken)
-    label("break", { x: BREAK_X, y: 254, class: "can-sim__marker-text" }, broken)
+    label(T.brk, { x: BREAK_X, y: 254, class: "can-sim__marker-text" }, broken)
     parts.broken = broken
 
     // The crushed wires, yellow touching green
@@ -210,7 +254,7 @@
       "stroke-linejoin": "round",
     }, short)
     el("circle", { cx: SHORT_X, cy: MID, r: 30, class: "can-sim__marker-ring" }, short)
-    label("short", { x: SHORT_X, y: 232, class: "can-sim__marker-text" }, short)
+    label(T.shortCircuit, { x: SHORT_X, y: 232, class: "can-sim__marker-text" }, short)
     parts.short = short
 
     // Wago joints: one for yellow and one for green
@@ -221,7 +265,7 @@
         el("rect", { x: x - 14, y: y - 10, width: 28, height: 20, rx: 3, fill: "#eef1f4", stroke: "#8796a5", "stroke-width": 1.5 }, wago)
         el("rect", { x: x - 14, y: y - 10, width: 28, height: 6, rx: 2, fill: "#f28c28" }, wago)
       })
-      label("open", { x: x, y: Y - 24, class: "can-sim__open" }, joint)
+      label(T.open, { x: x, y: Y - 24, class: "can-sim__open" }, joint)
       label("J" + (i + 1), { x: x, y: 232, class: "can-sim__label" }, joint)
       return joint
     })
@@ -233,7 +277,7 @@
       el("rect", { x: x - 39, y: MID - 4, width: 17, height: 8, rx: 2, class: "can-sim__led" }, kraken)
       el("rect", { x: x + 22, y: MID - 4, width: 17, height: 8, rx: 2, class: "can-sim__led can-sim__led--late" }, kraken)
       label(String(i + 1), { x: x, y: MID + 8, class: "can-sim__knum" }, kraken)
-      label("Kraken " + (i + 1), { x: x, y: 232, class: "can-sim__label" }, kraken)
+      label(T.kraken(i + 1), { x: x, y: 232, class: "can-sim__label" }, kraken)
       return kraken
     })
 
@@ -362,13 +406,13 @@
 
     var controls = document.createElement("div")
     controls.className = "can-sim__controls"
-    var prev = button("can-sim__btn", "Previous step", '<svg viewBox="0 0 24 24"><path d="M15.4 7.4 14 6l-6 6 6 6 1.4-1.4-4.6-4.6z"/></svg>')
-    var play = button("can-sim__btn", "Pause", "")
-    var next = button("can-sim__btn", "Next step", '<svg viewBox="0 0 24 24"><path d="M8.6 16.6 10 18l6-6-6-6-1.4 1.4 4.6 4.6z"/></svg>')
+    var prev = button("can-sim__btn", T.prev, '<svg viewBox="0 0 24 24"><path d="M15.4 7.4 14 6l-6 6 6 6 1.4-1.4-4.6-4.6z"/></svg>')
+    var play = button("can-sim__btn", T.pause, "")
+    var next = button("can-sim__btn", T.next, '<svg viewBox="0 0 24 24"><path d="M8.6 16.6 10 18l6-6-6-6-1.4 1.4 4.6 4.6z"/></svg>')
     var dots = document.createElement("div")
     dots.className = "can-sim__dots"
     var dotButtons = steps.map(function (_, i) {
-      var dot = button("can-sim__dot", "Step " + (i + 1), "")
+      var dot = button("can-sim__dot", T.step(i + 1), "")
       dot.addEventListener("click", function () {
         stop()
         go(i)
@@ -425,7 +469,7 @@
     }
 
     function updatePlay() {
-      play.setAttribute("aria-label", playing ? "Pause" : "Play")
+      play.setAttribute("aria-label", playing ? T.pause : T.play)
       play.innerHTML = playing
         ? '<svg viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>'
         : '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'
@@ -451,7 +495,7 @@
       captionNodes.forEach(function (caption, i) {
         caption.classList.toggle("is-active", i === index)
       })
-      count.textContent = "Step " + (index + 1) + " of " + steps.length
+      count.textContent = T.count(index + 1, steps.length)
       schedule()
     }
 
@@ -459,8 +503,8 @@
       clearTimeout(timer)
       if (!playing || !visible) return
       var last = cur === steps.length - 1
-      var words = captionNodes[cur].textContent.length
-      var dwell = Math.min(9000, 3200 + words * 32) + (last ? 2500 : 0)
+      var chars = captionNodes[cur].textContent.length
+      var dwell = Math.min(9000, 3200 + chars * T.msPerChar) + (last ? 2500 : 0)
       timer = setTimeout(function () {
         go(last ? 0 : cur + 1)
       }, dwell)
@@ -473,7 +517,7 @@
 
       var on = state.robot === "on"
       parts.pill.classList.toggle("is-on", on)
-      parts.pillText.textContent = on ? "Robot on, disabled" : "Robot off"
+      parts.pillText.textContent = on ? T.robotOn : T.robotOff
 
       var leds = state.leds || ["off", "off", "off", "off"]
       parts.krakens.forEach(function (kraken, i) {

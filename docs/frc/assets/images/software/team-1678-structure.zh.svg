@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 540" width="1100" height="540">
+<defs>
+<marker id="arrow-light" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="#8796a5"/>
+</marker>
+</defs>
+<style>
+text { font-family: Roboto, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", Helvetica, Arial, sans-serif; fill: #1f2a33; }
+.mono, .mono text { font-family: "Roboto Mono", Consolas, Menlo, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", monospace; }
+.label { font-size: 15px; font-weight: bold; fill: #5b6770; letter-spacing: 2px; }
+.muted, .muted text { fill: #5b6770; }
+.group { fill: #f5f7f8; stroke: #cfd8dc; stroke-width: 1.5; stroke-dasharray: 6 4; }
+.box-plain { fill: #ffffff; stroke: #607d8b; stroke-width: 2; }
+.box-flywheel { fill: #ffffff; stroke: #2e9d43; stroke-width: 2; }
+.box-servo { fill: #ffffff; stroke: #2f6fb5; stroke-width: 2; }
+.name { font-family: "Roboto Mono", Consolas, Menlo, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", monospace; font-size: 14px; font-weight: bold; text-anchor: middle; }
+.base { font-size: 14px; text-anchor: middle; }
+.extra { font-size: 14px; text-anchor: middle; fill: #5b6770; }
+.chip text { font-size: 14px; text-anchor: middle; }
+.plain rect { fill: #e3e9ed; stroke: #607d8b; stroke-width: 1.5; }
+.plain text { fill: #37474f; }
+.flywheel rect { fill: #e0f2e4; stroke: #2e9d43; stroke-width: 1.5; }
+.flywheel text { fill: #1b6a2b; }
+.servo rect { fill: #dfeafb; stroke: #2f6fb5; stroke-width: 1.5; }
+.servo text { fill: #245a94; }
+.link { stroke: #8796a5; stroke-width: 2; stroke-dasharray: 5 4; }
+</style>
+<rect width="1100" height="540" rx="16" fill="#ffffff"/>
+
+<!-- Superstructure -->
+<rect x="40" y="28" width="280" height="300" rx="12" fill="#37474f"/>
+<text x="180" y="64" text-anchor="middle" class="label" style="fill:#ffffff;font-size:17px">上层结构</text>
+<text x="180" y="92" text-anchor="middle" font-size="15" style="fill:#cfd8dc">自己没有电机</text>
+<text x="180" y="114" text-anchor="middle" font-size="15" style="fill:#cfd8dc">约 50 个命令，比如：</text>
+<text x="180" y="146" text-anchor="middle" class="mono" font-size="15" style="fill:#ffffff">intake()</text>
+<text x="180" y="170" text-anchor="middle" class="mono" font-size="15" style="fill:#ffffff">shoot()</text>
+<text x="180" y="194" text-anchor="middle" class="mono" font-size="15" style="fill:#ffffff">tuck()</text>
+<text x="180" y="218" text-anchor="middle" class="mono" font-size="15" style="fill:#ffffff">fenderShot()</text>
+<text x="180" y="242" text-anchor="middle" class="mono" font-size="15" style="fill:#ffffff">idle()</text>
+<text x="180" y="278" text-anchor="middle" font-size="15" style="fill:#cfd8dc">每个命令给它需要的</text>
+<text x="180" y="300" text-anchor="middle" font-size="15" style="fill:#cfd8dc">子系统发送设定值</text>
+
+<!-- Shooting -->
+<line x1="180" y1="364" x2="180" y2="332" class="link" marker-end="url(#arrow-light)"/>
+<text x="192" y="353" font-size="14" class="muted">最新的设定值</text>
+<rect x="40" y="366" width="280" height="110" rx="12" fill="#ffffff" stroke="#8796a5" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="180" y="398" text-anchor="middle" class="mono" font-size="16" font-weight="bold">Shooting</text>
+<text x="180" y="422" text-anchor="middle" font-size="14" class="muted">普通的类，不是子系统</text>
+<text x="180" y="444" text-anchor="middle" font-size="14" class="muted">计算射击参数</text>
+
+<!-- Arrows to the subsystems -->
+<line x1="322" y1="121" x2="396" y2="121" class="link" marker-end="url(#arrow-light)"/>
+<text x="359" y="111" text-anchor="middle" font-size="14" class="muted">设定值</text>
+<line x1="322" y1="291" x2="396" y2="291" class="link" marker-end="url(#arrow-light)"/>
+<text x="359" y="281" text-anchor="middle" font-size="14" class="muted">设定值</text>
+
+<!-- Row A: the intake -->
+<text x="400" y="56" class="label">吸取机构</text>
+<rect x="400" y="66" width="314" height="110" rx="12" class="group"/>
+<rect x="410" y="80" width="142" height="82" rx="10" class="box-servo"/>
+<text x="481" y="108" class="name">IntakeDeploy</text>
+<text x="481" y="130" class="base" style="fill:#245a94">servo</text>
+<text x="481" y="150" class="extra">臂</text>
+<rect x="562" y="80" width="142" height="82" rx="10" class="box-plain"/>
+<text x="633" y="108" class="name">IntakeRollers</text>
+<text x="633" y="130" class="base" style="fill:#37474f">MotorSubsystem</text>
+<text x="633" y="150" class="extra">+ 从动电机</text>
+
+<!-- Row A: the shooter -->
+<text x="746" y="56" class="label">发射机构</text>
+<rect x="746" y="66" width="314" height="110" rx="12" class="group"/>
+<rect x="756" y="80" width="142" height="82" rx="10" class="box-flywheel"/>
+<text x="827" y="108" class="name">Shooter</text>
+<text x="827" y="130" class="base" style="fill:#1b6a2b">flywheel</text>
+<text x="827" y="150" class="extra">+ 从动电机</text>
+<rect x="908" y="80" width="142" height="82" rx="10" class="box-servo"/>
+<text x="979" y="108" class="name">Hood</text>
+<text x="979" y="130" class="base" style="fill:#245a94">servo</text>
+<text x="979" y="150" class="extra">射击角度</text>
+
+<!-- Row B: moving fuel to the shooter -->
+<text x="400" y="226" class="label">把燃料球送往发射机构</text>
+<rect x="400" y="236" width="466" height="110" rx="12" class="group"/>
+<rect x="410" y="250" width="142" height="82" rx="10" class="box-plain"/>
+<text x="481" y="278" class="name">HopperRollers</text>
+<text x="481" y="300" class="base" style="fill:#37474f">MotorSubsystem</text>
+<rect x="562" y="250" width="142" height="82" rx="10" class="box-flywheel"/>
+<text x="633" y="278" class="name">TunnelRollers</text>
+<text x="633" y="300" class="base" style="fill:#1b6a2b">flywheel</text>
+<text x="633" y="320" class="extra">+ 从动电机</text>
+<rect x="714" y="250" width="142" height="82" rx="10" class="box-plain"/>
+<text x="785" y="278" class="name">FeederRollers</text>
+<text x="785" y="300" class="base" style="fill:#37474f">MotorSubsystem</text>
+
+<!-- Row B: climber -->
+<text x="898" y="226" class="label">爬升机构</text>
+<rect x="898" y="236" width="162" height="110" rx="12" class="group"/>
+<rect x="908" y="250" width="142" height="82" rx="10" class="box-servo"/>
+<text x="979" y="278" class="name">Climber</text>
+<text x="979" y="300" class="base" style="fill:#245a94">servo</text>
+
+<!-- Legend -->
+<text x="400" y="392" class="label">基类</text>
+<g class="chip servo"><rect x="400" y="406" width="140" height="26" rx="13"/><text x="470" y="424">servo</text></g>
+<text x="556" y="424" font-size="15"><tspan class="mono" font-size="14">ServoMotorSubsystem</tspan>：移动到某个位置</text>
+<g class="chip flywheel"><rect x="400" y="442" width="140" height="26" rx="13"/><text x="470" y="460">flywheel</text></g>
+<text x="556" y="460" font-size="15"><tspan class="mono" font-size="14">FlywheelMotorSubsystem</tspan>：以设定的速度旋转</text>
+<g class="chip plain mono"><rect x="400" y="478" width="140" height="26" rx="13"/><text x="470" y="496">MotorSubsystem</text></g>
+<text x="556" y="496" font-size="15">共同的父类，单独使用时：只是驱动电机</text>
+
+<text x="40" y="508" font-size="14" class="muted">未画出：底盘、LED 和摄像头。</text>
+</svg>
