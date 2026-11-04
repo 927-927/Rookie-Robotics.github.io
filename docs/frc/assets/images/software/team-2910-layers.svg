@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 952" width="1100" height="952">
+<defs>
+<marker id="arrow-light" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="#8796a5"/>
+</marker>
+<marker id="arrow-dark" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="#37474f"/>
+</marker>
+</defs>
+<style>
+text { font-family: Roboto, Helvetica, Arial, sans-serif; fill: #1f2a33; }
+.mono, .mono text { font-family: "Roboto Mono", Consolas, Menlo, monospace; }
+.label { font-size: 16px; font-weight: bold; fill: #5b6770; letter-spacing: 2px; }
+.muted, .muted text { fill: #5b6770; }
+.band { fill: #f5f7f8; }
+.badge circle { fill: #37474f; }
+.badge text { fill: #ffffff; font-size: 15px; font-weight: bold; text-anchor: middle; }
+.box { fill: #ffffff; stroke: #8796a5; stroke-width: 2; }
+.box-roller { fill: #ffffff; stroke: #2e9d43; stroke-width: 2; }
+.box-servo { fill: #ffffff; stroke: #2f6fb5; stroke-width: 2; }
+.group-roller { fill: #f4fbf5; stroke: #2e9d43; stroke-width: 2; }
+.group-servo { fill: #f3f7fd; stroke: #2f6fb5; stroke-width: 2; }
+.hardware { fill: #eceff1; stroke: #90a4ae; stroke-width: 1.5; }
+.chip text { font-size: 14px; text-anchor: middle; }
+.roller rect { fill: #e0f2e4; stroke: #2e9d43; stroke-width: 1.5; }
+.roller text { fill: #1b6a2b; }
+.servo rect { fill: #dfeafb; stroke: #2f6fb5; stroke-width: 1.5; }
+.servo text { fill: #245a94; }
+.ctre rect { fill: #eceff1; stroke: #90a4ae; stroke-width: 1.5; }
+.ctre text { fill: #455a64; }
+.link { stroke: #8796a5; stroke-width: 2; stroke-dasharray: 5 4; }
+.call { stroke: #37474f; stroke-width: 2.5; }
+.step { font-size: 14px; }
+</style>
+<rect width="1100" height="952" rx="16" fill="#ffffff"/>
+
+<!-- Column headings -->
+<text x="60" y="50" class="label">THE LAYERS</text>
+<text x="800" y="50" class="label">FOLLOWING THE HOOD</text>
+<line x1="785" y1="30" x2="785" y2="924" stroke="#cfd8dc" stroke-width="2" stroke-dasharray="4 6"/>
+
+<!-- ============ 1: Robot subsystems ============ -->
+<rect x="40" y="68" width="1020" height="128" rx="12" class="band"/>
+<g class="badge"><circle cx="74" cy="97" r="13"/><text x="74" y="102">1</text></g>
+<text x="96" y="103" class="label">ROBOT SUBSYSTEMS</text>
+<text x="314" y="103" font-size="15" class="muted">the state machines: decide what the motors should do</text>
+
+<rect x="60" y="118" width="165" height="62" rx="10" class="box-roller"/>
+<text x="142.5" y="144" text-anchor="middle" class="mono" font-size="14" font-weight="bold">HopperSubsystem</text>
+<text x="142.5" y="167" text-anchor="middle" font-size="14" style="fill:#1b6a2b">extends roller</text>
+
+<rect x="241" y="118" width="165" height="62" rx="10" class="box-roller"/>
+<text x="323.5" y="144" text-anchor="middle" class="mono" font-size="14" font-weight="bold">FlywheelSubsystem</text>
+<text x="323.5" y="167" text-anchor="middle" font-size="14" style="fill:#1b6a2b">roller + followers</text>
+
+<rect x="422" y="118" width="165" height="62" rx="10" class="box-servo"/>
+<text x="504.5" y="144" text-anchor="middle" class="mono" font-size="14" font-weight="bold">IntakeSubsystem</text>
+<text x="504.5" y="167" text-anchor="middle" font-size="14" style="fill:#245a94">extends servo</text>
+
+<rect x="603" y="118" width="165" height="62" rx="10" class="box-servo"/>
+<text x="685.5" y="144" text-anchor="middle" class="mono" font-size="14" font-weight="bold">HoodSubsystem</text>
+<text x="685.5" y="167" text-anchor="middle" font-size="14" style="fill:#245a94">extends servo</text>
+
+<text x="800" y="104" class="mono step" font-weight="bold">HoodSubsystem</text>
+<text x="800" y="128" class="step muted">in applyStates():</text>
+<text x="800" y="150" class="mono step">setMotionMagicSetpoint(</text>
+<text x="800" y="170" class="mono step" xml:space="preserve">    desiredHoodAngle);</text>
+
+<!-- 1 to 2 -->
+<line x1="233.5" y1="198" x2="233.5" y2="232" class="link" marker-end="url(#arrow-light)"/>
+<line x1="596.5" y1="198" x2="596.5" y2="232" class="link" marker-end="url(#arrow-light)"/>
+<text x="415" y="221" text-anchor="middle" class="mono muted" font-size="15">extends</text>
+<line x1="925" y1="198" x2="925" y2="232" class="call" marker-end="url(#arrow-dark)"/>
+
+<!-- ============ 2: Base classes ============ -->
+<rect x="40" y="236" width="1020" height="178" rx="12" class="band"/>
+<g class="badge"><circle cx="74" cy="265" r="13"/><text x="74" y="270">2</text></g>
+<text x="96" y="271" class="label">BASE CLASSES</text>
+<text x="258" y="271" font-size="15" class="muted">in <tspan class="mono" font-size="14">subsystems/base</tspan>: the motor code for each kind of mechanism</text>
+
+<rect x="60" y="286" width="347" height="94" rx="12" class="group-roller"/>
+<text x="233.5" y="312" text-anchor="middle" class="mono" font-size="15" font-weight="bold">RollerMotorSubsystem</text>
+<text x="233.5" y="335" text-anchor="middle" font-size="14" class="muted">extends SubsystemBase</text>
+<g class="chip roller mono"><rect x="162.5" y="348" width="142" height="26" rx="13"/><text x="233.5" y="366">+ WithFollowers</text></g>
+
+<rect x="423" y="286" width="347" height="94" rx="12" class="group-servo"/>
+<text x="596.5" y="312" text-anchor="middle" class="mono" font-size="15" font-weight="bold">ServoMotorSubsystem</text>
+<text x="596.5" y="335" text-anchor="middle" font-size="14" class="muted">extends SubsystemBase</text>
+<g class="chip servo mono"><rect x="431.5" y="348" width="142" height="26" rx="13"/><text x="502.5" y="366">+ WithFollowers</text></g>
+<g class="chip servo mono"><rect x="585.5" y="348" width="176" height="26" rx="13"/><text x="673.5" y="366">+ WithFusedCanCoder</text></g>
+
+<text x="415" y="402" text-anchor="middle" font-size="15" class="muted">Siblings with no shared parent: duty cycle, voltage and neutral mode are written in both.</text>
+
+<text x="800" y="272" class="mono step" font-weight="bold">ServoMotorSubsystem</text>
+<text x="800" y="298" class="step muted">logs the setpoint, then:</text>
+<text x="800" y="322" class="mono step">io.setMotionMagicSetpoint(</text>
+<text x="800" y="342" class="mono step" xml:space="preserve">    mechanismPosition, slot);</text>
+
+<!-- 2 to 3 -->
+<line x1="233.5" y1="416" x2="233.5" y2="450" class="link" marker-end="url(#arrow-light)"/>
+<line x1="596.5" y1="416" x2="596.5" y2="450" class="link" marker-end="url(#arrow-light)"/>
+<text x="415" y="439" text-anchor="middle" font-size="15" class="muted">each holds its own <tspan class="mono">io</tspan></text>
+<line x1="925" y1="416" x2="925" y2="450" class="call" marker-end="url(#arrow-dark)"/>
+
+<!-- ============ 3: MotorIO ============ -->
+<rect x="40" y="454" width="1020" height="144" rx="12" class="band"/>
+<g class="badge"><circle cx="74" cy="483" r="13"/><text x="74" y="488">3</text></g>
+<text x="96" y="489" class="label">MOTOR IO</text>
+<text x="207" y="489" font-size="15" class="muted">an interface: what a motor can be asked to do, with no motor code</text>
+
+<rect x="60" y="504" width="710" height="80" rx="12" class="box"/>
+<text x="415" y="530" text-anchor="middle" class="mono" font-size="15" font-weight="bold">MotorIO</text>
+<g class="chip ctre mono"><rect x="97" y="546" width="201" height="26" rx="13"/><text x="197.5" y="564">setOpenLoopDutyCycle()</text></g>
+<g class="chip ctre mono"><rect x="308" y="546" width="167" height="26" rx="13"/><text x="391.5" y="564">setVoltageOutput()</text></g>
+<g class="chip ctre mono"><rect x="485" y="546" width="218" height="26" rx="13"/><text x="594" y="564">setMotionMagicSetpoint()</text></g>
+<text x="713" y="564" font-size="15" class="muted">…</text>
+
+<text x="800" y="490" class="mono step" font-weight="bold">MotorIO</text>
+<text x="800" y="516" class="step muted">only names the method.</text>
+<text x="800" y="538" class="step muted">The object in <tspan class="mono">io</tspan> runs it.</text>
+
+<!-- 3 to 4 -->
+<line x1="233.5" y1="600" x2="233.5" y2="634" class="link" marker-end="url(#arrow-light)"/>
+<line x1="596.5" y1="600" x2="596.5" y2="634" class="link" marker-end="url(#arrow-light)"/>
+<text x="415" y="623" text-anchor="middle" font-size="15" class="muted">implemented by</text>
+<line x1="925" y1="600" x2="925" y2="634" class="call" marker-end="url(#arrow-dark)"/>
+
+<!-- ============ 4: IO implementations ============ -->
+<rect x="40" y="638" width="1020" height="136" rx="12" class="band"/>
+<g class="badge"><circle cx="74" cy="667" r="13"/><text x="74" y="672">4</text></g>
+<text x="96" y="673" class="label">IO IMPLEMENTATIONS</text>
+<text x="320" y="673" font-size="15" class="muted">RobotContainer picks one with <tspan class="mono" font-size="14">RobotBase.isSimulation()</tspan></text>
+
+<rect x="60" y="688" width="347" height="66" rx="12" class="box"/>
+<text x="233.5" y="715" text-anchor="middle" class="mono" font-size="15" font-weight="bold">MotorIOTalonFX</text>
+<text x="233.5" y="739" text-anchor="middle" font-size="14" class="muted">on the robot · implements MotorIO</text>
+
+<rect x="423" y="688" width="347" height="66" rx="12" class="box"/>
+<text x="596.5" y="715" text-anchor="middle" class="mono" font-size="15" font-weight="bold">SimMotorIOTalonFX</text>
+<text x="596.5" y="739" text-anchor="middle" font-size="14" class="muted">in simulation · extends MotorIOTalonFX</text>
+
+<text x="800" y="674" class="mono step" font-weight="bold">MotorIOTalonFX</text>
+<text x="800" y="700" class="mono step">talon.setControl(</text>
+<text x="800" y="720" class="mono step" xml:space="preserve">  motionMagicPositionControl</text>
+<text x="800" y="740" class="mono step" xml:space="preserve">    .withPosition(…)</text>
+<text x="800" y="760" class="mono step" xml:space="preserve">    .withSlot(slot));</text>
+
+<!-- 4 to 5 -->
+<line x1="233.5" y1="776" x2="233.5" y2="810" class="link" marker-end="url(#arrow-light)"/>
+<line x1="596.5" y1="776" x2="596.5" y2="810" class="link" marker-end="url(#arrow-light)"/>
+<text x="415" y="799" text-anchor="middle" font-size="15" class="muted">drives</text>
+<line x1="925" y1="776" x2="925" y2="810" class="call" marker-end="url(#arrow-dark)"/>
+
+<!-- ============ 5: Hardware ============ -->
+<rect x="40" y="814" width="1020" height="110" rx="12" class="band"/>
+<g class="badge"><circle cx="74" cy="843" r="13"/><text x="74" y="848">5</text></g>
+<text x="96" y="849" class="label">HARDWARE</text>
+<text x="220" y="849" font-size="15" class="muted">what really moves, or a model of it in simulation</text>
+
+<rect x="60" y="864" width="347" height="46" rx="12" class="hardware"/>
+<text x="233.5" y="892" text-anchor="middle" font-size="15"><tspan class="mono" font-weight="bold">TalonFX</tspan>: the motor's controller</text>
+
+<rect x="423" y="864" width="347" height="46" rx="12" class="hardware"/>
+<text x="596.5" y="892" text-anchor="middle" font-size="15"><tspan class="mono" font-weight="bold">DCMotorSim</tspan>: a physics model</text>
+
+<text x="800" y="858" font-size="15" font-weight="bold">The motor turns the</text>
+<text x="800" y="880" font-size="15" font-weight="bold">hood to the angle.</text>
+</svg>

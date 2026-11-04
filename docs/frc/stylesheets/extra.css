@@ -112,6 +112,97 @@
   }
 }
 
+/* Extra content under an item (like a status light table) that spans both
+   columns, below the photo and text */
+.md-typeset .item__more {
+  grid-column: 1 / -1;
+  order: 3;
+}
+
+.md-typeset .item__more > :first-child {
+  margin-top: 0;
+}
+
+.md-typeset .item__more > :last-child {
+  margin-bottom: 0;
+}
+
+/* Spec tables: two columns, label and value, with no header row */
+.md-typeset .specs thead {
+  display: none;
+}
+
+.md-typeset .specs table:not([class]) td {
+  padding: 0.4em 0.9em;
+}
+
+.md-typeset .specs td:first-child {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------
+   Status lights: small animated LEDs that blink like the device does.
+   <span class="leds"><i class="led red-off"></i><i class="led red-off late"></i></span>
+   Each LED blinks between two colors (red-off = red, then off).
+   late = half a blink behind, fast / slow = blink speed, dim = dimmer,
+   blip = a short flash
+   --------------------------------------------------------------- */
+
+.md-typeset .leds {
+  display: inline-flex;
+  gap: 0.3em;
+  margin-right: 0.45em;
+  padding: 0.25em 0.35em;
+  border-radius: 0.3em;
+  background: #23272b;
+  vertical-align: -0.25em;
+}
+
+.md-typeset .led {
+  --led-off: #4b5157;
+  --a: var(--led-off);
+  --b: var(--a);
+  --period: 1s;
+  display: block;
+  width: 0.75em;
+  height: 0.75em;
+  border-radius: 50%;
+  background: var(--a);
+  animation: rb-led var(--period) steps(1, end) infinite;
+}
+
+.md-typeset .led.red { --a: #ff3b30; }
+.md-typeset .led.orange { --a: #ff9500; }
+.md-typeset .led.green { --a: #34c759; }
+.md-typeset .led.red-off { --a: #ff3b30; --b: var(--led-off); }
+.md-typeset .led.orange-off { --a: #ff9500; --b: var(--led-off); }
+.md-typeset .led.green-off { --a: #34c759; --b: var(--led-off); }
+.md-typeset .led.red-orange { --a: #ff3b30; --b: #ff9500; }
+.md-typeset .led.red-green { --a: #ff3b30; --b: #34c759; }
+.md-typeset .led.orange-green { --a: #ff9500; --b: #34c759; }
+
+.md-typeset .led.late { animation-delay: calc(var(--period) / -2); }
+.md-typeset .led.fast { --period: 0.4s; }
+.md-typeset .led.slow { --period: 1.6s; }
+.md-typeset .led.dim { opacity: 0.45; }
+.md-typeset .led.blip { animation-name: rb-led-blip; --period: 1.4s; }
+
+@keyframes rb-led {
+  0% { background: var(--a); }
+  50% { background: var(--b); }
+}
+
+@keyframes rb-led-blip {
+  0% { background: var(--a); }
+  12% { background: var(--b); }
+}
+
+/* Status light tables: keep the lights and their name on one line */
+.md-typeset .lights td:first-child {
+  white-space: nowrap;
+}
+
 /* Thumbnails in the terminal → tool → photo table */
 .md-typeset img.table-photo {
   display: block;
@@ -424,4 +515,291 @@
     border-right: 0;
     border-bottom: 1px solid var(--vscode-border);
   }
+}
+
+/* ---------------------------------------------------------------
+   CAN bus animation on the Troubleshooting page
+   (drawn and played by javascripts/can-sim.js)
+   --------------------------------------------------------------- */
+
+.md-typeset .can-sim {
+  margin: 1.2em 0 1.6em;
+}
+
+/* The script turns the list into captions */
+.md-typeset .can-sim--ready > ol {
+  display: none;
+}
+
+.md-typeset .can-sim__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.5rem;
+}
+
+.md-typeset .can-sim__svg text {
+  font-family: var(--md-text-font-family, Roboto), Helvetica, Arial, sans-serif;
+}
+
+.md-typeset .can-sim__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+
+.md-typeset .can-sim__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  padding: 0;
+  border: 1px solid var(--md-default-fg-color--lighter);
+  border-radius: 50%;
+  background: var(--md-default-bg-color);
+  color: var(--md-default-fg-color);
+  cursor: pointer;
+}
+
+.md-typeset .can-sim__btn:hover,
+.md-typeset .can-sim__btn:focus-visible {
+  border-color: var(--md-accent-fg-color);
+  color: var(--md-accent-fg-color);
+}
+
+.md-typeset .can-sim__btn svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: currentcolor;
+}
+
+.md-typeset .can-sim__dots {
+  display: flex;
+  gap: 0.15rem;
+  margin-left: 0.3rem;
+}
+
+/* A bigger target than the dot itself */
+.md-typeset .can-sim__dot {
+  position: relative;
+  width: 1.1rem;
+  height: 1.1rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.md-typeset .can-sim__dot::before {
+  content: "";
+  position: absolute;
+  inset: 0.3rem;
+  border-radius: 50%;
+  background: var(--md-default-fg-color--lighter);
+  transition: background 0.2s, transform 0.2s;
+}
+
+.md-typeset .can-sim__dot.is-active::before {
+  background: var(--md-primary-fg-color);
+  transform: scale(1.3);
+}
+
+.md-typeset .can-sim__count {
+  margin-left: auto;
+  color: var(--md-default-fg-color--light);
+  font-size: 0.7rem;
+}
+
+.md-typeset .can-sim__captions {
+  display: grid;
+  margin-top: 0.4rem;
+}
+
+.md-typeset .can-sim__caption {
+  grid-area: 1 / 1;
+  visibility: hidden;
+}
+
+.md-typeset .can-sim__caption.is-active {
+  visibility: visible;
+}
+
+/* Text in the diagram */
+.can-sim__title { fill: #1f2a33; font-size: 22px; font-weight: 700; }
+.can-sim__strong { fill: #1f2a33; font-size: 15px; font-weight: 700; }
+.can-sim__small { fill: #5b6770; font-size: 14px; }
+.can-sim__label { fill: #5b6770; font-size: 15px; text-anchor: middle; }
+.can-sim__knum { fill: #6b737b; font-size: 22px; font-weight: 700; text-anchor: middle; }
+.can-sim__jack { fill: #5b6770; font-size: 12px; font-weight: 700; text-anchor: middle; }
+
+/* Robot on or off */
+.can-sim__pill-bg { fill: #eef1f4; stroke: #c9d1d9; }
+.can-sim__pill-dot { fill: #8796a5; }
+.can-sim__pill.is-on .can-sim__pill-dot { fill: #2e9d43; }
+.can-sim__pill-text { fill: #1f2a33; font-size: 15px; font-weight: 700; }
+
+/* Kraken status lights: red taking turns = no CAN,
+   orange together = CAN working, robot disabled */
+.can-sim__led { fill: #4b5157; }
+
+.can-sim__k--red .can-sim__led {
+  animation: can-sim-red 1s steps(1, end) infinite;
+}
+
+.can-sim__k--red .can-sim__led--late {
+  animation-delay: -0.5s;
+}
+
+.can-sim__k--orange .can-sim__led {
+  animation: can-sim-orange 1s steps(1, end) infinite;
+}
+
+@keyframes can-sim-red {
+  0% { fill: #ff3b30; }
+  50% { fill: #4b5157; }
+}
+
+@keyframes can-sim-orange {
+  0% { fill: #ff9500; }
+  50% { fill: #4b5157; }
+}
+
+/* Opening a Wago joint lifts it off */
+.can-sim__wago {
+  transition: transform 0.6s ease, opacity 0.6s ease;
+}
+
+.can-sim__joint.is-open .can-sim__wago {
+  transform: translateY(-30px);
+  opacity: 0;
+}
+
+.can-sim__open {
+  fill: #e65100;
+  font-size: 15px;
+  font-weight: 700;
+  text-anchor: middle;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.can-sim__joint.is-open .can-sim__open {
+  opacity: 1;
+}
+
+.can-sim__res {
+  transition: transform 0.8s ease-in-out;
+}
+
+/* The fault, once it's found */
+.can-sim__marker {
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.can-sim__marker.is-shown {
+  opacity: 1;
+}
+
+.can-sim__marker-ring {
+  fill: none;
+  stroke: #d32f2f;
+  stroke-width: 2.5;
+  stroke-dasharray: 5 4;
+}
+
+.can-sim__marker-text {
+  fill: #d32f2f;
+  font-size: 15px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+/* Current running along the wire the meter is beeping through */
+.can-sim__flow {
+  stroke-width: 2.5;
+  stroke-dasharray: 7 11;
+  opacity: 0;
+  transition: opacity 0.3s;
+  animation: can-sim-flow 0.7s linear infinite;
+}
+
+.can-sim__flow--yellow { stroke: #6b5200; }
+.can-sim__flow--green { stroke: #ffffff; }
+
+.can-sim__flow.is-shown {
+  opacity: 1;
+}
+
+@keyframes can-sim-flow {
+  to { stroke-dashoffset: -18; }
+}
+
+/* Multimeter */
+.can-sim__reading {
+  fill: #1d2a1d;
+  font-family: var(--md-code-font-family, "Roboto Mono"), monospace;
+  font-size: 28px;
+  font-weight: 700;
+  text-anchor: end;
+}
+
+.can-sim__mode { fill: #ffffff; font-size: 30px; font-weight: 700; text-anchor: middle; }
+
+.can-sim__pointer {
+  transform-origin: 486px 396px;
+  transition: transform 0.5s ease;
+}
+
+.can-sim__beep {
+  opacity: 0;
+}
+
+.can-sim__beep.is-shown {
+  animation: can-sim-beep 0.45s ease-in-out infinite alternate;
+}
+
+@keyframes can-sim-beep {
+  from { opacity: 0.35; }
+  to { opacity: 1; }
+}
+
+.can-sim__verdict {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.can-sim__verdict.is-good,
+.can-sim__verdict.is-bad {
+  opacity: 1;
+}
+
+.can-sim__verdict.is-good circle { fill: #2e9d43; }
+.can-sim__verdict.is-bad circle { fill: #d32f2f; }
+.can-sim__verdict-text { fill: #ffffff; font-size: 20px; font-weight: 700; text-anchor: middle; }
+
+@media (prefers-reduced-motion: reduce) {
+  .can-sim__svg * {
+    transition: none !important;
+  }
+
+  .can-sim__flow {
+    animation: none;
+  }
+
+  .can-sim__beep.is-shown {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* A small heading inside an item that stays out of the table of contents */
+.md-typeset .item__subhead {
+  margin-bottom: 0.6em;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }

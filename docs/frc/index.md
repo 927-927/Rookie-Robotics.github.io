@@ -9,7 +9,8 @@ navigation on the left, or start here:
 
     ---
 
-    Mechanical build: frames, drivetrains and mechanisms.
+    Designing the robot in CAD, the devices that go on it (motors, sensors
+    and power), and the screws and nuts that hold it together.
 
     [:octicons-arrow-right-24: Hardware](hardware/index.md)
 

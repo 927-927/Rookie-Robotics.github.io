@@ -34,6 +34,7 @@ extra_css:
 extra_javascript:
   - frc/javascripts/sidebar-toggle.js
   - frc/javascripts/code-window.js
+  - frc/javascripts/can-sim.js
 
 markdown_extensions:
   - admonition
@@ -62,6 +63,9 @@ nav:
       - frc/index.md
       - Hardware:
           - frc/hardware/index.md
+          - CAD: frc/hardware/cad.md
+          - Common devices: frc/hardware/devices.md
+          - Components: frc/hardware/components.md
       - Electronics:
           - frc/electronics/index.md
           - Power wiring: frc/electronics/power-wiring.md
@@ -69,6 +73,7 @@ nav:
           - Tools: frc/electronics/tools.md
           - Connectors: frc/electronics/connectors.md
           - Wire terminals: frc/electronics/wire-terminals.md
+          - Troubleshooting: frc/electronics/troubleshooting.md
       - Software:
           - frc/software/index.md
           - Java basics: frc/software/java-basics.md
@@ -78,6 +83,6 @@ nav:
           - Command-based styles:
               - frc/software/command-based-styles/index.md
               - Team 2910: frc/software/command-based-styles/team-2910.md
-              - Team 1678: "/Rookie-Robotics.github.io/frc/software/command-based-styles/#team-1678"
+              - Team 1678: frc/software/command-based-styles/team-1678.md
               - Team 8214: "/Rookie-Robotics.github.io/frc/software/command-based-styles/#team-8214"
   # <<< FRC nav

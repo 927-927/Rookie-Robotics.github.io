@@ -49,4 +49,13 @@ and how to put a terminal on a wire so it stays there for a whole season.
 
     [:octicons-arrow-right-24: Wire terminals](wire-terminals.md)
 
+-   :material-stethoscope:{ .lg .middle } __Troubleshooting__
+
+    ---
+
+    Finding a CAN bus fault: status lights, multimeter checks, and splitting
+    the bus, with animations of each.
+
+    [:octicons-arrow-right-24: Troubleshooting](troubleshooting.md)
+
 </div>
