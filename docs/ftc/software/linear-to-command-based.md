@@ -49,7 +49,8 @@ public void runOpMode() {
     while (opModeIsActive()) {
         run();               // one scheduler loop
     }
-    reset();                 // the OpMode ended
+    end();                   // once, after STOP
+    reset();                 // clears the scheduler
 }
 ```
 
@@ -156,9 +157,10 @@ PLAY, and your code checks the A button and sets the motor every time.
 ### Add SolversLib to your project
 
 Before the command-based version builds, add SolversLib to the project.
-Open `TeamCode/build.gradle` (Android Studio calls it
-**build.gradle (Module: TeamCode)**) and add these lines. Keep everything
-that's already in the file:
+Open `TeamCode/build.gradle`: the `build.gradle` inside the `TeamCode`
+folder, not the one at the top of the project. Add the `repositories`
+block above `dependencies`, and one line inside `dependencies`. Keep
+everything that's already in the file:
 
 ```groovy
 repositories {
@@ -182,13 +184,15 @@ Or start from the
 [SolversLib Quickstart](https://github.com/FTC-23511/SolversLib-Quickstart),
 a copy of FtcRobotController 12.0 with SolversLib already added. It also
 includes Pedro Pathing, Panels and FTC Dashboard, which you'll use later.
+Its versions of those may be older than the ones the later pages use, so
+check them when you get there.
 
 ### The command-based version
 
 The same robot, command-based. Start with `Intake.java`, then
 `IntakeTeleOp.java`:
 
-<div class="vscode vscode--wide" markdown>
+<div class="vscode" markdown>
 <div class="vscode__titlebar">command-based project</div>
 <div class="vscode__body" markdown>
 <nav class="vscode__sidebar" aria-label="Files">
@@ -284,8 +288,8 @@ every loop.
 ??? info "The imports, if Alt+Enter offers more than one choice"
 
     SolversLib also has an old `com.seattlesolvers.solverslib.command.old`
-    package, with some classes of the same names, like `Command`. Don't
-    pick those. The imports for the two files are:
+    package, with some classes of the same names, like `Command` and
+    `CommandOpMode`. Don't pick those. The imports for the two files are:
 
     ```java
     // Intake.java
@@ -357,12 +361,12 @@ has four, and the scheduler calls each one at a set time:
 runs until a binding cancels it or another command interrupts it. A few
 other ways to make a command cover most needs. `runOnce` and `startEnd` are
 subsystem methods, like `run`, so you use them inside a subsystem. The rest
-work with any command:
+work anywhere, with any commands:
 
 | Code | What the command does |
 |---|---|
 | `runOnce(() -> ...)` | Runs the code once, then finishes |
-| `startEnd(() -> a, () -> b)` | Runs `a` when it starts and `b` when it ends, including when it's cancelled |
+| `startEnd(() -> a, () -> b)` | Runs `a` when it starts and `b` when it ends. Like `run`, it never finishes by itself, so `b` runs when it's cancelled or interrupted. |
 | `run(...).withTimeout(2000)` | Like `run(...)`, but ends after 2000&nbsp;ms. SolversLib times are in **milliseconds**, not seconds. |
 | `first.andThen(second)` | Runs `first`, then `second` |
 | `Commands.sequence(a, b, c)` | Runs `a`, then `b`, then `c`. This replaces the state machine from [Your first autonomous](first-autonomous.md). |
@@ -407,7 +411,8 @@ too: `GamepadKeys.Button.CROSS` is the same button as `A`.
 `initialize()` runs when you press INIT, but the scheduler only starts
 after PLAY. So during INIT, pressing A does nothing, and no default command
 runs. To do something over and over during INIT, like showing telemetry or
-letting the driver pick an alliance, override `initialize_loop()`.
+letting the driver pick an alliance, override `initialize_loop()`. Call
+`telemetry.update()` there too, or the telemetry won't show.
 
 An auto schedules its routine in `preRun()`, which runs once, right after
 PLAY:
@@ -519,7 +524,8 @@ command libraries. The ideas are the same; the names are not.
 ### FTCLib
 
 FTCLib is the library SolversLib was copied from. Its last release, 2.1.1,
-came out in February 2023 for FTC SDK 7.1, and nobody maintains it now.
+came out in February 2023 and was built for FTC SDK 7.1. There has been no
+release since.
 Older team code and tutorials still use it. Its class names are the same
 as SolversLib's, but older code makes commands with classes, like
 `new RunCommand(() -> ..., intake)`, instead of `intake.run(...)`.
@@ -549,16 +555,19 @@ no subsystem class, no button bindings and no default commands: you call
 and when two commands need the same one, Ivy compares their priorities. It
 can also queue or pause a command instead of cancelling it. You don't need
 Ivy to use Pedro with SolversLib, which has its own
-[Pedro commands](https://docs.seattlesolvers.com/pedro-pathing/pedro-commands).
+[Pedro commands](https://docs.seattlesolvers.com/pedro-pathing/pedro-commands)
+in an extra library, `org.solverslib:pedroPathing:0.3.6`.
 
 ## Try it
 
-1.  **Add a claw.** Add a second subsystem, `Claw`, that owns a servo named
-    `"claw"` in the robot configuration. Give it `open()` and `close()`
-    commands made with `runOnce(...)`: a servo holds its position, so
-    setting it once is enough. In `IntakeTeleOp`, bind the right bumper to
-    `open()` and the left bumper to `close()` with `whenPressed`. The claw
-    doesn't need a default command.
+1.  **Add a claw.** Add a second subsystem, `Claw`, that owns a `Servo`
+    named `"claw"` in the robot configuration. Give it `open()` and
+    `close()` commands made with `runOnce(...)`: a servo holds its
+    position, so setting it once is enough. Find the two positions
+    (between 0 and 1) by testing on your robot. In `IntakeTeleOp`, bind
+    `GamepadKeys.Button.RIGHT_BUMPER` to `open()` and
+    `GamepadKeys.Button.LEFT_BUMPER` to `close()` with `whenPressed`. The
+    claw doesn't need a default command.
 2.  **Write a sequential auto.** Make an `@Autonomous` `CommandOpMode` that,
     in `preRun()`, schedules one `Commands.sequence(...)`: close the claw,
     wait 1000&nbsp;ms, run the intake for 2 seconds, then open the claw.
@@ -567,7 +576,7 @@ You're done when holding A runs the intake and letting go stops it, the
 bumpers open and close the claw even while the intake runs, and your auto
 does its four steps in order, with nothing moving until you press PLAY.
 You should also be able to explain, loop by loop, why the intake stops
-when you let go of A, even though no line in `IntakeTeleOp` says so.
+when you let go of A: what cancels `runIn()`, and when `stop()` starts.
 
 ## Learn more
 
