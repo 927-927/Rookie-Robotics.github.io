@@ -1,0 +1,18 @@
+{#-
+  Copied from 927-927.github.io. Replaces Material's language dropdown with one
+  button that opens the current page in the other language. The i18n plugin
+  (mkdocs.yml) points each link at this page's version in that language.
+-#}
+{% for alt in config.extra.alternate if alt.lang != config.theme.language %}
+  {% if alt.lang == "zh" %}
+    {% set label = "切换到中文 (Switch to Chinese)" %}
+  {% else %}
+    {% set label = "Switch to English (切换到英文)" %}
+  {% endif %}
+  <div class="md-header__option">
+    <a href="{{ alt.link | url }}" hreflang="{{ alt.lang }}" class="md-header__button rb-lang-toggle" title="{{ label }}" aria-label="{{ label }}">
+      {% include ".icons/material/translate.svg" %}
+      <span lang="{{ alt.lang }}">{{ alt.name }}</span>
+    </a>
+  </div>
+{% endfor %}

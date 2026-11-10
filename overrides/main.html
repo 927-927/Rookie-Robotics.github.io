@@ -10,3 +10,23 @@
     } catch (e) {}
   </script>
 {% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {% if config.theme.language == "zh" %}
+    <!-- Nav entries written as site paths in mkdocs.yml (like Team 8214's)
+         point at the English site, so keep them on the Chinese one. Adapted
+         from 927-927.github.io for a site served under a subpath. -->
+    <script>
+      (function () {
+        var root = new URL({{ config.site_url | tojson }}, location.href).pathname.replace(/zh\/$/, "")
+        document.querySelectorAll(".md-nav a[href]").forEach(function (a) {
+          var href = a.getAttribute("href")
+          if (href.indexOf(root) === 0 && href.indexOf(root + "zh/") !== 0) {
+            a.setAttribute("href", root + "zh/" + href.slice(root.length))
+          }
+        })
+      })()
+    </script>
+  {% endif %}
+{% endblock %}

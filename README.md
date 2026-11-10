@@ -23,6 +23,15 @@ Then open <http://127.0.0.1:8000>. Pushing to `main` rebuilds the live site.
 1. Create a new `.md` file under `docs/ftc/`.
 2. Add it under `FTC:` in the `nav` section of `mkdocs.yml`.
 
+## Chinese version
+
+The 中文 / English button in the header switches between the English site and
+the Chinese one under `/zh/`. A page's Chinese copy sits next to it with a
+`.zh` suffix (`docs/ftc/index.md` → `docs/ftc/index.zh.md`); a page without
+one shows the English text on the Chinese site. Chinese nav titles go under
+`nav_translations` in `mkdocs.yml`. The FRC `.zh.md` pages come from
+927-927.github.io with the rest of the FRC docs.
+
 ## How the FRC docs stay in sync
 
 Don't edit anything in `docs/frc/` or the FRC part of the `nav` in this repo;

@@ -26,6 +26,46 @@ theme:
         icon: material/brightness-4
         name: Switch to light mode
 
+plugins:
+  - search
+  # English stays at /, Chinese is built at /zh/. A page's Chinese version sits
+  # next to it with a .zh suffix (index.md -> index.zh.md); pages without one
+  # show the English text on the Chinese site. Carried over from
+  # 927-927.github.io, which writes the FRC .zh.md pages.
+  - i18n:
+      docs_structure: suffix
+      fallback_to_default: true
+      languages:
+        - locale: en
+          name: English
+          default: true
+        - locale: zh
+          name: 中文
+          # Chinese titles for the nav entries, keyed by their English title.
+          # The FRC ones come from 927-927.github.io's mkdocs.yml; terms follow
+          # its translation-glossary.md.
+          nav_translations:
+            Home: 首页
+            Hardware: 硬件
+            Common devices: 常用设备
+            Components: 零部件
+            Electronics: 电控
+            Power wiring: 电源接线
+            Signal wiring: 信号接线
+            Tools: 工具
+            Connectors: 连接器
+            Wire terminals: 线端端子
+            Troubleshooting: 故障排查
+            Software: 软件
+            Java basics: Java 基础
+            Command-based skeleton: 基于命令的基本结构
+            Time-based to command-based: 从基于时间到基于命令
+            Complex command-based: 进阶基于命令编程
+            Command-based styles: 各队的基于命令风格
+            Team 2910: 2910 队
+            Team 1678: 1678 队
+            Team 8214: 8214 队
+
 # Styles and scripts come from the synced FRC docs, so changes to them in
 # 927-927.github.io show up here too. New files still need adding here.
 extra_css:
