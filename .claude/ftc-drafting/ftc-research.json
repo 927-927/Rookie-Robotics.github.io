@@ -1301,5 +1301,269 @@
    "None of the code examples were compiled against SDK 12.0.0 in this research. The SolversLib, FTCLib and Ivy examples are built from verified source signatures; the NextFTC v2 example should be build-tested before publishing.",
    "The FRC curriculum also mentions WPILib Commands v3 (2027). If the FRC side moves to v3, the FTC mapping table will need a second column."
   ]
+ },
+ "research:team-code": {
+  "summary": "As of November 2026 the FTC season is BIOBUZZ (2026-27, FIRST CANOPY season; kickoff 12 Sep 2026). That is too early for any top team to have published finished code for it, so the useful public code is from INTO THE DEEP (2024-25) and DECODE (2025-26). Most World Championship winners do not publish their code. GitHub searches found no public recent repos for 11260 Up-A-Creek (2025 Worlds winning-alliance captain), 30030/21087/11228 (2026 Worlds winners), 17792 (2026 Inspire), 18270, 20265 or 7172. The same is true of most of the suggested candidates (19234, 9889, 7236, 21229, 12051, 3965, 11115, 18172, 8417). 16379 KookyBotz' newest public repo is CenterStage (2023-24, last push 2024-07-01), and 10158's team repos end at CenterStage, so both fall outside the requested window.\n\nThe strong, recent, well-organized public repos come from teams with Worlds-level results:\n- **11329 I.C.E. Robotics**: Hailstorm, DECODE. First pick on the Edison Division winning alliance at 2026 Worlds; Indiana State winning-alliance captain. Its README has a robot photo and the repo includes design docs.\n- **23511 Seattle Solvers**: they maintain SolversLib. Their DECODE robot took 2nd place Inspire in the Lovelace Division at 2026 Worlds. Their INTO THE DEEP code is a clean command-based example.\n- **19448 X BOTS**: DECODE; Control Award 1st, Lovelace Division, 2026 Worlds.\n- **12808 RevAmped**: DECODE; Control Award 1st, Goodall Division, 2026 Worlds.\n- **6165 MSET Cuttlefish**: INTO THE DEEP; Judges' Choice in the Jemison Division at 2025 Worlds.\n- **14343 Escape Velocity**: INTO THE DEEP; WPILib-style FTCLib code.\n\nThree architectural patterns show up:\n1. A plain-Java \"Robot\" coordination class that owns subsystems, each with its own update() method, called from thin OpMode wrappers (11329).\n2. FTCLib/SolversLib command-based code with a Robot singleton holding hardware, enum states per subsystem, and GamepadEx whenPressed bindings (23511, 19448, 14343).\n3. A custom framework: an abstract Module class with ModuleState enums plus caching hardware wrappers (6165), or Hw* wrappers with a state graph and threads (12808).\n\nAlmost every team uses the same loop-time tricks: MANUAL bulk caching cleared once per loop, write caching (skip setPower/setPosition when the value change is below a tolerance), cached voltage reads, and passing the end-of-auto pose to TeleOp. Licensing caveat: every repo's LICENSE file is the FIRST SDK's BSD-3-Clause-Clear notice (\"Copyright (c) 2014-2022 FIRST\"), inherited from FtcRobotController. No team adds its own license, so the curriculum should link to the code and quote short attributed excerpts rather than copy whole files. Only 11329 includes robot photos (hailstorm.jpg, iceberg.jpeg), with no photographer credit, so ask the team for permission before reusing them.",
+  "facts": [
+   {
+    "topic": "season context",
+    "claim": "The 2026-2027 FTC game is BIOBUZZ presented by RTX (FIRST CANOPY season). Kickoff and game reveal were 12 Sep 2026.",
+    "source_url": "https://www.firstinspires.org/community-blog/biobuzz-kickoff-and-season-resources",
+    "confidence": "likely"
+   },
+   {
+    "topic": "2026 Worlds (DECODE) results",
+    "claim": "2026 Worlds: Winning Alliance 30030 Exodus, 21087 Velocity and 11228 OverClucked Bots. Finalist Alliance 18270 RoboPlayers, 20265 Heart of RoBots and 7172 Technical Difficulties. Overall Inspire Award: 17792 Amigos Droids (Ross Division). FIRST blog post dated 13 May 2026.",
+    "source_url": "https://www.firstinspires.org/community-blog/congratulations-to-our-decode-first-championship-teams",
+    "confidence": "verified"
+   },
+   {
+    "topic": "2025 Worlds (INTO THE DEEP) results",
+    "claim": "2025 Worlds finals (FTCScout season 2024, event FTCCMP1): Winner 11260 Up-A-Creek (captain), 20870 Team Matrix and 19746 BrainSTEM. Finalist 18030, 20871 and 24751. Inspire 1st: 18139 Rebel Robotics.",
+    "source_url": "https://api.ftcscout.org/rest/v1/events/2024/FTCCMP1/awards",
+    "confidence": "verified"
+   },
+   {
+    "topic": "11329 I.C.E. Robotics - achievements",
+    "claim": "11329 I.C.E. Robotics (Bloomington, Indiana) in DECODE: Worlds Edison Division Winner (placement 2 = first pick) and Design 2nd; Indiana State Championship Winner (captain); Michiana Premier Event Winner (captain). In INTO THE DEEP: Worlds Edison Control Award 2nd; Indiana State Champion with Control Award 1st.",
+    "source_url": "https://api.ftcscout.org/rest/v1/teams/11329/awards?season=2025",
+    "confidence": "verified"
+   },
+   {
+    "topic": "11329 - repo",
+    "claim": "github.com/FTC11329/11329-2026-repo holds the code for the robot 'Hailstorm'. Not a fork; 327 commits; head commit 829cc23 on 2026-08-03. Custom README with a robot photo (hailstorm.jpg) and docs/robot.md, docs/shooter.md and docs/shooter-interpolation.md. The LICENSE file is the FIRST SDK BSD-3-Clause-Clear notice. The README names no photographer.",
+    "source_url": "https://github.com/FTC11329/11329-2026-repo",
+    "confidence": "verified"
+   },
+   {
+    "topic": "11329 - structure",
+    "claim": "11329's 2026 code is plain Java with no command framework. MainTeleopBlue/Red extend OpMode and only forward init/init_loop/start/loop/stop to a MainTeleop class. MainTeleop builds one Robot object, which owns the Intake, Shooter, Turret, Indexer, Drivetrain, Lights, Climber and Vision subsystems plus the Pedro Follower. Each subsystem takes HardwareMap in its constructor and has update(). Constants.java holds nested static classes. A FancyButton class handles Toggle and LongPress edge detection. EndValuesStorer carries the turret, indexer and pose values from auto into TeleOp.",
+    "source_url": "https://github.com/FTC11329/11329-2026-repo/tree/main/TeamCode/src/main/java/org/firstinspires/ftc/teamcode",
+    "confidence": "verified"
+   },
+   {
+    "topic": "11329 - loop-time tricks",
+    "claim": "In 11329's code, Robot sets every LynxModule to BulkCachingMode.MANUAL. Intake.setIntakeMotorPower only writes when the value changed (if lastMotorPower != set), which is hand-rolled write caching.",
+    "source_url": "https://github.com/FTC11329/11329-2026-repo/blob/main/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/subsystems/Intake.java",
+    "confidence": "verified"
+   },
+   {
+    "topic": "11329 - design doc",
+    "claim": "docs/robot.md explains why the team added Robot.java as an 'integration layer': in earlier seasons each op mode initialized every subsystem itself and reimplemented multi-subsystem logic.",
+    "source_url": "https://github.com/FTC11329/11329-2026-repo/blob/main/docs/robot.md",
+    "confidence": "verified"
+   },
+   {
+    "topic": "11329 - pathing and dependencies",
+    "claim": "11329's 2026 repo copies the Pedro Pathing source into TeamCode/pedroPathing rather than using a maven dependency. It uses Panels via com.bylazar.sloth:fullpanels:0.2.4+1.0.12 and FTC SDK 11.1.0.",
+    "source_url": "https://github.com/FTC11329/11329-2026-repo/blob/main/TeamCode/build.gradle",
+    "confidence": "verified"
+   },
+   {
+    "topic": "11329 - 2025 repo",
+    "claim": "github.com/FTC11329/11329-2025-repo is the INTO THE DEEP code for the robot 'Iceberg' (README shows iceberg.jpeg, a robot photo). Same pattern: plain teleop classes (iuriTeleops/TeleopBlind) wrapped by Blue/Red OpModes, a utility/StateMachine.java built from boolean flags, and subsystems/*. Head commit f1a7db7 on 2026-03-03.",
+    "source_url": "https://github.com/FTC11329/11329-2025-repo",
+    "confidence": "verified"
+   },
+   {
+    "topic": "23511 Seattle Solvers - achievements",
+    "claim": "23511 Seattle Solvers (Sammamish, WA): 2nd place Inspire in the Lovelace Division at 2026 Worlds (DECODE). In INTO THE DEEP: Washington Championship Design 2nd, plus qualifier Think 1st and Innovate 1st.",
+    "source_url": "https://api.ftcscout.org/rest/v1/teams/23511/awards?season=2025",
+    "confidence": "verified"
+   },
+   {
+    "topic": "23511 - Into-the-Deep-2025 repo",
+    "claim": "github.com/FTC-23511/Into-the-Deep-2025 is forked from FtcRobotController, has 307 commits and a stock SDK README (no photo). LICENSE is BSD-3-Clause-Clear (FIRST). Layout: commandbase/{Intake,Deposit,Drive}.java (SubsystemBase with enum states), commandbase/commands/*, hardware/{Robot,Globals}.java, opmode/Auto (Pedro paths, with .pp files from the Pedro visualizer in Auto/Recipes), opmode/TeleOp, and tuning/* with servo and PIDF tuning guides in markdown. Dependencies: SolversLib core 0.2.7, pedroPathing 0.2.5 and Pedro 1.0.9.",
+    "source_url": "https://github.com/FTC-23511/Into-the-Deep-2025",
+    "confidence": "verified"
+   },
+   {
+    "topic": "23511 - structure details",
+    "claim": "In 23511's code, Robot is a singleton (Robot.getInstance()) that holds all hardware as SolversMotorEx/SolversServo created with a 0.01 caching tolerance, plus the subsystems and the Pedro Follower. Hubs use MANUAL bulk caching, and the TeleOp clears only the Control Hub cache at the end of each loop to save time. Buttons are bound in initialize() with driver.getGamepadButton(...).whenPressed(new InstantCommand / ConditionalCommand / UninterruptibleCommand(...)). end() saves autoEndPose for TeleOp.",
+    "source_url": "https://github.com/FTC-23511/Into-the-Deep-2025/blob/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/opmode/TeleOp/FullTeleOp.java",
+    "confidence": "verified"
+   },
+   {
+    "topic": "23511 - Decode-2026 repo",
+    "claim": "github.com/FTC-23511/Decode-2026 is forked from FTC-23511/SolversLib-Quickstart, has 451 commits and a stock README. It is an advanced robot: coaxial swerve through SolversLib's CoaxialSwerveDrivetrain, a turret, and a custom DriveTo point-to-point command instead of Pedro. SolversLib, PhotonCore and a profiler are copied into TeamCode. The Robot singleton is in globals/Robot.java.",
+    "source_url": "https://github.com/FTC-23511/Decode-2026",
+    "confidence": "verified"
+   },
+   {
+    "topic": "SolversLib",
+    "claim": "SolversLib (github.com/FTC-23511/SolversLib) describes itself as 'An updated and maintained fork of FTCLib'. It is BSD-3-Clause, led by FTC 23511 and hosted on the Dairy Foundation maven. Latest version on that maven: org.solverslib:core 0.3.6 (metadata lastUpdated 2026-09-16). Its MotorEx/ServoEx skip hardware writes smaller than a configurable cachingTolerance.",
+    "source_url": "https://repo.dairy.foundation/releases/org/solverslib/core/maven-metadata.xml",
+    "confidence": "verified"
+   },
+   {
+    "topic": "19448 X BOTS",
+    "claim": "19448 X BOTS (Wildwood, MO): Control Award 1st in the Lovelace Division at 2026 Worlds; Missouri-Kansas Championship Winner and Inspire 1st (DECODE). Repo github.com/ryalisuchir/Decode ('X BOTS (19448) Repository for DECODE'; README says 'Worlds Edition Repository'): 59 commits, not a fork, LICENSE BSD-3-Clause-Clear (FIRST), no photo. Layout: common/commandbase/{commands,subsystems}, a Halo.java robot container, Globals.java holding one enum per mechanism, and opmode/{auto,teleop,testing,tuning}. Uses SolversLib 0.3.3, Pedro (com.pedropathing:ftc) 2.1.1 and Sloth/Panels.",
+    "source_url": "https://github.com/ryalisuchir/Decode",
+    "confidence": "verified"
+   },
+   {
+    "topic": "12808 RevAmped Robotics",
+    "claim": "12808 RevAmped Robotics (Portland, OR): Control Award 1st in the Goodall Division at 2026 Worlds; INTO THE DEEP: 3rd team on the Edison Division finalist alliance at 2025 Worlds and Oregon Championship Inspire 1st. Repo github.com/junkjunk123/RevAmped-Decode-V2: 532 commits, stock README, LICENSE BSD-3-Clause-Clear. It has utils/hardware Hw* wrappers (HwMotor uses a power threshold for write caching), Robot.update() calling every mechanism, a state handler built on Java records and interfaces, threads (TrackingThread, GyroThread) and a sim/ folder. It depends on 'com.pedropathing:ivy:LOCAL', which will not resolve from a public maven.",
+    "source_url": "https://github.com/junkjunk123/RevAmped-Decode-V2",
+    "confidence": "verified"
+   },
+   {
+    "topic": "6165 MSET Cuttlefish",
+    "claim": "6165 MSET Cuttlefish (Saratoga, CA), INTO THE DEEP: Northern California Championship Division Winner, Finalist and Innovate 1st; Judges' Choice in the Jemison Division at 2025 Worlds. Repo github.com/6165-MSET-Cuttlefish/6165-IntoTheDeep was archived 12 Dec 2025 and has only 2 commits (a code dump). Stock README, LICENSE BSD-3-Clause-Clear. Layout: architecture/modules with an abstract Module class and ModuleState enums that carry servo and motor targets, architecture/hardware/Enhanced{Motor,Servo,CRServo} (write caching with comments plus voltage compensation), a Kotlin TaskScheduler, and Road Runner 1.0 actions.",
+    "source_url": "https://github.com/6165-MSET-Cuttlefish/6165-IntoTheDeep",
+    "confidence": "verified"
+   },
+   {
+    "topic": "14343 Escape Velocity",
+    "claim": "14343 Escape Velocity (Bellevue, WA), INTO THE DEEP: Washington Championship Think 1st and Winner (2nd team). Repo github.com/escape-velocity-14343/IntoTheSleep uses FTCLib 2.1.1 in WPILib style: Constants/ package, commands/custom and commands/group, subsystems/*Subsystem, lib/SquIDController and lib/CachingVoltageSensor, and custom go-to-point driving with no Pedro or Road Runner. Its README text is a joke (not documentation). The team also has a DECODE repo (escape-velocity-14343/Decode, forked, last commit 2026-01-01).",
+    "source_url": "https://github.com/escape-velocity-14343/IntoTheSleep",
+    "confidence": "verified"
+   },
+   {
+    "topic": "16379 KookyBotz",
+    "claim": "KookyBotz' newest public repo is KookyBotz/CenterStage (2023-24; last push 2024-07-01; LICENSE BSD-3-Clause-Clear). They have no public INTO THE DEEP or DECODE repo. Its common/commandbase + common/hardware + common/subsystem layout is the template that 19448's layout resembles.",
+    "source_url": "https://github.com/KookyBotz/CenterStage",
+    "confidence": "verified"
+   },
+   {
+    "topic": "10158 / Pedro Pathing",
+    "claim": "Team 10158's repos (AnyiLin/10158-Centerstage, last push 2024-05-14) stop at CenterStage. FTCScout now lists 10158 as 'Bay-Mechs' (Bogart, GA), not 'Scott's Bots'. Whether this is a rename was not verified.",
+    "source_url": "https://api.ftcscout.org/rest/v1/teams/10158",
+    "confidence": "uncertain"
+   },
+   {
+    "topic": "teams without public recent code",
+    "claim": "GitHub repository searches found no public 2024-26 robot code for 11260, 19234 (only a CAD repo, lazarcloud/IntoTheDeep-Claw), 9889 (FTC9889 org stops at 2019-20), 8417 (outreach robots only), 7236, 21229, 12051, 3965, 11115, 18172, 30030, 21087, 11228, 18270, 20265, 7172 or 17792. This is not proof that no code exists.",
+    "source_url": "https://api.github.com/search/repositories?q=byteforce+ftc",
+    "confidence": "likely"
+   },
+   {
+    "topic": "16093 Cosmic Spark (China)",
+    "claim": "16093 Cosmic Spark (Beijing, BNDS) publishes DECODE code at tqdmye/FTC16093-2026DECODE. It uses FTCLib 2.1.1 with WPIMath jars, Pedro 1.0.9 and RR 0.5.6, plus a docs/ site with robot photos (docs/assets/robot.jpg). Its 2025-26 result is modest (Beijing qualifier Control 2nd). The team has a 2026-27 BIOBUZZ repo, OLeslieO/FTC16093-BioBuzz. Could be a local example for the Chinese edition, but it is not a top-team exemplar.",
+    "source_url": "https://github.com/tqdmye/FTC16093-2026DECODE",
+    "confidence": "likely"
+   },
+   {
+    "topic": "licensing",
+    "claim": "Every candidate repo's LICENSE file is the FIRST FtcRobotController BSD-3-Clause-Clear text ('Copyright (c) 2014-2022 FIRST'). None adds a team license or a photo license. SolversLib itself is BSD-3-Clause.",
+    "source_url": "https://github.com/FTC11329/11329-2026-repo/blob/main/LICENSE",
+    "confidence": "verified"
+   }
+  ],
+  "code_examples": [
+   {
+    "title": "Thin OpMode wrapper delegating to a plain TeleOp class (11329 Hailstorm)",
+    "code": "@TeleOp(name = \"Main Teleop Blue\")\npublic class MainTeleopBlue extends OpMode {\n    MainTeleop mainTeleop;\n    @Override public void init() {\n        mainTeleop = new MainTeleop(gamepad1, gamepad2, telemetry, hardwareMap, RobotSide.Blue);\n        mainTeleop.init();\n    }\n    @Override public void init_loop() { mainTeleop.init_loop(); }\n    @Override public void start()     { mainTeleop.start(); }\n    @Override public void loop()      { mainTeleop.loop(); }\n    @Override public void stop()      { mainTeleop.stop(); }\n}",
+    "notes": "Excerpt; the group string is shortened. One TeleOp class serves both alliances. Uses the iterative OpMode, not LinearOpMode. Repo commit 829cc23 (2026-08-03). License is the FIRST BSD-3-Clause-Clear notice; attribute 11329.",
+    "source_url": "https://github.com/FTC11329/11329-2026-repo/blob/main/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/teleops/MainTeleopBlue.java"
+   },
+   {
+    "title": "Hand-rolled write caching in a subsystem (11329 Intake)",
+    "code": "public void setIntakeServoPower(double set) {\n    if (lastServoPower != set) {   // only talk to the hub when the value changes\n        lastServoPower = set;\n        intakeServo.setPower(set);\n    }\n}",
+    "notes": "Simplest version of write caching for rookies to copy. SolversLib, 6165 EnhancedMotor and 12808 HwMotor use a tolerance instead of exact equality.",
+    "source_url": "https://github.com/FTC11329/11329-2026-repo/blob/main/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/subsystems/Intake.java"
+   },
+   {
+    "title": "Command-based button bindings with SolversLib (23511 INTO THE DEEP)",
+    "code": "// inside CommandOpMode.initialize()\nsuper.reset();\nrobot.init(hardwareMap);\nregister(robot.deposit, robot.intake);\ndriver = new GamepadEx(gamepad1);\n\ndriver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(\n        new InstantCommand(() -> robot.intake.setPivot(IntakePivotState.INTAKE)));\n\noperator.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(\n        new UninterruptibleCommand(\n                new SetDeposit(robot, DepositPivotState.SCORING, HIGH_BUCKET_HEIGHT, false).withTimeout(1500)));\n\n// end of run(): manual bulk cache, clear once per loop\nrobot.ControlHub.clearBulkCache();",
+    "notes": "Excerpt from FullTeleOp.java. Imports com.seattlesolvers.solverslib.command.* and gamepad.*. Built against SolversLib core 0.2.7; current is 0.3.6, so check for API drift before reusing. Robot is a singleton (Robot.getInstance()).",
+    "source_url": "https://github.com/FTC-23511/Into-the-Deep-2025/blob/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/opmode/TeleOp/FullTeleOp.java"
+   },
+   {
+    "title": "Tolerance-based motor write caching wrapper (6165 EnhancedMotor)",
+    "code": "if (Math.abs(corrected - cachedPower) >= cachingTolerance\n        || (corrected == 0.0 && cachedPower != 0.0)\n        || (corrected >= 1.0 && !(cachedPower >= 1.0))\n        || (corrected <= -1.0 && !(cachedPower <= -1.0))\n        || Double.isNaN(cachedPower)) {\n    cachedPower = corrected;\n    dcMotorEx.setPower(corrected);\n}",
+    "notes": "The 6165 source comments explain that every motor write costs loop time and why the 0, +1 and -1 edge cases always write. The class also applies voltage compensation before this check. The repo is archived (Dec 2025).",
+    "source_url": "https://github.com/6165-MSET-Cuttlefish/6165-IntoTheDeep/blob/main/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/architecture/hardware/EnhancedMotor.java"
+   }
+  ],
+  "resources": [
+   {
+    "name": "11329 I.C.E. Robotics - Hailstorm (DECODE 2025-26)",
+    "url": "https://github.com/FTC11329/11329-2026-repo",
+    "what": "Java and Pedro Pathing (source copied into the repo) with plain classes and no command framework. Read in this order: README (photo, results) -> docs/robot.md (why Robot.java exists) -> teleops/MainTeleopBlue.java (thin OpMode) -> teleops/MainTeleop.java (FancyButton bindings) -> subsystems/Robot.java (coordination, 1077 lines) -> subsystems/Intake.java (small subsystem with write caching) -> Constants.java -> docs/shooter.md and docs/shooter-interpolation.md.",
+    "license": "LICENSE file = FIRST SDK BSD-3-Clause-Clear; no team license; photo has no credit",
+    "status": "Active through 2026-08-03 (commit 829cc23); 327 commits"
+   },
+   {
+    "name": "11329 I.C.E. Robotics - Iceberg (INTO THE DEEP 2024-25)",
+    "url": "https://github.com/FTC11329/11329-2025-repo",
+    "what": "The team's previous-season code with the same wrapper pattern and a boolean-flag StateMachine.java. Compare it with the 2026 repo to show how the code evolved into a Robot integration layer.",
+    "license": "FIRST SDK BSD-3-Clause-Clear",
+    "status": "Last commit 2026-03-03"
+   },
+   {
+    "name": "23511 Seattle Solvers - Into-the-Deep-2025",
+    "url": "https://github.com/FTC-23511/Into-the-Deep-2025",
+    "what": "The clearest command-based example. Paths: hardware/Robot.java (singleton) and hardware/Globals.java; commandbase/Intake.java, Deposit.java and Drive.java (subsystems with enum states); commandbase/commands/*; opmode/TeleOp/FullTeleOp.java (bindings); opmode/Auto/*.java plus Auto/Recipes/*.pp (Pedro visualizer files); tuning/example/tuningGuidePIDF.md and servoTuningGuide.md.",
+    "license": "FIRST SDK BSD-3-Clause-Clear (fork of FtcRobotController)",
+    "status": "Last commit 2025-11-22; 307 commits"
+   },
+   {
+    "name": "23511 Seattle Solvers - Decode-2026",
+    "url": "https://github.com/FTC-23511/Decode-2026",
+    "what": "Advanced follow-up: swerve, turret, custom DriveTo, PhotonCore and a profiler. Good for 'what top code grows into', not a starting point.",
+    "license": "FIRST SDK BSD-3-Clause-Clear (fork of SolversLib-Quickstart)",
+    "status": "Last commit 2026-07-10; 451 commits"
+   },
+   {
+    "name": "SolversLib",
+    "url": "https://github.com/FTC-23511/SolversLib",
+    "what": "Maintained FTCLib fork: command base, hardware wrappers with write caching, gamepad and controllers, plus a Pedro Pathing integration module. Docs and a quickstart are linked from the repo.",
+    "license": "BSD-3-Clause",
+    "status": "Maintained; core 0.3.6 on repo.dairy.foundation (2026-09-16)"
+   },
+   {
+    "name": "19448 X BOTS - Decode (Worlds Edition)",
+    "url": "https://github.com/ryalisuchir/Decode",
+    "what": "SolversLib 0.3.3 command-based code with Pedro 2.1.1, in a KookyBotz-style layout: common/commandbase/{commands,subsystems}, common/Halo.java (robot container), common/Globals.java (one enum per mechanism), opmode/{auto,teleop,testing,tuning}, and shooter lookup tables in common/utility/tables.",
+    "license": "FIRST SDK BSD-3-Clause-Clear",
+    "status": "Last commit 2026-05-15; 59 commits"
+   },
+   {
+    "name": "6165 MSET Cuttlefish - 6165-IntoTheDeep",
+    "url": "https://github.com/6165-MSET-Cuttlefish/6165-IntoTheDeep",
+    "what": "Custom framework with comments written for teammates: architecture/modules/util/Module.java and ModuleState (a state machine per subsystem in which each enum value carries its target position), architecture/hardware/Enhanced* (write caching and voltage compensation), a Kotlin TaskScheduler, and Road Runner 1.0 actions.",
+    "license": "FIRST SDK BSD-3-Clause-Clear",
+    "status": "Archived 2025-12-12; 2 commits (code dump)"
+   },
+   {
+    "name": "12808 RevAmped Robotics - RevAmped-Decode-V2",
+    "url": "https://github.com/junkjunk123/RevAmped-Decode-V2",
+    "what": "Advanced reading: utils/hardware Hw* abstraction layer, Robot.update(), a RobotStateHandler state graph, threads and simulation. Will not build as-is because it depends on com.pedropathing:ivy:LOCAL.",
+    "license": "FIRST SDK BSD-3-Clause-Clear",
+    "status": "Last commit 2026-07-24; 532 commits"
+   },
+   {
+    "name": "14343 Escape Velocity - IntoTheSleep",
+    "url": "https://github.com/escape-velocity-14343/IntoTheSleep",
+    "what": "WPILib-style FTCLib 2.1.1 code (Constants/, commands/custom, commands/group, subsystems, a SquID controller). The closest match to FRC structure, so it is useful as a bridge to the FRC page.",
+    "license": "FIRST SDK BSD-3-Clause-Clear",
+    "status": "Last commit 2025-02-06; README is a joke, not documentation"
+   },
+   {
+    "name": "16379 KookyBotz - CenterStage (historical reference)",
+    "url": "https://github.com/KookyBotz/CenterStage",
+    "what": "The classic common/commandbase + common/hardware + common/subsystem FTC layout that many teams copied. Outside the 2024+ window.",
+    "license": "FIRST SDK BSD-3-Clause-Clear",
+    "status": "Last push 2024-07-01; no newer public repos"
+   },
+   {
+    "name": "FTCScout API (awards data)",
+    "url": "https://api.ftcscout.org/rest/v1/teams/11329/awards?season=2025",
+    "what": "Machine-readable award history per team and season (season 2024 = INTO THE DEEP, 2025 = DECODE). Use it to cite achievements.",
+    "license": "n/a (data service)",
+    "status": "Live"
+   }
+  ],
+  "recommendations": "Feature three teams, in this order, as a progression from LinearOpMode to structured code.\n\n**1. 11329 I.C.E. Robotics, Hailstorm (DECODE).** Teach this first because it needs no new library. Students see:\n- a thin OpMode wrapper\n- one TeleOp class shared by both alliances\n- a Robot class that owns the subsystems and calls their update() each loop\n- one class per subsystem, built from HardwareMap\n- a Constants class with nested static classes\n- FancyButton for rising and falling edges\n- hand-written write caching plus MANUAL bulk caching\n- saving the auto end pose for TeleOp\n\nIts docs/robot.md explains in the team's own words why they moved from \"every op mode initializes everything\" to an integration layer. It is also the only candidate with a real README and robot photos, and it has a Worlds division win. Downsides: Robot.java is about 1,077 lines, the Pedro source is copied into the repo, and some files are experimental. Tell students to read Intake.java and MainTeleopBlue.java first and to skim Robot.java.\n\n**2. 23511 Seattle Solvers, Into-the-Deep-2025.** This is the command-based step, using SolversLib, the library this team maintains. Teach:\n- the Robot singleton holding all hardware\n- the Globals constants file\n- SubsystemBase classes whose states are enums (IntakePivotState, IntakeMotorState)\n- command classes such as SetIntake and SetDeposit\n- binding buttons declaratively in initialize() with whenPressed and InstantCommand, ConditionalCommand or UninterruptibleCommand\n- SolversMotorEx write caching (tolerance 0.01)\n- clearing only the Control Hub bulk cache\n- committing the Pedro visualizer .pp files next to the autos\n- the in-repo PIDF and servo tuning guides\n\nUse the INTO THE DEEP repo, not Decode-2026: the DECODE repo is swerve with copied-in libraries and is too advanced. Credibility comes from the 2026 Worlds Lovelace Inspire 2nd and from authoring SolversLib. Warn that it was built against SolversLib 0.2.7 and the current version is 0.3.6.\n\n**3. 6165 MSET Cuttlefish, 6165-IntoTheDeep.** This is the \"build your own framework\" contrast. It has an abstract Module class with ModuleState enums, a state machine per subsystem in which each enum value carries its servo or motor target, and EnhancedMotor/EnhancedServo wrappers whose comments explain write caching and voltage compensation. It earned Judges' Choice at 2025 Worlds. Downside: it is a 2-commit archived code dump, so there is no history to study.\n\n**Alternate third pick: 19448 X BOTS (DECODE).** Choose this if you want a 2026 Worlds Control Award winner and the widely copied KookyBotz layout (common/commandbase/{commands,subsystems}, a Halo robot container, a Globals enum per mechanism). It overlaps 23511's pattern, though.\n\n**Mention but do not feature:**\n- 12808 RevAmped: Worlds Control 1st, but uses records and threads and depends on a LOCAL maven artifact, so it will not build.\n- 14343 Escape Velocity: the WPILib-style mirror, useful for linking back to the FRC page, but its READMEs are jokes.\n- 16379 KookyBotz CenterStage: historical template, last pushed 2024.\n\n**Lessons that recur across all of them:**\n- MANUAL bulk caching, cleared once per loop\n- write caching\n- one class per mechanism, with enum states\n- a central Robot object (constructed object or singleton)\n- a constants file\n- binding buttons on rising edges\n- passing the end-of-auto pose to TeleOp\n- separate tuning and test OpModes\n\n**Legal and attribution:**\n- Link to repos pinned at specific commits, and quote only short excerpts with attribution. No repo has a team license; the LICENSE file is FIRST's BSD-3-Clause-Clear text, so whole-file copying is ambiguous.\n- Ask 11329 for permission and a credit line before embedding hailstorm.jpg or iceberg.jpeg. No other featured repo has a robot photo.\n- Pin these commits: 11329 829cc23, 23511 9a1b4ad, 6165 74bc060, 19448 a51e333.\n- Re-check in spring 2027 for BIOBUZZ repos; 23511 already has a BioBuzz-2026 quickstart fork.",
+  "open_questions": [
+   "Will 11329 let the curriculum embed hailstorm.jpg and iceberg.jpeg, and who should be credited? The README names no photographer.",
+   "Is reuse of team code under the inherited FIRST BSD-3-Clause-Clear LICENSE acceptable to each team, or should we only link to it and quote short excerpts? None of them adds its own license.",
+   "Was team 10158 renamed from 'Scott's Bots' to 'Bay-Mechs' (the FTCScout name)? Pedro Pathing's team attribution was not verified.",
+   "Do 11260 Up-A-Creek, 30030 Exodus or 18270 RoboPlayers publish code anywhere other than GitHub repo search (an org with a non-obvious name, GitLab, or a website zip)? Searches found none.",
+   "23511's Into-the-Deep-2025 targets SolversLib 0.2.7 (SolversMotorEx and the solversHardware package). Check whether those classes still exist in 0.3.6 before teaching the exact API.",
+   "Who owns kleongf/FTC_Decode (Kevin Fong)? It is well documented DECODE code with a command/subsystem layout, but its README names no team.",
+   "Pedro Pathing's maven metadata at maven.pedropathing.com/com/pedropathing/ftc shows latest 2.0.1, yet teams use 2.1.0 and 2.1.1, so the current hosting location and version need checking for the pathing pages."
+  ]
  }
 }
