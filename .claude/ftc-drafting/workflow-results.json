@@ -1,0 +1,1341 @@
+{
+ "research:sdk-and-basics": {
+  "summary": "As of 2026-11-10 the FTC season is 2026-2027 BIOBUZZ presented by RTX, part of the FIRST CANOPY season. Kickoff was 2026-09-12. The current SDK is FtcRobotController v12.0. Its GitHub release was published 2026-09-12 and its README build stamp is 20260907-090034. The only teaching-relevant breaking change in v12.0 is the AprilTag \"cluster\" API: legacy AprilTag OpModes no longer compile until they cast `AprilTagDetection` to `AprilTagSingleDetection` or `AprilTagClusterDetection`. The big tooling change came in the off-season. v11.2 (2026-07-15) and v11.2.1 (2026-07-31) moved to Gradle 9.1 and AGP 8.13.2 and now need Android Studio Narwhal 3 Feature Drop or later. v11.2 also added the `@Utility` OpMode type and the TestHardware and TestGamepad utilities. SDK 10.3 (June 2025) added built-in button edge detection: `gamepad1.aWasPressed()`, `aWasReleased()` and the same pair for every button, each true once \"since the last call of this method\". SDK 11.1 added trigger booleans (`left_trigger_pressed`) and trigger edge detection. FTC code still compiles at Java 1.8 (`sourceCompatibility JavaVersion.VERSION_1_8`), and OnBot Java only supports Java 1.8. So `var`, records, switch expressions and `List.of` are not available.\n\nFTC Docs still says to start with Blocks, move to OnBot Java, and use Android Studio only for advanced users. Its first-OpMode tutorials (`MyFIRSTJavaOpMode`) use `LinearOpMode`, as do REV's Hello Robot course and gm0. FTC Docs has no dedicated pages for telemetry, gamepad or hardwareMap; for those, use the Javadoc (RobotCore 12.0.0) and gm0. REV Hardware Client 2 (2026) is now the update tool for the Control Hub and Driver Hub. The original RHC 1.x is still needed for phone-based Robot Controllers.\n\nLooking ahead, FIRST's new Systemcore/Motioncore/A301 control system becomes legal in FTC in 2027-28. The legacy and hybrid systems stay legal through at least 2030-31, and Systemcore is programmed with WPILib, which has an FTC-like OpMode framework and uses Java 25. For 2026-27, everything stays on the Control Hub plus the FTC SDK. ftcsoftware.org is a July 2026 beta fork of frcsoftware.org. It currently teaches WPILib 2027 and Systemcore, and its Stage 1 code even uses FRC parts (TalonFX, SparkMax), so it does not fit FTC-SDK rookies yet. frcsoftware.org's Stage 0 Java is conceptually reusable, but it runs in WPILib VS Code and uses Java 9+ `List.of`. The best free texts are gm0 (CC BY-NC 2.0, actively maintained, with a partial zh-CN translation) and Alan G. Smith's Learn Java for FTC (free PDF but no open license, updated 2026).",
+  "facts": [
+   {
+    "topic": "Season",
+    "claim": "The 2026-2027 FTC game is BIOBUZZ presented by RTX, part of the FIRST CANOPY season.",
+    "source_url": "https://www.firstinspires.org/programs/ftc/game-and-season",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Season",
+    "claim": "FTC Kickoff was September 12, 2026. 'SDK and Live Preview (Beta) releases' were scheduled during Kickoff Week. The Competition Manual Preview came out July 29, 2026.",
+    "source_url": "https://www.firstinspires.org/community-blog/key-upcoming-biobuzz-season-dates",
+    "confidence": "verified"
+   },
+   {
+    "topic": "SDK version",
+    "claim": "The latest FtcRobotController release is v12.0. It was published on GitHub 2026-09-12T18:03:30Z with the assets FtcDriverStation-release.apk and FtcRobotController-release.apk. The README header is 'Version 12.0 (20260907-090034)', labeled the official 2026/2027 release.",
+    "source_url": "https://api.github.com/repos/FIRST-Tech-Challenge/FtcRobotController/releases?per_page=4",
+    "confidence": "verified"
+   },
+   {
+    "topic": "SDK v12.0 changes",
+    "claim": "v12.0 breaking change: the AprilTag Cluster feature causes compile errors in code that uses AprilTagDetection objects, in both Android Studio and OnBot Java. The fix is an instanceof check and a cast to AprilTagSingleDetection or AprilTagClusterDetection. Other changes: a tree view for robot configurations; DS gamepad indicators turn orange on the Android generic driver; the BIOBUZZ AprilTag library (getCurrentGameTagLibrary); BIOBUZZ tags move, so they are not suitable for absolute field localization; OctoQuad MK2 fw 3.1.0; battery voltage now updates on the DS even with no telemetry.",
+    "source_url": "https://github.com/FIRST-Tech-Challenge/FtcRobotController",
+    "confidence": "verified"
+   },
+   {
+    "topic": "SDK v11.2 / v11.2.1 changes",
+    "claim": "v11.2 (build 20260707-102819, published 2026-07-15) upgrades Gradle to 9.1 and AGP to 8.13.2. It requires Android Studio Narwhal 3 Feature Drop or later; older versions fail to sync and users should not downgrade AGP. It adds the @Utility OpMode type (shown in a Utility menu; needs DS and RC 11.2+), a TestHardware utility (servos, CR servos, motors, color/distance/touch sensors, IMU, webcams, analog) and a TestGamepad utility, plus PwmControl setPulseWidth/getPulseWidth. v11.2.1 (build 20260724-093406, published 2026-07-31) is tooling-only (issue #2099) and ships no APKs.",
+    "source_url": "https://raw.githubusercontent.com/FIRST-Tech-Challenge/FtcRobotController/master/README.md",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Android Studio requirement",
+    "claim": "The README states: 'To use this Android Studio project, you will need Android Studio Narwhal 3 Feature Drop or later.' Programming in Blocks or OnBot Java does not need Android Studio. The README tells even advanced Java programmers to start with the Blocks tutorial.",
+    "source_url": "https://raw.githubusercontent.com/FIRST-Tech-Challenge/FtcRobotController/master/README.md",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Java version",
+    "claim": "build.common.gradle sets sourceCompatibility/targetCompatibility JavaVersion.VERSION_1_8 (compileSdkVersion 30, minSdkVersion 24, targetSdkVersion 28). The 10.1.1 notes say 'OnBotJava only supports Java 1.8' and that Ladybug's bundled JDK is 21. Java 9+ language and library features (var, records, switch expressions, List.of) should not be taught for FTC code.",
+    "source_url": "https://raw.githubusercontent.com/FIRST-Tech-Challenge/FtcRobotController/master/build.common.gradle",
+    "confidence": "verified"
+   },
+   {
+    "topic": "SDK dependencies",
+    "claim": "build.dependencies.gradle pulls org.firstinspires.ftc Inspection, Blocks, RobotCore, RobotServer, OnBotJava, Hardware, FtcCommon and Vision, all at 12.0.0, from mavenCentral(), plus google() for androidx.",
+    "source_url": "https://raw.githubusercontent.com/FIRST-Tech-Challenge/FtcRobotController/master/build.dependencies.gradle",
+    "confidence": "verified"
+   },
+   {
+    "topic": "FTC Docs install page staleness",
+    "claim": "The FTC Docs 'Installing Android Studio' page still carries a Ladybug caution: the bundled JDK is incompatible, install JDK 17 separately, and 'Do not upgrade Gradle'. It never mentions Narwhal. This looks stale next to SDK 10.1.1+ (Ladybug support) and 11.2+ (Narwhal 3 FD required).",
+    "source_url": "https://ftc-docs.firstinspires.org/en/latest/programming_resources/tutorial_specific/android_studio/installing_android_studio/Installing-Android-Studio.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Gamepad edge detection",
+    "claim": "SDK 10.3 (build 20250625-090416) release notes say 'Added support for gamepad edge detection' and add the ConceptGamepadEdgeDetection sample. RobotCore 10.3.0 Javadoc has aWasPressed()/aWasReleased(); RobotCore 10.2.0 has no *WasPressed methods.",
+    "source_url": "https://javadoc.io/static/org.firstinspires.ftc/RobotCore/10.3.0/com/qualcomm/robotcore/hardware/Gamepad.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Gamepad edge detection",
+    "claim": "RobotCore 12.0.0 Gamepad has xWasPressed()/xWasReleased() for a, b, x, y, dpadUp/Down/Left/Right, guide, start, back, leftBumper, rightBumper, leftStickButton, rightStickButton, circle, cross, triangle, square, share, options, touchpad, ps, leftTrigger and rightTrigger, plus resetEdgeDetection(). Each 'Checks if ... was pressed since the last call of this method', so calling it twice in one loop consumes the event.",
+    "source_url": "https://javadoc.io/static/org.firstinspires.ftc/RobotCore/12.0.0/com/qualcomm/robotcore/hardware/Gamepad.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Gamepad triggers",
+    "claim": "SDK 11.1 (build 20251231-104637, published 2026-01-20): 'Gamepad triggers can now be accessed as booleans and have edge detection supported' (fields left_trigger_pressed/right_trigger_pressed; setTriggerThreshold). It also fixed Blocks showing the wrong Java for edge-detection blocks, so Blocks supports edge detection too.",
+    "source_url": "https://raw.githubusercontent.com/FIRST-Tech-Challenge/FtcRobotController/master/README.md",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Gamepad edge detection sample",
+    "claim": "ConceptGamepadEdgeDetection extends LinearOpMode, is named 'Concept: Gamepad Edge Detection', and uses gamepad1.leftBumperWasPressed()/WasReleased(), rightBumper..., leftTrigger..., rightTrigger... and gamepad1.left_trigger_pressed.",
+    "source_url": "https://raw.githubusercontent.com/FIRST-Tech-Challenge/FtcRobotController/master/FtcRobotController/src/main/java/org/firstinspires/ftc/robotcontroller/external/samples/ConceptGamepadEdgeDetection.java",
+    "confidence": "verified"
+   },
+   {
+    "topic": "gm0 gamepad tutorial",
+    "claim": "gm0's Gamepad Usage page still teaches manual edge detection: Gamepad.copy() into current/previous Gamepad objects, then `current.a && !previous.a`. It does not mention the SDK's built-in *WasPressed() methods.",
+    "source_url": "https://gm0.org/en/latest/docs/software/tutorials/gamepad.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "SDK 10.3 other",
+    "claim": "SDK 10.3 added a static 'blackboard' HashMap on OpMode for state shared between OpModes (not across robot resets), a Full Range Servo option and GoBilda Pinpoint support.",
+    "source_url": "https://raw.githubusercontent.com/FIRST-Tech-Challenge/FtcRobotController/master/README.md",
+    "confidence": "verified"
+   },
+   {
+    "topic": "SDK 11.0",
+    "claim": "SDK 11.0 (build 20250827-105138) added OnBot Java 'projects' (grouping related files) and DECODE color/AprilTag support.",
+    "source_url": "https://raw.githubusercontent.com/FIRST-Tech-Challenge/FtcRobotController/master/README.md",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Choosing a tool",
+    "claim": "FTC Docs 'Choosing a Programming Tool' calls Blocks the fastest way for novices to start and strongly recommends that all users begin with Blocks. OnBot Java requires a sound understanding of Java. Android Studio is complicated, needs extensive Java experience and a dedicated laptop, and is recommended only for advanced users.",
+    "source_url": "https://ftc-docs.firstinspires.org/en/latest/programming_resources/shared/choosing_program_lang/choosing-program-lang.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Supported hardware",
+    "claim": "FTC Docs: 'Only the REV Control Hub and the REV Driver Hub are officially supported'. Android phones are legal but unsupported. A phone RC needs an Expansion Hub, OTG adapter and USB-A to USB-Mini cable.",
+    "source_url": "https://ftc-docs.firstinspires.org/en/latest/programming_resources/android_studio_java/before_you_start/before-you-start.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "First OpMode tutorial",
+    "claim": "The FTC Docs Android Studio and OnBot Java 'Creating and Running an OpMode' pages both build MyFIRSTJavaOpMode, which extends LinearOpMode with @TeleOp. Devices are imu (Gyroscope), motorTest (DcMotor), digitalTouch (DigitalChannel), sensorColorRange (DistanceSensor) and servoTest (Servo). The pages use hardwareMap.get(...), telemetry.addData/update, waitForStart(), while(opModeIsActive()), and later tgtPower = -gamepad1.left_stick_y. No page is titled 'Hello World'.",
+    "source_url": "https://ftc-docs.firstinspires.org/en/latest/programming_resources/tutorial_specific/android_studio/creating_op_modes/Creating-and-Running-an-Op-Mode-%28Android-Studio%29.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "OnBot Java build",
+    "claim": "In OnBot Java the Build button (wrench icon) compiles all .java files on the Robot Controller, so an error in any file fails the whole build. Success shows 'Build succeeded!'.",
+    "source_url": "https://ftc-docs.firstinspires.org/en/latest/programming_resources/tutorial_specific/onbot_java/creating_op_modes/Creating-and-Running-an-Op-Mode-%28OnBot-Java%29.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Docs coverage gaps",
+    "claim": "I found no FTC Docs pages dedicated to telemetry, gamepad programming or hardwareMap. They are covered inside the first-OpMode tutorials, the Javadoc (javadoc.io/doc/org.firstinspires.ftc) and gm0 (Using Telemetry, Gamepad Usage, Reading and Writing to Hardware). The only gamepad page in FTC Docs is a hardware anchor on the Driver Station Components page.",
+    "source_url": "https://ftc-docs.firstinspires.org/en/latest/programming_resources/index.html",
+    "confidence": "likely"
+   },
+   {
+    "topic": "Telemetry",
+    "claim": "Telemetry Javadoc: 'no call to update() is required in loop-based OpModes' (it runs at the end of each loop/init_loop). In LinearOpMode 'unless update() is called, nothing will appear on the driver station screen'. Transmission happens at most every 250 ms by default (setMsTransmissionInterval), and autoClear is on by default.",
+    "source_url": "https://javadoc.io/static/org.firstinspires.ftc/RobotCore/12.0.0/org/firstinspires/ftc/robotcore/external/Telemetry.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "OpMode lifecycle",
+    "claim": "OpMode (iterative): init() is abstract, called once on INIT. init_loop() is optional and runs repeatedly between INIT and PLAY. start() is optional and runs once on PLAY. loop() is abstract and runs repeatedly until stop. stop() is optional and runs once at stop ('hardware control is limited'). Also getRuntime(), resetRuntime(), terminateOpModeNow() and a static blackboard.",
+    "source_url": "https://javadoc.io/static/org.firstinspires.ftc/RobotCore/12.0.0/com/qualcomm/robotcore/eventloop/opmode/OpMode.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "LinearOpMode",
+    "claim": "LinearOpMode: override runOpMode(). Helpers are waitForStart(), opModeIsActive() (Run phase), opModeInInit(), isStarted(), isStopRequested(), idle() and sleep(ms). init/init_loop/start/loop/stop are final ('may not be overridden by linear OpModes').",
+    "source_url": "https://javadoc.io/static/org.firstinspires.ftc/RobotCore/12.0.0/com/qualcomm/robotcore/eventloop/opmode/LinearOpMode.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "LinearOpMode vs OpMode guidance",
+    "claim": "gm0 treats the choice as preference and uses 'LinearOpMode everywhere for consistency'. It notes that since SDK 8.1 OpMode has about a 1 ms delay between loop() calls, making it about as fast as LinearOpMode. opModeIsActive() calls idle(); opModeInInit() does not.",
+    "source_url": "https://gm0.org/en/latest/docs/software/getting-started/linear-opmode-vs-opmode.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Official samples",
+    "claim": "The SDK samples BasicOpMode_Iterative (@TeleOp(name=\"Basic: Iterative OpMode\", group=\"Iterative OpMode\")) and BasicOpMode_Linear (@TeleOp(name=\"Basic: Linear OpMode\")) use hardwareMap.get(DcMotor.class, \"left_drive\"/\"right_drive\"), setDirection(REVERSE/FORWARD) and POV drive from -gamepad1.left_stick_y and right_stick_x with Range.clip. The iterative sample never calls telemetry.update().",
+    "source_url": "https://raw.githubusercontent.com/FIRST-Tech-Challenge/FtcRobotController/master/FtcRobotController/src/main/java/org/firstinspires/ftc/robotcontroller/external/samples/BasicOpMode_Iterative.java",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Wireless deploy",
+    "claim": "Wireless ADB to a Control Hub: join the Program & Manage Wi-Fi, check 192.168.43.1:8080 loads, put adb on PATH, then run 'adb.exe connect 192.168.43.1:5555'. The default Control Hub Wi-Fi password is 'password'.",
+    "source_url": "https://ftc-docs.firstinspires.org/en/latest/programming_resources/shared/managing_control_hub/Managing-a-Control-Hub.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Android Studio workflow",
+    "claim": "gm0's Android Studio guide: clone https://github.com/FIRST-Tech-Challenge/FtcRobotController.git via Get from VCS and write code in TeamCode > java > org.firstinspires.ftc.teamcode. Deploy over USB with the Run button or over Wi-Fi with 'adb connect 192.168.43.1:5555' (phones: adb tcpip 5555 then 192.168.49.1:5555). Configuration XMLs can be pulled from /sdcard/FIRST or placed in TeamCode/src/main/res/xml. The guide also covers Logcat debugging.",
+    "source_url": "https://gm0.org/en/latest/docs/software/getting-started/using-android-studio.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "USB deploy",
+    "claim": "FTC Docs AS tutorial: connect the Control Hub via its USB-C port (not USB Mini) with a charged 12V battery, then press the green Run button next to TeamCode to build and install.",
+    "source_url": "https://ftc-docs.firstinspires.org/en/latest/programming_resources/tutorial_specific/android_studio/creating_op_modes/Creating-and-Running-an-Op-Mode-%28Android-Studio%29.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Firmware updates",
+    "claim": "Hub firmware (shared by Control Hub and Expansion Hub) can be updated five ways: REV Hardware Client over USB; DS app > Advanced RC Settings > REV Hub Firmware Update; the RC phone app (Expansion Hub only); the Manage page in Chrome on a laptop; or the Manage page on the Driver Station device.",
+    "source_url": "https://ftc-docs.firstinspires.org/en/latest/ftc_sdk/updating/hub_firmware/Updating-Hub-Firmware.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "REV Hardware Client",
+    "claim": "FTC Docs describe REV Hardware Client 2 (released in 2026) as the current tool for updating Control Hub OS, Driver Hub OS, Expansion Hub firmware, the RC/DS apps and Servo Hub firmware. RHC2 cannot update the RC app on an Android phone, so phone users need the original RHC 1.x, which installs separately.",
+    "source_url": "https://ftc-docs.firstinspires.org/en/latest/ftc_sdk/updating/hardware_client/Updating-REV-Hardware-Client.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "REV Hardware Client 2",
+    "claim": "RHC2 runs on Windows 10 (1709+)/11, macOS 15+ and Ubuntu 24.04/Debian 12+. It lists Control Hub, Expansion Hub and Driver Hub as supported. It says devices must run firmware 26.x.x or newer, and devices on 2025 firmware need a Recovery Mode update first; whether that applies to FTC hubs or only CAN/FRC devices is unclear.",
+    "source_url": "https://docs.revrobotics.com/rev-hardware-client-2",
+    "confidence": "uncertain"
+   },
+   {
+    "topic": "Bulk reads",
+    "claim": "LynxModule.BulkCachingMode: OFF means never replace commands with cached bulk-read results. MANUAL replaces eligible commands with cached results until the user calls clearBulkCache(), typically once per loop. AUTO is 'same as MANUAL except the cache is also cleared automatically when the same command is issued twice' and is aimed at beginners.",
+    "source_url": "https://javadoc.io/static/org.firstinspires.ftc/Hardware/12.0.0/com/qualcomm/hardware/lynx/LynxModule.BulkCachingMode.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Bulk reads",
+    "claim": "gm0 Bulk Reads: one bulk read reads all non-I2C sensor values on a hub in about the time of one command, and needs SDK 5.4+. AUTO is recommended. MANUAL returns stale values if clearBulkCache() is not called on every hub every loop. Bulk reads are per hub. The SDK sample ConceptMotorBulkRead (@TeleOp 'Motor Bulk Reads', group 'Tests') demonstrates all three modes.",
+    "source_url": "https://gm0.org/en/latest/docs/software/tutorials/bulk-reads.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "gm0",
+    "claim": "gm0 is licensed under 'Creative Commons Attribution-NonCommercial 2.0 Generic (CC BY-NC 2.0)'. The repo gamemanual0/gm0 is active, with its last commit on 2026-10-25 ('Fix/replace/remove a few dead links').",
+    "source_url": "https://gm0.org/en/latest/docs/appendix/license.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "gm0 Chinese",
+    "claim": "A Simplified Chinese gm0 build exists at gm0-zh-cn.readthedocs.io (project gm0-zh_CN, from gamemanual0/gm0-translations). Navigation and headings are in Chinese, but it is partially translated, with English item names mixed in.",
+    "source_url": "https://gm0-zh-cn.readthedocs.io/zh-cn/latest/docs/software/index.html",
+    "confidence": "likely"
+   },
+   {
+    "topic": "Learn Java for FTC",
+    "claim": "Learn Java for FTC by Alan G. Smith lives at github.com/alan412/LearnJavaForFTC. The free PDF (LearnJavaForFTC.pdf) and exercise solutions are in the repo, and a paperback is on Amazon (B08DBVKXLZ). The GitHub license field is null (no open license). Last push was 2026-11-09. The README says the samples were tested with SDK 11.2. A 2026-05-11 commit updated the PDF with chapters on Control Theory and Behavior Trees.",
+    "source_url": "https://github.com/alan412/LearnJavaForFTC",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Learn Java for FTC structure",
+    "claim": "The solutions folder implies about 21 chapters, with a 'ProgrammingBoard' running example (chapters 6-17), a RobotLocation class (chapter 5), Touch/Motor/Servo-with-gamepad OpModes (chapters 6-8) and LinearOpMode in an appendix (Appendix B); the book mainly uses iterative OpMode. The full TOC could not be fetched (the PDF timed out).",
+    "source_url": "https://github.com/alan412/LearnJavaForFTC/tree/master/solutions",
+    "confidence": "uncertain"
+   },
+   {
+    "topic": "ftcsoftware.org",
+    "claim": "ftcsoftware.org is a beta fork of frcsoftware.org (repo ftcsoftware/ftcsoftware.org, created 2026-07-29, last push 2026-09-02, 1 star). Content is CC BY-NC-SA 4.0 and examples are BSD-3. It requires the WPILib 2027 alpha VS Code. Stage 0 covers Java; Stage 1A/1B covers kitbot and command-based; Stage 2 is TBD. Stage 1A code uses WPILib/Systemcore classes (OpModeRobot, PeriodicOpMode, DifferentialDrive, OnboardIMU) and even FRC TalonFX/SparkMax, not FTC SDK hardwareMap/DcMotor.",
+    "source_url": "https://ftcsoftware.org/learning-course/stage1/stage1a/kitbot-drivetrain/",
+    "confidence": "verified"
+   },
+   {
+    "topic": "frcsoftware.org Stage 0 fit",
+    "claim": "frcsoftware.org Stage 0 (Java Fundamentals, Debugging, Git, Operators, Conditionals, Loops, Classes and Objects, Methods and Mutable State, Arrays, Interfaces/Generics/Lists) runs exercises in WPILib 2027 VS Code from a Stage 0 template repo. Its Interfaces lesson uses List.of (Java 9+, not available at FTC's Java 1.8 level) and references WPILib classes. Content is CC BY-NC-SA 4.0.",
+    "source_url": "https://frcsoftware.org/learning-course/stage0/interfaces-lists/",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Future control system",
+    "claim": "FIRST blog (2025-12-08): the new control system (Systemcore replacing the Control Hub, Motioncore, the A301 CAN brushless actuator, an 18V battery and a DS device still to be decided) is available for FTC competition from 2027-28. 'There will be a transition period through at least the 2030-31 season' in which legacy and hybrid setups are legal. The Driver Hub stays legal after a software upgrade.",
+    "source_url": "https://www.firstinspires.org/community-blog/control-system-update-first-tech-challenge-edition",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Future control system software",
+    "claim": "FIRST blog (2024-11-27): Systemcore is built on the Raspberry Pi CM5. The new software is built with Limelight, WPILib and the FTC tech team. It supports Blockly and text-based on-robot ('headless') coding, and 'full Integrated Development Environment (IDE) support will continue'.",
+    "source_url": "https://www.firstinspires.org/community-blog/introducing-the-future-mobile-robot-controller",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Future control system software",
+    "claim": "WPILib 2027 (alpha) adds an OpMode framework 'similar to FTC' and FTC fields, and requires Java 25.",
+    "source_url": "https://docs.wpilib.org/en/latest/docs/yearly-overview/yearly-changelog.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Future control system software",
+    "claim": "A May 2026 FIRST Washington coaches deck reportedly says there are no FTC control-system changes for 2026-27, the Control Hub stays on the FTC SDK, and Systemcore programming is based on WPILib. This came from a search snippet; I did not fetch the deck.",
+    "source_url": "https://firstwa.org/wp-content/uploads/2026/06/May-26th-Coaches-Meeting.pdf",
+    "confidence": "likely"
+   },
+   {
+    "topic": "Starter bots",
+    "claim": "FIRST's BIOBUZZ kickoff post (2026-09-18) lists StarterBots from AndyMark, goBILDA, REV and Studica, plus Skill Builders, and says BIOBUZZ-specific FTC Docs guides will be published through the fall. REV's 2026-27 DUO Starter Bot has TeleOp and Auto code in Blocks and OnBot Java, with config names leftDrive, rightDrive, intakeMotor, flywheel, crServo and pollenServo.",
+    "source_url": "https://docs.revrobotics.com/ftc-kickoff-concepts/home/programming-teleop-and-auto",
+    "confidence": "verified"
+   },
+   {
+    "topic": "REV Hello Robot",
+    "claim": "REV's 'Hello Robot - Intro to OnBot Java Programming' has an Intro (Where to Program, What is an OpMode, Configuration, Using a Gamepad) and three parts: Part 1 Basics (servos, motors, touch, color), Part 2 Robot Control (arcade drive, arm with limit switch) and Part 3 Autonomous and Encoders (ElapsedTime, RUN_TO_POSITION, arm encoders). For SDK 10.3+ it uses the 'Blank OpMode - Linear OpMode' template.",
+    "source_url": "https://docs.revrobotics.com/duo-control/hello-robot-java",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Simulator",
+    "claim": "Beta8397/virtual_robot is a JavaFX 2D simulator 'to help beginning Java programmers learn to program for FTC'. It approximates the FTC SDK, has a ProgrammingBoard config matching Learn Java for FTC, supports RoadRunner 1.0.1 and PedroPathing v3, and needs IntelliJ (or Android Studio) with Liberica JDK 17 full.",
+    "source_url": "https://github.com/Beta8397/virtual_robot",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Other courses",
+    "claim": "Code-A-Robot (codearobot.org, by Jacob Kaiserman, not affiliated with FIRST, © 2025) offers 6 units (Java Fundamentals through TeleOp & Beyond, including Road Runner) in a browser editor. It requires sign-up and states no license.",
+    "source_url": "https://www.codearobot.org/",
+    "confidence": "verified"
+   }
+  ],
+  "code_examples": [
+   {
+    "title": "LinearOpMode: hold A to run one motor (current API)",
+    "code": "package org.firstinspires.ftc.teamcode;\n\nimport com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;\nimport com.qualcomm.robotcore.eventloop.opmode.TeleOp;\nimport com.qualcomm.robotcore.hardware.DcMotor;\n\n@TeleOp(name = \"Lesson: One Motor (Linear)\", group = \"Lessons\")\npublic class OneMotorLinear extends LinearOpMode {\n    @Override\n    public void runOpMode() {\n        // \"motor\" must match the name in the ACTIVE robot configuration (case-sensitive)\n        DcMotor motor = hardwareMap.get(DcMotor.class, \"motor\");\n\n        telemetry.addData(\"Status\", \"Initialized\");\n        telemetry.update();\n\n        waitForStart();               // INIT phase ends when the driver presses START\n\n        while (opModeIsActive()) {    // runs until STOP (or end of match)\n            double power = gamepad1.a ? 0.5 : 0.0;   // hold A to run at half power\n            motor.setPower(power);\n\n            telemetry.addData(\"A held\", gamepad1.a);\n            telemetry.addData(\"Motor power\", power);\n            telemetry.update();       // REQUIRED in LinearOpMode or nothing shows on the DS\n        }\n    }\n}",
+    "notes": "Imports: LinearOpMode, TeleOp, DcMotor. Works on SDK 12.0 (and all recent SDKs). Java 1.8 language level. Use @Autonomous instead of @TeleOp for an auto. Structure follows FTC Docs MyFIRSTJavaOpMode and BasicOpMode_Linear.",
+    "source_url": "https://raw.githubusercontent.com/FIRST-Tech-Challenge/FtcRobotController/master/FtcRobotController/src/main/java/org/firstinspires/ftc/robotcontroller/external/samples/BasicOpMode_Linear.java"
+   },
+   {
+    "title": "Iterative OpMode: hold A to run one motor",
+    "code": "package org.firstinspires.ftc.teamcode;\n\nimport com.qualcomm.robotcore.eventloop.opmode.OpMode;\nimport com.qualcomm.robotcore.eventloop.opmode.TeleOp;\nimport com.qualcomm.robotcore.hardware.DcMotor;\n\n@TeleOp(name = \"Lesson: One Motor (Iterative)\", group = \"Lessons\")\npublic class OneMotorIterative extends OpMode {\n    private DcMotor motor;\n\n    @Override\n    public void init() {              // once, when INIT is pressed (abstract: must implement)\n        motor = hardwareMap.get(DcMotor.class, \"motor\");\n        telemetry.addData(\"Status\", \"Initialized\");\n    }\n\n    @Override\n    public void init_loop() { }       // repeatedly between INIT and START (optional)\n\n    @Override\n    public void start() { }           // once, when START is pressed (optional)\n\n    @Override\n    public void loop() {              // repeatedly until STOP (abstract: must implement)\n        double power = gamepad1.a ? 0.5 : 0.0;\n        motor.setPower(power);\n        telemetry.addData(\"A held\", gamepad1.a);\n        telemetry.addData(\"Motor power\", power);\n        // no telemetry.update(): loop-based OpModes send telemetry automatically after loop()/init_loop()\n    }\n\n    @Override\n    public void stop() { }            // once after STOP (optional; hardware control is limited here)\n}",
+    "notes": "Never put a blocking while-loop or sleep() inside loop(); each call must return quickly. Lifecycle per OpMode Javadoc 12.0.0. Pattern from BasicOpMode_Iterative.",
+    "source_url": "https://raw.githubusercontent.com/FIRST-Tech-Challenge/FtcRobotController/master/FtcRobotController/src/main/java/org/firstinspires/ftc/robotcontroller/external/samples/BasicOpMode_Iterative.java"
+   },
+   {
+    "title": "Toggle a motor with built-in edge detection (SDK 10.3+)",
+    "code": "// inside runOpMode() of a LinearOpMode, after hardwareMap.get(...)\nboolean running = false;\nwaitForStart();\nwhile (opModeIsActive()) {\n    boolean aPressed = gamepad1.aWasPressed();   // true ONCE per press; call it once per loop and store it\n    if (aPressed) {\n        running = !running;\n    }\n    motor.setPower(running ? 0.5 : 0.0);\n    telemetry.addData(\"Running\", running);\n    telemetry.update();\n}\n\n// Equivalent manual version (what gm0 teaches; works on any SDK):\n// Gamepad current = new Gamepad(), previous = new Gamepad();\n// previous.copy(current); current.copy(gamepad1);\n// if (current.a && !previous.a) { running = !running; }",
+    "notes": "aWasPressed()/aWasReleased() and the other button methods arrived in SDK 10.3 (June 2025). leftTriggerWasPressed() and left_trigger_pressed arrived in 11.1. Each *WasPressed() reports presses 'since the last call of this method', so a second call in the same loop returns false. resetEdgeDetection() clears the state. The manual version needs import com.qualcomm.robotcore.hardware.Gamepad.",
+    "source_url": "https://javadoc.io/static/org.firstinspires.ftc/RobotCore/12.0.0/com/qualcomm/robotcore/hardware/Gamepad.html"
+   },
+   {
+    "title": "Bulk reads: MANUAL caching (clear once per loop)",
+    "code": "import com.qualcomm.hardware.lynx.LynxModule;\nimport java.util.List;\n\n// in runOpMode(), before waitForStart()\nList<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);\nfor (LynxModule hub : allHubs) {\n    hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL); // or AUTO (recommended for beginners)\n}\n\nwaitForStart();\nwhile (opModeIsActive()) {\n    for (LynxModule hub : allHubs) {\n        hub.clearBulkCache();          // MANUAL only: forget this and you read stale values forever\n    }\n    int left  = leftMotor.getCurrentPosition();   // served from one bulk read per hub\n    int right = rightMotor.getCurrentPosition();\n    telemetry.addData(\"Encoders\", \"%d / %d\", left, right);\n    telemetry.update();\n}",
+    "notes": "Bulk reads cover all non-I2C sensor and encoder data on a hub. I2C sensors (IMU, color sensors) are still separate reads. In AUTO mode, re-reading the same value in one loop triggers an extra bulk read. See the SDK sample ConceptMotorBulkRead.",
+    "source_url": "https://gm0.org/en/latest/docs/software/tutorials/bulk-reads.html"
+   }
+  ],
+  "resources": [
+   {
+    "name": "FtcRobotController (FTC SDK) GitHub repo",
+    "url": "https://github.com/FIRST-Tech-Challenge/FtcRobotController",
+    "what": "Official Android Studio project. TeamCode is where students write code. The README has full release notes, and the samples sit in FtcRobotController/src/main/java/org/firstinspires/ftc/robotcontroller/external/samples (BasicOpMode_Linear, BasicOpMode_Iterative, ConceptGamepadEdgeDetection, ConceptMotorBulkRead, ...).",
+    "license": "BSD-3-Clause-Clear style FIRST license (headers in sample files)",
+    "status": "Maintained; v12.0 published 2026-09-12"
+   },
+   {
+    "name": "FTC SDK Releases",
+    "url": "https://github.com/FIRST-Tech-Challenge/FtcRobotController/releases",
+    "what": "Release tags and prebuilt RC/DS APKs (v12.0, v11.2.1, v11.2, v11.1, ...).",
+    "status": "Maintained"
+   },
+   {
+    "name": "FTC SDK Javadoc",
+    "url": "https://javadoc.io/doc/org.firstinspires.ftc",
+    "what": "API reference (RobotCore 12.0.0: OpMode, LinearOpMode, Gamepad, Telemetry, HardwareMap; Hardware 12.0.0: LynxModule). The best official reference for telemetry, gamepad and hardwareMap.",
+    "status": "Current version 12.0.0"
+   },
+   {
+    "name": "FTC Docs: Programming Resources hub",
+    "url": "https://ftc-docs.firstinspires.org/en/latest/programming_resources/index.html",
+    "what": "Official index. Programming Tutorials: Choosing a Programming Tool (.../shared/choosing_program_lang/choosing-program-lang.html), Blocks Tutorial, OnBot Java Tutorial and Android Studio Tutorial. Supporting docs: Control System Intro, Configuring Hardware, Managing a Control Hub. Vision: AprilTag, Color Processing. Advanced: PIDF, the Universal IMU Interface (.../programming_resources/imu/imu.html), Kotlin.",
+    "license": "BSD-3-Clause (ftcdocs repo); verify",
+    "status": "Maintained (some pages stale, e.g. the Android Studio install caution)"
+   },
+   {
+    "name": "FTC Docs: Android Studio Tutorial",
+    "url": "https://ftc-docs.firstinspires.org/en/latest/programming_resources/android_studio_java/Android-Studio-Tutorial.html",
+    "what": "Chapters: Before You Start; Introduction; Configuring your Hardware; Installing Android Studio (.../tutorial_specific/android_studio/installing_android_studio/Installing-Android-Studio.html); Downloading the AS Project Folder (.../downloading_as_project_folder/Downloading-the-Android-Studio-Project-Folder.html); Fork and Clone from GitHub (.../fork_and_clone_github_repository/Fork-and-Clone-From-GitHub.html); Creating and Running an OpMode (.../creating_op_modes/Creating-and-Running-an-Op-Mode-%28Android-Studio%29.html); Controlling a Servo; Using Sensors.",
+    "status": "Maintained; the install page's Ladybug/JDK 17 caution looks out of date"
+   },
+   {
+    "name": "FTC Docs: OnBot Java Tutorial",
+    "url": "https://ftc-docs.firstinspires.org/en/latest/programming_resources/onbot_java/OnBot-Java-Tutorial.html",
+    "what": "17 links: Intro, Control System, Required Materials, Configuring Hardware, Connecting to Program & Manage, Writing an OpMode, Creating and Running an OpMode (https://ftc-docs.firstinspires.org/en/latest/programming_resources/tutorial_specific/onbot_java/creating_op_modes/Creating-and-Running-an-Op-Mode-%28OnBot-Java%29.html), Controlling a Servo, Using Sensors, OnBot Java Reference Info.",
+    "status": "Maintained"
+   },
+   {
+    "name": "FTC Docs: Blocks Tutorial",
+    "url": "https://ftc-docs.firstinspires.org/en/latest/programming_resources/blocks/Blocks-Tutorial.html",
+    "what": "20 links including Creating Op Modes (Blocks), Running Your OpMode (All Languages) (https://ftc-docs.firstinspires.org/en/latest/programming_resources/tutorial_specific/blocks/running_op_modes/Running-Your-Op-Mode.html), Managing OpModes, Servo, Sensors, Blocks Reference.",
+    "status": "Maintained"
+   },
+   {
+    "name": "FTC Docs: Configuring Your Hardware",
+    "url": "https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html",
+    "what": "Robot configuration: Getting Started/Creating a Configuration, DC Motor, Servo, Color Distance Sensor, Digital Touch, External Webcam, Adding an Expansion Hub (configuring_dual_hubs), Saving the Configuration.",
+    "status": "Maintained"
+   },
+   {
+    "name": "FTC Docs: Updating Components of the Control System",
+    "url": "https://ftc-docs.firstinspires.org/en/latest/ftc_sdk/updating/index.html",
+    "what": "Children: Updating REV Hardware Client (hardware_client/Updating-REV-Hardware-Client.html), RC App (rc_app/Updating-the-RC-App.html), DS App (ds_app/Updating-the-DS-App.html), Control Hub OS (controlhub_os/Updating-the-Control-Hub-OS.html), Hub Firmware (hub_firmware/Updating-Hub-Firmware.html).",
+    "status": "Maintained (mentions RHC2, 2026)"
+   },
+   {
+    "name": "FTC Docs: Managing a Control Hub",
+    "url": "https://ftc-docs.firstinspires.org/en/latest/programming_resources/shared/managing_control_hub/Managing-a-Control-Hub.html",
+    "what": "Name/password, reset, Wi-Fi channel, logs, firmware, RC app update, webcam calibration, OS update, and Wireless ADB (adb connect 192.168.43.1:5555).",
+    "status": "Maintained"
+   },
+   {
+    "name": "FTC Docs: Control System Introduction",
+    "url": "https://ftc-docs.firstinspires.org/en/latest/programming_resources/shared/control_system_intro/The-FTC-Control-System.html",
+    "what": "Robot Controller (Control Hub), Expansion Hub, Driver Station (Driver Hub), gamepads, 12V battery; supported versus phone setups.",
+    "status": "Maintained"
+   },
+   {
+    "name": "Game Manual 0 (gm0) Software section",
+    "url": "https://gm0.org/en/latest/docs/software/index.html",
+    "what": "Getting Started: Fundamental Concepts (getting-started/fundamental-concepts.html), Options for Programming, LinearOpMode vs OpMode, Reading and Writing to Hardware (common-hardware-components.html), Using Android Studio, Common Issues. Tutorials: Mecanum TeleOp, Gamepad Usage, Using Telemetry, Encoders, Bulk Reads, Computer Vision. Programming Concepts: Control Loops, Finite State Machines, Kinematics, Odometry. Advanced Control System: Control System Electronics, SDK Communication, SDK Motors, SDK Servos, SDK Sensors, Lynx Module. Software Glossary. All under https://gm0.org/en/latest/docs/software/...",
+    "license": "CC BY-NC 2.0 Generic",
+    "status": "Maintained (last commit 2026-10-25). The gamepad page does not cover the built-in *WasPressed() methods yet."
+   },
+   {
+    "name": "gm0 Simplified Chinese build",
+    "url": "https://gm0-zh-cn.readthedocs.io/zh-cn/latest/docs/software/index.html",
+    "what": "Partial zh-CN translation of gm0 (from gamemanual0/gm0-translations). Useful for the Chinese edition.",
+    "license": "CC BY-NC 2.0 (inherits gm0)",
+    "status": "Partially translated; completeness unknown"
+   },
+   {
+    "name": "Learn Java for FTC (Alan G. Smith)",
+    "url": "https://github.com/alan412/LearnJavaForFTC",
+    "what": "Free PDF book plus a solutions folder. Builds Java from scratch around a 'ProgrammingBoard' hardware class (touch sensor, motor, servo, gamepad, sensors, arrays, vision, and since 2026 chapters on control theory and behavior trees). Mostly iterative OpMode; LinearOpMode is in an appendix. About 21 chapters by exercise numbering. Paperback: https://www.amazon.com/dp/B08DBVKXLZ",
+    "license": "No open license (GitHub license null; the book is copyrighted). Link to it, do not copy.",
+    "status": "Maintained (pushed 2026-11-09; samples tested with SDK 11.2)"
+   },
+   {
+    "name": "REV Hello Robot - Intro to OnBot Java",
+    "url": "https://docs.revrobotics.com/duo-control/hello-robot-java",
+    "what": "Intro (Where to Program, What is an OpMode, Configuration, Using a Gamepad). Part 1 Basics: servos, motors, telemetry, touch, color. Part 2 Robot Control: drivetrain, arcade drive, arm and limit switch. Part 3 Autonomous and Encoders: ElapsedTime, encoder ticks to distance, RUN_TO_POSITION, arm encoders. Uses LinearOpMode templates. A parallel Blocks course is at https://docs.revrobotics.com/duo-control/hello-robot-blocks",
+    "status": "Maintained (updated for SDK 10.3 template names)"
+   },
+   {
+    "name": "REV 2026-27 DUO FTC Starter Bot",
+    "url": "https://docs.revrobotics.com/ftc-kickoff-concepts/home/2026-27-rev-duo-ftc-starter-bot",
+    "what": "BIOBUZZ starter bot with Blocks and OnBot Java TeleOp/Auto code and a config file. Walkthroughs at .../home/programming-teleop-and-auto and .../programming-auto.",
+    "status": "Current season (2026-27)"
+   },
+   {
+    "name": "FIRST BIOBUZZ kickoff and season resources",
+    "url": "https://www.firstinspires.org/community-blog/biobuzz-kickoff-and-season-resources",
+    "what": "Official 2026-27 starter bots (AndyMark, goBILDA, REV, Studica), Skill Builders, team resources (https://ftc-resources.firstinspires.org/ftc/team) and webinars.",
+    "status": "Posted 2026-09-18"
+   },
+   {
+    "name": "REV Hardware Client 2",
+    "url": "https://docs.revrobotics.com/rev-hardware-client-2",
+    "what": "Desktop tool to update Control Hub/Driver Hub OS, hub firmware and RC/DS apps over USB or Wi-Fi, and to back up and restore Control Hub data. Download: https://rhc2.revrobotics.com/download/download.html. The original RHC (for phone RCs) is at https://docs.revrobotics.com/rev-hardware-client",
+    "status": "Current (2026)"
+   },
+   {
+    "name": "frcsoftware.org Learning Course",
+    "url": "https://frcsoftware.org/learning-course/",
+    "what": "Stage 0 Java: Java Fundamentals, Debugging, Git, Operators, Conditionals, Loops, Classes and Objects, Methods and Mutable State, Arrays and For-Each, Interfaces/Generics/Lists, Additional Resources, Wrap-Up. Uses WPILib 2027 VS Code and a template repo.",
+    "license": "CC BY-NC-SA 4.0 content; BSD-3 examples",
+    "status": "Maintained"
+   },
+   {
+    "name": "ftcsoftware.org",
+    "url": "https://ftcsoftware.org/learning-course/",
+    "what": "Beta fork of frcsoftware.org for FTC. Course Setup (WPILib 2027 alpha, Git, GitHub). Stage 0 Java (7 lessons). Stage 1A kitbot (drivetrain, sim, simple auto) and 1B command-based, both on WPILib/Systemcore APIs. Stage 2 TBD. Repo: https://github.com/ftcsoftware/ftcsoftware.org",
+    "license": "CC BY-NC-SA 4.0 content; BSD-3 examples",
+    "status": "Beta, created 2026-07-29, last push 2026-09-02. Not aligned with the FTC SDK for 2026-27."
+   },
+   {
+    "name": "Virtual Robot (Beta8397)",
+    "url": "https://github.com/Beta8397/virtual_robot",
+    "what": "2D JavaFX FTC simulator that approximates the SDK (hardwareMap, OpModes, gamepad). Has a ProgrammingBoard config for Learn Java for FTC plus RoadRunner and Pedro support. Lets students practice without hardware in IntelliJ with JDK 17.",
+    "license": "Not stated in README (see LEGAL folder)",
+    "status": "Active (401 commits; README mentions Biobuzz/Decode fields)"
+   },
+   {
+    "name": "Code-A-Robot",
+    "url": "https://www.codearobot.org/",
+    "what": "Six-unit browser-based FTC Java course (Java Fundamentals; Getting Ready for FTC; Robot Control Basics; Sensors and Feedback; Autonomous incl. Road Runner; TeleOp and Beyond). Requires sign-up.",
+    "license": "Not stated",
+    "status": "Active (© 2025)"
+   },
+   {
+    "name": "FIRST: Control System Update - FTC Edition",
+    "url": "https://www.firstinspires.org/community-blog/control-system-update-first-tech-challenge-edition",
+    "what": "Official timeline for Systemcore/Motioncore/A301 in FTC: legal from 2027-28, transition through at least 2030-31.",
+    "status": "Posted 2025-12-08"
+   },
+   {
+    "name": "FTC Community Technical Forum",
+    "url": "https://ftc-community.firstinspires.org/",
+    "what": "Official Q&A forum for technical and software help.",
+    "status": "Active"
+   }
+  ],
+  "recommendations": "1. Target platform for 2026-27: teach the FTC SDK v12.0 on a REV Control Hub with a Driver Hub. Every official source treats this as the supported stack this season. Mention the 2027-28 Systemcore/WPILib transition only as a \"what's next\" sidebar: it is optional, and the legacy system stays legal through at least 2030-31. Do not base FTC lessons on ftcsoftware.org yet. It targets WPILib 2027 alpha and even uses FRC motor controllers. Revisit it in 2027.\n\n2. Tool path: follow the official guidance but compress it, giving Blocks a day at most for absolute beginners. FTC Docs says to start with Blocks, which is good for demystifying configuration and OpModes. Then teach Java in OnBot Java first: no install, works on Chromebooks, same API. Move to Android Studio (Narwhal 3 Feature Drop or later) plus git fork/clone. That move mirrors the FRC curriculum's VS Code + git workflow and enables libraries, Logcat and wireless ADB. Warn students that the FTC Docs install page's Ladybug/JDK 17 caution is outdated, that they should not change the Gradle or AGP versions, and that being on the robot's Wi-Fi cuts off internet access.\n\n3. Java Stage 0: reuse the structure of frcsoftware.org Stage 0 (variables, operators, conditionals, loops, classes, methods, arrays, interfaces/lists), since its concepts are generic. Rewrite it for FTC constraints:\n   - FTC compiles at Java 1.8 (and OnBot Java supports only 1.8). Avoid var, records, switch expressions, text blocks and List.of; use new ArrayList<>() or Arrays.asList.\n   - Replace System.out/terminal exercises with telemetry. They can run in OnBot Java, in plain Java, or in Beta8397/virtual_robot when there is no robot.\n   - frcsoftware content is CC BY-NC-SA 4.0. Adapted text must stay non-commercial, share-alike and attributed.\n   - Link to Learn Java for FTC as optional parallel reading. It is free but has no open license, so do not copy it.\n   - gm0 (CC BY-NC 2.0, with a partial zh-CN translation) can be quoted or adapted with attribution, non-commercially.\n\n4. OpMode model: teach LinearOpMode first. FTC Docs' MyFIRSTJavaOpMode, the REV Hello Robot templates and gm0 all use it, and runOpMode → waitForStart → while(opModeIsActive()) reads top-to-bottom for rookies. Then teach iterative OpMode (init / init_loop / start / loop / stop) as the bridge to state machines and to the FRC side's periodic/command-based thinking. Explicitly teach two traps:\n   - telemetry.update() is required in LinearOpMode but automatic in iterative OpMode.\n   - Never block (sleep or a while loop) inside loop().\n\n5. Gamepad: teach the built-in edge detection, gamepad1.aWasPressed() (SDK 10.3+) and triggers via left_trigger_pressed / leftTriggerWasPressed() (11.1+). Add one lesson on the manual previous/current Gamepad.copy() pattern, because gm0 and most older team code still use it. Stress that *WasPressed() consumes the event: call it once per loop and store the result.\n\n6. Hardware and config lessons:\n   - The hardwareMap name must match the active configuration, case-sensitive.\n   - setDirection for drivetrains.\n   - Use the new @Utility TestHardware and TestGamepad utilities (SDK 11.2+) for wiring checks before writing code.\n   - Use REV Hardware Client 2 for OS, firmware and app updates. Phone RCs need the original RHC.\n   - Deploy over USB-C with the Run button or with adb connect 192.168.43.1:5555, and keep config XMLs in TeamCode/src/main/res/xml.\n\n7. Later stage, performance: introduce bulk reads after encoders. Use AUTO as the default, and MANUAL with clearBulkCache() once per loop for advanced students. Cover loop-time telemetry (ElapsedTime). Point to gm0 Bulk Reads and the SDK sample ConceptMotorBulkRead.\n\n8. Season hooks: use the REV/goBILDA/AndyMark/Studica BIOBUZZ starter bots and their OnBot Java code as the Stage 1 \"kitbot\" analogue of the FRC curriculum's kitbot. When covering vision, note the v12.0 AprilTag cluster API change and that BIOBUZZ tags move, so they cannot be used for absolute field localization.\n\nTrade-offs: OnBot Java-first lowers setup friction, but it has no git, poor library support and compiles every file at once. Android Studio-first matches the FRC curriculum but costs about 3 GB and a full install day and needs a capable laptop. A blended path (OnBot Java for Stage 0-1, Android Studio from Stage 2) is the best compromise.",
+  "open_questions": [
+   "What is the exact chapter TOC of the current (2026) Learn Java for FTC PDF? The PDF fetch timed out; the structure here is inferred from the solutions folder and secondary snippets.",
+   "Does REV Hardware Client 2's 'firmware 26.x.x or newer / Recovery Mode' requirement apply to Control Hub/Expansion Hub firmware or only to CAN/FRC devices?",
+   "Will FTC Docs update the 'Installing Android Studio' page (still Ladybug/JDK 17) to reflect the Narwhal 3 Feature Drop requirement from SDK 11.2+? Does a separate JDK 17 install still matter with Narwhal's bundled JDK? Test on a clean machine.",
+   "Will the FTC SDK keep receiving releases after 2027-28 for Control Hub teams? A FIRSTWA May 2026 deck reportedly says the Control Hub stays on the FTC SDK; not verified from a primary FIRST source.",
+   "Will Systemcore-based FTC programming (WPILib 2027, Java 25, FTC-like OpMode framework) offer Blocks/OnBot-style browser coding? The Nov 2024 FIRST blog promised Blockly and headless text coding, but there are no current docs for FTC use.",
+   "Do the BIOBUZZ-specific FTC Docs technical guides ('published through the fall') include any new official programming tutorials worth linking?",
+   "Is the REV DUO Starter Bot OnBot Java code LinearOpMode-based, and does it use the built-in edge-detection methods? The code is only available as file downloads, which I did not open.",
+   "How complete is the gm0 zh-CN translation of the Software section, and is there an official Chinese FTC Docs build (ftc-docs has translation test builds, e.g. tr)?",
+   "What license do the FTC Docs repo (FIRST-Tech-Challenge/ftcdocs) and Beta8397/virtual_robot (LEGAL folder) use, if the curriculum wants to reuse images or text?"
+  ]
+ },
+ "research:control-auto-tools": {
+  "summary": "As of 2026-11-10 the FTC season is BIOBUZZ (2026-27), running on FTC SDK 12.0 (tag published 2026-09-12). Building SDK 12.0 needs Android Studio Narwhal 3 Feature Drop or later, with Gradle 9.1 and AGP 8.13.2 (since 11.2). Java source compatibility stays at 1.8 so that OnBot Java keeps working.\n\n**Breaking change.** SDK 12.0's only breaking change affects vision. Every AprilTag detection is now either an AprilTagSingleDetection or an AprilTagClusterDetection, so old AprilTag code no longer compiles until it does an instanceof check and a cast. BIOBUZZ tags sit in 4-tag clusters on moving HIVE CELLs, and FIRST says they are \"not suitable for absolute Field Localization\". This season, AprilTags are an aiming tool, not a way to localize on the field.\n\n**Motor control.** It is unchanged:\n- The four RunModes still work as before.\n- DcMotorEx.setVelocity takes ticks per second.\n- RUN_TO_POSITION layers a P-only position loop over the velocity PIDF.\n- Stronger teams use RUN_WITHOUT_ENCODER with their own PID + feedforward, which gm0 and CTRL ALT FTC teach. gm0 says the built-in loop runs at 20 Hz.\n\n**Localization.** The usual setup is now the goBILDA Pinpoint, which comes with an SDK driver (GoBildaPinpointDriver, since SDK 10.3, with V2 support since 11.1). V1 is discontinued and V2 (3110-0002-0002) is in stock at $79.99. The universal IMU interface with RevHubOrientationOnRobot is the standard for heading.\n\n**Path following.** Pedro Pathing 3 (v3.0.0 on 2026-09-10, now v3.0.2) is a full rewrite:\n- It adds the Foresight follower, PoseFactory, a new Path API, and a robot-hosted AutoTune web tuner.\n- It publishes to Maven Central and has a Quickstart on SDK 12.0.0.\n- It requires Android Studio.\n\nRoad Runner 1.0 (core 1.0.1, ftc 0.1.25) still works and is well documented but has gone quiet: its quickstart was last pushed 2025-10-31 and still targets SDK 11.0.0. Activity and fork counts point to Pedro as the community default for 2026.\n\n**Developer tools.**\n- FTC Dashboard 0.6.0 (2026-05-16).\n- Panels (fullpanels 1.0.20, 2026-11-07). It needs the Dairy repo as of SDK 12.\n- Sloth 0.3.2 hot reload (2026-09-17).\n- AdvantageScope v26 has experimental FTC support: FTC fields, Road Runner logs, and FTC Dashboard streaming.\n\n**Vision.** Use VisionPortal with the AprilTag, Color Locator and Predominant Color processors. The Limelight 3A (Limelight3A class) has been supported since SDK 10.0.\n\n**Long term.** FIRST says Systemcore becomes legal for FTC in 2027-28, and the current control system stays legal through at least 2030-31. A curriculum built on the current SDK should stay relevant for several seasons.",
+  "facts": [
+   {
+    "topic": "SDK / season",
+    "claim": "FTC SDK v12.0 (build 20260907-090034) was published on GitHub on 2026-09-12 as the official release for the BIOBUZZ (2026-2027) season. It requires Android Studio Narwhal 3 Feature Drop or later.",
+    "source_url": "https://github.com/FIRST-Tech-Challenge/FtcRobotController/releases",
+    "confidence": "verified"
+   },
+   {
+    "topic": "SDK / season",
+    "claim": "SDK 11.2 (2026-07-15) moved to Gradle 9.1 and Android Gradle Plugin 8.13.2. Older Android Studio versions fail to sync, and the notes say not to downgrade AGP when prompted. 11.2 also added @Utility OpModes, including TestHardware (tests motors, servos, sensors, IMUs and webcams in the config) and TestGamepad.",
+    "source_url": "https://raw.githubusercontent.com/FIRST-Tech-Challenge/FtcRobotController/master/README.md",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Vision / AprilTag",
+    "claim": "SDK 12.0 breaking change: AprilTag code that uses AprilTagDetection fields fails to compile. Each detection must be checked with instanceof AprilTagSingleDetection or AprilTagClusterDetection and cast first. ftcPose is inherited from the base class. id exists only on single detections; percentClusterFound (an int) only on clusters.",
+    "source_url": "https://ftc-docs.firstinspires.org/en/latest/tech_tips/tech-tips/tech-tip-apriltag-clusters/tech-tip-apriltag-clusters.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Vision / AprilTag",
+    "claim": "For BIOBUZZ, getCurrentGameTagLibrary() returns BIOBUZZ tags. Each cluster's origin is the center of the Cell opening, for easy aiming. The release notes warn that because BIOBUZZ AprilTags move, they are not suitable for absolute field localization. The tech tip says BIOBUZZ has 4 clusters and no single tags.",
+    "source_url": "https://raw.githubusercontent.com/FIRST-Tech-Challenge/FtcRobotController/master/README.md",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Motor control",
+    "claim": "The DcMotor.RunMode javadoc (RobotCore 12.0.0) defines four modes. RUN_WITHOUT_ENCODER applies raw power. RUN_USING_ENCODER is a velocity PID mode. RUN_TO_POSITION is a PID mode toward setTargetPosition(). STOP_AND_RESET_ENCODER zeroes the count and removes power; whether it is a transient state depends on the controller. Deprecated aliases RUN_WITHOUT_ENCODERS, RUN_USING_ENCODERS and RESET_ENCODERS still exist.",
+    "source_url": "https://javadoc.io/static/org.firstinspires.ftc/RobotCore/12.0.0/com/qualcomm/robotcore/hardware/DcMotor.RunMode.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Motor control",
+    "claim": "DcMotorEx provides setVelocity(double ticksPerSecond), setVelocity(double, AngleUnit), getVelocity(), setVelocityPIDFCoefficients(p,i,d,f), setPositionPIDFCoefficients(p), setPIDFCoefficients(RunMode, PIDFCoefficients), setTargetPositionTolerance(int) and getCurrent(CurrentUnit). The javadoc says RUN_TO_POSITION computes a velocity goal each cycle and then runs the RUN_USING_ENCODER logic, so only the P coefficient makes sense for the position stage.",
+    "source_url": "https://javadoc.io/static/org.firstinspires.ftc/RobotCore/12.0.0/com/qualcomm/robotcore/hardware/DcMotorEx.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Motor control",
+    "claim": "gm0 says to call setTargetPosition() before setMode(RUN_TO_POSITION), because the reverse order throws an error. It also says encoders do not reset when an OpMode starts, so use STOP_AND_RESET_ENCODER. SDK 10.2 fixed a bug where the wrong order needed a power cycle to recover; it now logs a stack trace instead.",
+    "source_url": "https://gm0.org/en/latest/docs/software/tutorials/encoders.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Motor control",
+    "claim": "The FTC Docs tech tip says the power or velocity given in RUN_TO_POSITION should be unsigned, because the controller picks the direction. It also stresses setting the correct motor type in the Robot Configuration.",
+    "source_url": "https://ftc-docs.firstinspires.org/en/latest/tech_tips/tech-tips/tech-tip-motor-modes/tech-tip-motor-modes.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Control theory",
+    "claim": "gm0 Control Loops says the built-in PID (enabled by RUN_USING_ENCODER) runs at a fixed 20 Hz (50 ms), and many top teams run external loops at up to 80 Hz. The page covers PID tuning order (P, then D, then I), Kv/Ka feedforward, static-friction feedforward, cosine gravity feedforward for arms, and trapezoidal motion profiles.",
+    "source_url": "https://gm0.org/en/latest/docs/software/concepts/control-loops.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Control theory",
+    "claim": "CTRL ALT FTC's 'FTC motor control' chapter recommends RUN_WITHOUT_ENCODER plus an external PID (the encoder still counts), BRAKE zero-power behaviour, and no threads for hardware calls. It describes the built-in controllers as lower frequency and often worse.",
+    "source_url": "https://www.ctrlaltftc.com/practical-examples/ftc-motor-control",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Control theory",
+    "claim": "CTRL ALT FTC (team 22377 Sigmacorns, GitBook, repo BenCaunt/CTRL-ALT-FTC) is still online with 28 pages listed in llms.txt. The repo has 138 commits, and the latest are minor fixes on 2025-09-02, 2025-02-24 and 2025-01-13, so the content is stable but low-activity.",
+    "source_url": "https://www.ctrlaltftc.com/llms.txt",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Localization / IMU",
+    "claim": "REV Control Hubs shipped from September 2022 use the BHI260AP IMU; earlier hubs use the BNO055. The universal IMU interface (SDK 8.1+) supports both, and the BHI260AP can only be used through it. Orientation is set with RevHubOrientationOnRobot(LogoFacingDirection, UsbFacingDirection). Yaw comes from getRobotYawPitchRollAngles(). resetYaw() should be called only when the robot is level. Expansion Hubs bought after December 2021 have no IMU. Java samples: SensorIMUOrthogonal, SensorIMUNonOrthogonal, ConceptExploringIMUOrientation.",
+    "source_url": "https://ftc-docs.firstinspires.org/en/latest/programming_resources/imu/imu.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Localization / Pinpoint",
+    "claim": "The SDK has added a built-in goBILDA Pinpoint driver (com.qualcomm.hardware.gobilda.GoBildaPinpointDriver) and the SensorGoBildaPinpoint sample since v10.3 (2025-06-25). v11.1 (2025-12-31) added Pinpoint v2 support and fixed an error when resolution was set in units other than mm. The sample uses setOffsets(mm), setEncoderResolution(goBILDA_4_BAR_POD), setEncoderDirections, resetPosAndIMU, update() and getPosition() returning Pose2D.",
+    "source_url": "https://raw.githubusercontent.com/FIRST-Tech-Challenge/FtcRobotController/master/README.md",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Localization / Pinpoint",
+    "claim": "The original Pinpoint (SKU 3110-0002-0001) is discontinued and sold out. Pinpoint V2 (SKU 3110-0002-0002) costs $79.99 USD and is listed in stock. V2 adds CRC8 on I2C, pitch/roll and quaternion orientation, configurable bulk-read windows and a USB port for future firmware updates. goBILDA claims about 1,500 Hz updates.",
+    "source_url": "https://www.gobilda.com/pinpoint-v2-odometry-computer-imu-sensor-fusion-for-2-wheel-odometry/",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Localization / Pinpoint",
+    "claim": "Pedro's Pinpoint tuning page says to plug the Pinpoint into an I2C port other than port 0 (the Control Hub's internal IMU uses port 0), mount it sticker side up, and put the forward pod on X and the strafe pod on Y.",
+    "source_url": "https://pedropathing.com/docs/pathing/tuning/localization/pinpoint",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Localization / dead wheels",
+    "claim": "gm0's Dead Wheels page compares two-wheel+IMU (cheaper, more drift, IMU over I2C cannot be bulk read) with three-wheel (more accurate, needs heading tuning). It does not mention Pinpoint, OTOS or OctoQuad, and the gm0 Odometry page recommends Road Runner and does not mention Pedro. gm0 is out of date on modern odometry hardware.",
+    "source_url": "https://gm0.org/en/latest/docs/common-mechanisms/dead-wheels.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Localization / other",
+    "claim": "The SDK added SparkFun OTOS and OctoQuad support in 9.2. 11.0 added an OctoQuad MK2 odometry localizer (firmware 3.x), and 12.0 supports OctoQuad MK2 firmware 3.1.0.",
+    "source_url": "https://raw.githubusercontent.com/FIRST-Tech-Challenge/FtcRobotController/master/README.md",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Pathing / Pedro",
+    "claim": "Pedro Pathing release history: v3.0.0 on 2026-09-10 (Foresight, PoseFactory, new Path API, AutoTune), v3.0.1 on 2026-09-18 (500 ms IMU calibration delay in PinpointLocalizer, driveOrHold()), v3.0.2 on 2026-10-16. The last 2.x release was v2.1.2 on 2026-05-07.",
+    "source_url": "https://github.com/Pedro-Pathing/PedroPathing/releases",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Pathing / Pedro",
+    "claim": "Pedro 3 installs from the Quickstart (git clone https://github.com/Pedro-Pathing/Quickstart.git) or manually: add maven { url 'https://repo.dairy.foundation/releases/' } and the dependencies com.pedropathing:revhub:3.0.2 and com.pedropathing:tuning:1.0.3. Both artifacts are on Maven Central (revhub updated 2026-10-16, tuning 2026-10-30). The Quickstart's build.dependencies.gradle uses FTC SDK 12.0.0 artifacts.",
+    "source_url": "https://raw.githubusercontent.com/Pedro-Pathing/Quickstart/master/build.dependencies.gradle",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Pathing / Pedro",
+    "claim": "Pedro prerequisites are a holonomic drivetrain (Mecanum and Swerve are supported by default) and a localizer: Pinpoint, OctoQuad, OTOS, Two Wheel, Three Wheel or Three Wheel IMU. It must be used from Android Studio and does not work with OnBot Java or Blocks.",
+    "source_url": "https://pedropathing.com/docs/pathing/prerequisites",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Pathing / Pedro",
+    "claim": "Pedro 3 tuning has three steps (Drivetrain, Localization, Foresight), all done through AutoTune, a robot-hosted web page at http://192.168.43.1:10158. Each tuner is registered in Tuning.java with an @Tuner method that returns a Procedure. After tuning, Constants.create(HardwareMap) returns new Follower(localizer, drivetrain, new Foresight(config)).",
+    "source_url": "https://pedropathing.com/docs/pathing/tuning",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Pathing / Pedro",
+    "claim": "Pedro 3 API: PoseFactory.degrees() and p.of(x,y,heading); static import com.pedropathing.api.Paths.* gives line() and curve(); .linear(start,end) sets heading interpolation (the default is tangential); follower.setPose(), follower.update() every loop, !follower.isBusy() or follower.atParametricEnd(), follower.manual(forward, lateral, turn) for TeleOp, and follower.pose().x(). Pedro uses its own coordinate system, not the official FTC one.",
+    "source_url": "https://pedropathing.com/docs/pathing/guide/pose-creation",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Pathing / Pedro",
+    "claim": "The Pedro docs strongly recommend the Ivy command library (implementation 'com.pedropathing.ivy:pedro:1.1.1', on Maven Central since 2026-09-10) over a manual state machine for new users. The guide only documents following a path through Ivy. follower.follow(path) without Ivy appears in the Quickstart's Tests.java.",
+    "source_url": "https://pedropathing.com/docs/pathing/guide/path-following",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Pathing / Pedro",
+    "claim": "Older Pedro repos are archived: Pedro-Pathing-Quickstart (marked outdated), Quickstart-1.0.9, DocsV2 and the old maven.pedropathing.com repo. The current Quickstart repo was last pushed 2026-10-30, the Docs repo 2026-11-09, and the Visualizer is at visualizer.pedropathing.com.",
+    "source_url": "https://api.github.com/orgs/Pedro-Pathing/repos?per_page=50&sort=updated",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Pathing / popularity",
+    "claim": "pedropathing.com calls itself \"The most popular autonomous pathing library for FTC\" (a self-claim). Independent signals as of 2026-11-10: the Pedro Quickstart (created 2025-08-29) has 754 forks, plus 242 and 109 on its two archived predecessors, while road-runner-quickstart (created 2018) has 1,731 forks. GitHub repo search for repos pushed since 2026-09-01 returned 71 'pedropathing in:readme' versus 32 'roadrunner ftc in:readme'. This is rough evidence that Pedro is the current community default.",
+    "source_url": "https://pedropathing.com/",
+    "confidence": "likely"
+   },
+   {
+    "topic": "Pathing / Road Runner",
+    "claim": "Road Runner 1.0 install: maven https://maven.brott.dev/ with com.acmerobotics.roadrunner:ftc:0.1.25, core:1.0.1, actions:1.0.1 and com.acmerobotics.dashboard:dashboard:0.5.1. The quickstart is https://github.com/acmerobotics/road-runner-quickstart. 1.0.x is not backwards compatible with 0.5.x.",
+    "source_url": "https://rr.brott.dev/docs/v1-0/installation/",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Pathing / Road Runner",
+    "claim": "Road Runner activity has slowed. core 1.0.1 was released 2025-01-05 and ftc 0.1.25 on 2025-08-23 (still the latest on maven.brott.dev). road-runner-quickstart was last pushed 2025-10-31 and still uses FTC SDK 11.0.0 with dashboard 0.5.1. No repo is archived.",
+    "source_url": "https://github.com/acmerobotics/road-runner-quickstart",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Pathing / Road Runner",
+    "claim": "Road Runner 1.0 tuning order: drive class and localizer setup, then FTC Dashboard, then OTOS tuners (OTOS only), then ForwardPushTest, LateralPushTest (drive encoders only), ForwardRampLogger, LateralRampLogger, AngularRampLogger, ManualFeedforwardTuner, ManualFeedbackTuner and SplineTest. Supported localizers are drive encoders, two dead wheels (par/perp), three dead wheels (par0/par1/perp), Pinpoint ('pinpoint', tuned like two dead wheels) and OTOS ('sensor_otos').",
+    "source_url": "https://rr.brott.dev/docs/v1-0/tuning/",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Vision / color",
+    "claim": "FTC Docs Color Processing covers the Predominant Color processor ('long range color sensor', sample ConceptVisionColorSensor; compare result.closestSwatch to a Swatch) and the Color Blob Locator (samples ConceptVisionColorLocator_Rectangle and ConceptVisionColorLocator_Circle; circleFit added in 11.0). Hardware color sensors use NormalizedColorSensor (sample SensorColor, with setGain and getNormalizedColors).",
+    "source_url": "https://ftc-docs.firstinspires.org/en/latest/color_processing/index.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Vision / Limelight",
+    "claim": "Limelight 3A support has been in the SDK since 10.0, in package com.qualcomm.hardware.limelightvision (Limelight3A, LLResult, LLResultTypes, LLStatus). Usage: hardwareMap.get(Limelight3A.class, \"limelight\"), setPollRateHz, pipelineSwitch(i), start(), getLatestResult(), isValid(), getTx/getTy/getTa, getBotpose(), and getBotpose_MT2() with updateRobotOrientation(yaw) for MegaTag2. Since SDK 10.3, getLatestResult never returns null, so check isValid().",
+    "source_url": "https://docs.limelightvision.io/docs/docs-limelight/apis/ftc-programming",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Vision / Limelight",
+    "claim": "Limelight 3A setup: plug it into the Control Hub's blue USB 3.0 port, scan in Configure Robot so it appears as an 'Ethernet Device', and rename it 'limelight'. The web UI is at http://limelight.local:5801.",
+    "source_url": "https://docs.limelightvision.io/docs/docs-limelight/getting-started/limelight-3a",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Dev tools / FTC Dashboard",
+    "claim": "FTC Dashboard v0.6.0 (2026-05-16) installs with maven { url = 'https://maven.brott.dev/' } and implementation 'com.acmerobotics.dashboard:dashboard:0.6.0'. Open it at 192.168.43.1:8080/dash on a Control Hub. 0.6.0 added a Limelight 3A proxy, gamepad view, config editor and error view, and its notes say 'Update to SDK v11'. The repo was last pushed 2026-09-07 and is not archived.",
+    "source_url": "https://github.com/acmerobotics/ftc-dashboard",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Dev tools / Panels",
+    "claim": "Panels (by Lazar, github.com/ftcontrol/ftcontrol-panels) shows v1.0.20 on panels.bylazar.com. On mymaven.bylazar.com/releases, com.bylazar:fullpanels is at 1.0.20 (lastUpdated 2026-11-07). Setup needs both the https://mymaven.bylazar.com/releases and https://repo.dairy.foundation/releases repos, because Panels uses Sloth for scanning as of SDK 12. Do not mix fullpanels with individual plugins. Open it at 192.168.43.1:8001 on a Control Hub. The GitHub license field reads 'Other'.",
+    "source_url": "https://raw.githubusercontent.com/ftcontrol/ftcontrol-panels/HEAD/library/Docs/web/src/docs/Prerequisites.svelte",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Dev tools / Sloth",
+    "claim": "Sloth (Dairy Foundation) is a hot-reload library that deploys TeamCode in under about 2 seconds. Version 0.3.2 (dev.frozenmilk.sinister:Sloth:0.3.2) with the Load gradle plugin dev.frozenmilk:Load:0.3.2 was published 2026-09-17. You deploy with a 'deploySloth' Gradle run configuration, and only classes in the TeamCode package are hot reloaded. Library or Gradle changes need a full install. The README notes a common 2026-27 issue for teams moving to pedro3/nextv2: old sloth-loaded code must be removed from the robot.",
+    "source_url": "https://github.com/Dairy-Foundation/Sloth",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Dev tools / AdvantageScope",
+    "claim": "AdvantageScope 2026 (latest v26.0.2) has experimental FTC support: FTC field and robot models, FTC coordinate systems, Road Runner log files and FTC Dashboard live streaming. It warns teams to be careful during the season and does not endorse any FTC logging library. Full FTC support is planned for the Systemcore transition in 2027-28.",
+    "source_url": "https://docs.advantagescope.org/whats-new/",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Dev tools / logging",
+    "claim": "The Robot Controller writes /sdcard/ftcRobotControllerLog.txt. RobotLog.d(\"msg\") from com.qualcomm.robotcore.util.RobotLog writes to that log and to logcat, which you can filter in Android Studio over USB or wireless ADB. Logs can be pulled with adb pull.",
+    "source_url": "https://ftc-docs.firstinspires.org/en/latest/control_system_troubleshooting/using_log_files/using-log-files.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Dev tools / logging",
+    "claim": "The Control Hub accepts wireless ADB on port 5555 (adb connect 192.168.43.1:5555 after joining its Wi-Fi). This comes from a search summary of the 'Managing a Control Hub' page and was not fetched directly.",
+    "source_url": "https://ftc-docs.firstinspires.org/en/latest/programming_resources/shared/managing_control_hub/Managing-a-Control-Hub.html",
+    "confidence": "likely"
+   },
+   {
+    "topic": "Mecanum",
+    "claim": "gm0's robot-centric mecanum uses y = -left_stick_y, x = left_stick_x * 1.1 (strafe correction) and rx = right_stick_x. It sets denominator = max(|y|+|x|+|rx|, 1) and powers FL=(y+x+rx)/d, BL=(y-x+rx)/d, FR=(y-x-rx)/d, BR=(y+x-rx)/d. Field-centric rotates (x,y) by -botHeading: rotX = x*cos(-h) - y*sin(-h), rotY = x*sin(-h) + y*cos(-h), and resets yaw on the options button.",
+    "source_url": "https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Mecanum",
+    "claim": "The SDK samples BasicOmniOpMode_Linear and RobotTeleopMecanumFieldRelativeDrive use motor names front_left_drive, front_right_drive, back_left_drive and back_right_drive (renamed in 10.3) and reverse the LEFT side. gm0 reverses the RIGHT side, so the correct side depends on the motors and must be tested. The field-relative sample uses atan2/hypot and AngleUnit.normalizeRadians(theta - yaw).",
+    "source_url": "https://github.com/FIRST-Tech-Challenge/FtcRobotController/blob/master/FtcRobotController/src/main/java/org/firstinspires/ftc/robotcontroller/external/samples/RobotTeleopMecanumFieldRelativeDrive.java",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Performance",
+    "claim": "Bulk reads are enabled with hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO) for every LynxModule from hardwareMap.getAll(LynxModule.class). MANUAL mode needs clearBulkCache() each loop. The SDK sample is ConceptMotorBulkRead.",
+    "source_url": "https://gm0.org/en/latest/docs/software/tutorials/bulk-reads.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Future control system",
+    "claim": "FIRST (blog of 2025-12-08) says FTC teams can compete with Systemcore starting in 2027-28. The legacy and hybrid systems stay legal through at least the 2030-31 season, and the REV Driver Hub stays legal after a software upgrade. The post does not say how robots will be programmed.",
+    "source_url": "https://www.firstinspires.org/community-blog/control-system-update-first-tech-challenge-edition",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Season",
+    "claim": "The BIOBUZZ kickoff and game reveal were on 2026-09-12. The scoring element is 'Pollen', plastic balls of about 3 inches. This comes from search summaries of FIRST pages; the pages themselves were not fetched.",
+    "source_url": "https://www.firstinspires.org/community-blog/biobuzz-kickoff-and-season-resources",
+    "confidence": "likely"
+   }
+  ],
+  "resources": [
+   {
+    "name": "FTC SDK (FtcRobotController) v12.0 and README release notes",
+    "url": "https://github.com/FIRST-Tech-Challenge/FtcRobotController",
+    "what": "Official SDK. The README lists breaking changes per version. The samples folder holds RobotAutoDriveByTime_Linear, RobotAutoDriveByEncoder_Linear, RobotAutoDriveByGyro_Linear, BasicOmniOpMode_Linear, RobotTeleopMecanumFieldRelativeDrive, ConceptMotorBulkRead, SensorGoBildaPinpoint, SensorLimelight3A, ConceptAprilTagEasy/Localization, ConceptVisionColorSensor/Locator and SensorColor.",
+    "status": "Maintained. v12.0 released 2026-09-12 (BIOBUZZ).",
+    "license": "BSD-3-Clause-Clear style (FIRST)"
+   },
+   {
+    "name": "FTC SDK Javadoc (RobotCore 12.0.0)",
+    "url": "https://javadoc.io/doc/org.firstinspires.ftc/RobotCore/latest/index.html",
+    "what": "API reference for DcMotor, DcMotorEx, IMU and other classes. Static pages such as https://javadoc.io/static/org.firstinspires.ftc/RobotCore/12.0.0/com/qualcomm/robotcore/hardware/DcMotorEx.html can be read without the iframe.",
+    "status": "Current (12.0.0)."
+   },
+   {
+    "name": "FTC Docs: Motor Modes and Encoders tech tip",
+    "url": "https://ftc-docs.firstinspires.org/en/latest/tech_tips/tech-tips/tech-tip-motor-modes/tech-tip-motor-modes.html",
+    "what": "Official explanation of RunModes, setVelocity and setPIDFCoefficients, and why the motor type in the config matters.",
+    "status": "Current."
+   },
+   {
+    "name": "FTC Docs: Universal IMU interface",
+    "url": "https://ftc-docs.firstinspires.org/en/latest/programming_resources/imu/imu.html",
+    "what": "BHI260AP versus BNO055, RevHubOrientationOnRobot, yaw/pitch/roll and resetYaw, with orthogonal and non-orthogonal mounting samples.",
+    "status": "Current."
+   },
+   {
+    "name": "FTC Docs: AprilTag / VisionPortal section",
+    "url": "https://ftc-docs.firstinspires.org/en/latest/apriltag/index.html",
+    "what": "Subpages: Intro, ID Codes, Metadata, Reference Frame, Pose, Understanding AprilTag Values, Library, Localization, Test Images and Advanced Use. VisionPortal overview: https://ftc-docs.firstinspires.org/en/latest/apriltag/vision_portal/visionportal_overview/visionportal-overview.html (webcams, processor init, portal init, previews, camera controls, CPU/bandwidth, multiportal). Camera calibration: https://ftc-docs.firstinspires.org/en/latest/programming_resources/vision/camera_calibration/camera-calibration.html",
+    "status": "Current. Updated for SDK 12 clusters."
+   },
+   {
+    "name": "FTC Docs: AprilTag Clusters tech tip (SDK 12)",
+    "url": "https://ftc-docs.firstinspires.org/en/latest/tech_tips/tech-tips/tech-tip-apriltag-clusters/tech-tip-apriltag-clusters.html",
+    "what": "How to migrate to AprilTagSingleDetection and AprilTagClusterDetection, with BIOBUZZ cluster specifics. Short link: https://ftc-docs.firstinspires.org/apriltag-clusters",
+    "status": "New for 2026-27."
+   },
+   {
+    "name": "FTC Docs: Color Processing",
+    "url": "https://ftc-docs.firstinspires.org/en/latest/color_processing/index.html",
+    "what": "Subpages: Overview, Color Sensor (Predominant Color processor), Color Blob Concepts, Color Locator Discover/Explore/Challenge/Round Blobs, and Color Spaces.",
+    "status": "Current."
+   },
+   {
+    "name": "FTC Docs: Using Log Files to Troubleshoot",
+    "url": "https://ftc-docs.firstinspires.org/en/latest/control_system_troubleshooting/using_log_files/using-log-files.html",
+    "what": "Covers RC log location, RobotLog.d, Android Studio logcat filters and adb pull.",
+    "status": "Current, though some examples are dated."
+   },
+   {
+    "name": "Game Manual 0: Software section",
+    "url": "https://gm0.org/en/latest/docs/software/index.html",
+    "what": "Key pages: Mecanum TeleOp https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html, Encoders https://gm0.org/en/latest/docs/software/tutorials/encoders.html, Bulk Reads https://gm0.org/en/latest/docs/software/tutorials/bulk-reads.html, Control Loops https://gm0.org/en/latest/docs/software/concepts/control-loops.html, Finite State Machines https://gm0.org/en/latest/docs/software/concepts/finite-state-machines.html, Odometry https://gm0.org/en/latest/docs/software/concepts/odometry.html and Dead Wheels https://gm0.org/en/latest/docs/common-mechanisms/dead-wheels.html",
+    "status": "Maintained (repo pushed 2026-10-25). The odometry and dead-wheel pages do not cover Pinpoint, OTOS, OctoQuad or Pedro.",
+    "license": "CC BY-SA 4.0 (gm0 standard; not re-verified)"
+   },
+   {
+    "name": "CTRL ALT FTC (control theory for FTC)",
+    "url": "https://www.ctrlaltftc.com/",
+    "what": "Free control-theory course.\n- **Basics:** Introduction to Controls /introduction-to-controls; Open Loop /introduction-to-open-loop-control; Closed Loop /introduction-to-closed-loop-control.\n- **The PID Controller** (/the-pid-controller): Proportional /the-pid-controller/the-proportional-term; Integral /the-pid-controller/the-integral-term; Derivative /the-pid-controller/the-derivative-term; Tuning Methods /the-pid-controller/tuning-methods-of-a-pid-controller; Practical Improvements /the-pid-controller/practical-improvements-to-pid.\n- **Feedforward:** /feedforward-control.\n- **Advanced:** Full State Feedback /advanced/full-state-feedback; Kalman Filter /advanced/the-kalman-filter; Gain Scheduling /advanced/gain-scheduling; Motion Profiling /advanced/motion-profiling; SMARTDAMP /advanced/smartdamp-algorithm.\n- **Practical Examples:** FTC Motor Control /practical-examples/ftc-motor-control; Drivetrain Control /practical-examples/drivetrain-control; Controlling Heading /practical-examples/controlling-heading; Roadrunner Control Explained /practical-examples/roadrunner-control-explained.\n- **Homeostasis library:** /homeostasis-by-thermal-equilibrium/what-is-homeostasis, installation (jitpack com.github.Thermal-Equilibrium:homeostasis-FTC:1.0.8), included-controllers, state-estimation-and-filters, systems-in-homeostasis.\n- **Continued learning:** /continued-learning/extra-resources, /continued-learning/video-tutorials, /continued-learning/glossary.\n\nAll paths are relative to https://www.ctrlaltftc.com; append .md for Markdown.",
+    "status": "Online and stable but low activity; last commit 2025-09-02 (typo fix). Homeostasis library maintenance is unclear and looks legacy.",
+    "license": "Not stated on repo page"
+   },
+   {
+    "name": "Pedro Pathing docs (Pedro 3)",
+    "url": "https://pedropathing.com/docs/pathing",
+    "what": "- **Getting started:** Intro, Prerequisites (/docs/pathing/prerequisites), Installation (/docs/pathing/installation), Tuning (/docs/pathing/tuning, then drivetrain/mecanum, localization with pinpoint, octoquad, otos, two-wheel, three-wheel and three-wheel-imu, foresight, constants, test), Troubleshooting (/docs/pathing/faq), What's new (/docs/pathing/pedro3).\n- **Guide:** setting-up-auto, pose-creation, path-creation, path-following, auto-usage, teleop-usage, follow-state, debugging, modifiers.\n- **Reference:** posefactory, api, interpolation, deceleration, coordinates, endconstraints, pathconstraints, foresightoptions, beziercurves, velocity, logging, controllers.\n- **Related:** Ivy docs at /docs/ivy; Visualizer at https://visualizer.pedropathing.com; docs source at https://github.com/Pedro-Pathing/Docs (MDX, readable raw).",
+    "status": "Very active: v3.0.2 released 2026-10-16, docs pushed 2026-11-09.",
+    "license": "BSD-3-Clause"
+   },
+   {
+    "name": "Pedro Pathing Quickstart",
+    "url": "https://github.com/Pedro-Pathing/Quickstart",
+    "what": "FTC SDK 12.0.0 project with Pedro 3 (revhub 3.0.2, tuning 1.0.3). The teamcode/pedro package contains Constants.java, Tuning.java and procedures (PinpointTuner, OTOSTuner, OctoQuadTuner, TwoWheelTuner, ThreeWheelTuner, ThreeWheelIMUTuner, MecanumTuner, ForesightTuner, Tests).",
+    "status": "Active, last push 2026-10-30. The older Pedro-Pathing-Quickstart and Quickstart-1.0.9 repos are archived.",
+    "license": "BSD-3-Clause (SDK fork)"
+   },
+   {
+    "name": "Road Runner docs (1.0)",
+    "url": "https://rr.brott.dev/docs/v1-0/installation/",
+    "what": "Installation, New Features, Migration from 0.5, Actions, Tuning (/docs/v1-0/tuning/), API docs, Builder Reference, Log Files, Modules and guides (path-following, teleop-actions, centerstage-auto, ftclib-commands, tangents and more). Also MeepMeep (/docs/meepmeep/) and legacy 0.5.x 'Tour' pages on PID, feedforward and motion profiling, which are good theory reading.",
+    "status": "Online. Library is in low-activity maintenance (core 1.0.1 from 2025-01; quickstart last pushed 2025-10-31 on SDK 11.0.0).",
+    "license": "MIT"
+   },
+   {
+    "name": "Road Runner quickstart",
+    "url": "https://github.com/acmerobotics/road-runner-quickstart",
+    "what": "FTC project with Road Runner 1.0, FTC Dashboard and tuning OpModes (Mecanum/Tank drives; localizers for drive encoders, two/three dead wheels, Pinpoint and OTOS).",
+    "status": "Not archived but stale: last push 2025-10-31, still SDK 11.0.0 and dashboard 0.5.1.",
+    "license": "BSD-3-Clause-Clear (SDK fork)"
+   },
+   {
+    "name": "FTC Dashboard",
+    "url": "https://acmerobotics.github.io/ftc-dashboard/",
+    "what": "Telemetry graphs, field overlay, @Config live variables, camera stream and OpMode controls. Source: https://github.com/acmerobotics/ftc-dashboard",
+    "status": "Maintained. v0.6.0 released 2026-05-16, repo pushed 2026-09-07.",
+    "license": "MIT"
+   },
+   {
+    "name": "Panels (FTControl) by Lazar",
+    "url": "https://panels.bylazar.com/",
+    "what": "Plugin-based dashboard: telemetry, field, graph, configurables, OpMode control, gamepad, Limelight proxy, capture/replay, camera stream and battery. Java and Kotlin quickstarts: https://github.com/ftcontrol/Panels-Quickstart-Java and https://github.com/ftcontrol/Panels-Quickstart-Kotlin. Source: https://github.com/ftcontrol/ftcontrol-panels",
+    "status": "Very active: fullpanels 1.0.20 published 2026-11-07. The old ftcontrol.pages.dev docs are superseded.",
+    "license": "'Other' per GitHub (check the repo)"
+   },
+   {
+    "name": "Sloth (Dairy Foundation)",
+    "url": "https://github.com/Dairy-Foundation/Sloth",
+    "what": "Hot code reload in under 2 seconds via the Load gradle plugin and a deploySloth task. Ships Sloth-compatible FTC Dashboard ('slothboard'). Dairy Templates (https://github.com/Dairy-Foundation/Templates) offer a pre-configured teamcode-sloth template using the dev.frozenmilk.teamcode plugin '12.0.0-1.2.x'.",
+    "status": "Active: 0.3.2 released 2026-09-17.",
+    "license": "Not checked"
+   },
+   {
+    "name": "AdvantageScope (experimental FTC support)",
+    "url": "https://docs.advantagescope.org/whats-new/",
+    "what": "Log and telemetry viewer. The 2026 release adds FTC fields, FTC coordinates, Road Runner log import and FTC Dashboard live streaming. Live sources: https://docs.advantagescope.org/overview/live-sources/",
+    "status": "v26.0.2 (Apr 2026). FTC support is experimental; full support is planned for Systemcore in 2027-28.",
+    "license": "BSD-3-Clause (not re-verified)"
+   },
+   {
+    "name": "Limelight 3A docs",
+    "url": "https://docs.limelightvision.io/docs/docs-limelight/apis/ftc-programming",
+    "what": "FTC Java and Blockly API guide (Limelight3A, LLResult, MegaTag1/2). Quick-start and hardware setup: https://docs.limelightvision.io/docs/docs-limelight/getting-started/limelight-3a",
+    "status": "Maintained."
+   },
+   {
+    "name": "goBILDA Pinpoint V2 Odometry Computer",
+    "url": "https://www.gobilda.com/pinpoint-v2-odometry-computer-imu-sensor-fusion-for-2-wheel-odometry/",
+    "what": "Product page with the user guide PDF (still the V1 document) and Blocks guide. V1 page: https://www.gobilda.com/pinpoint-odometry-computer-imu-sensor-fusion-for-2-wheel-odometry/ (discontinued).",
+    "status": "V2 in stock at $79.99. V1 discontinued."
+   }
+  ],
+  "code_examples": [
+   {
+    "title": "Robot-centric mecanum TeleOp (gm0 math, SDK motor names)",
+    "code": "package org.firstinspires.ftc.teamcode;\n\nimport com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;\nimport com.qualcomm.robotcore.eventloop.opmode.TeleOp;\nimport com.qualcomm.robotcore.hardware.DcMotor;\n\n@TeleOp(name = \"Mecanum Robot-Centric\")\npublic class MecanumRobotCentric extends LinearOpMode {\n    @Override\n    public void runOpMode() {\n        DcMotor fl = hardwareMap.get(DcMotor.class, \"front_left_drive\");\n        DcMotor bl = hardwareMap.get(DcMotor.class, \"back_left_drive\");\n        DcMotor fr = hardwareMap.get(DcMotor.class, \"front_right_drive\");\n        DcMotor br = hardwareMap.get(DcMotor.class, \"back_right_drive\");\n\n        // One side must be reversed. The SDK samples reverse the LEFT side; gm0 reverses the RIGHT.\n        // Test: push left stick forward -> all wheels should spin forward. If not, flip the other side.\n        fl.setDirection(DcMotor.Direction.REVERSE);\n        bl.setDirection(DcMotor.Direction.REVERSE);\n        for (DcMotor m : new DcMotor[]{fl, bl, fr, br}) {\n            m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);\n            m.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);\n        }\n\n        waitForStart();\n        while (opModeIsActive()) {\n            double y  = -gamepad1.left_stick_y;       // stick up is negative, so negate\n            double x  =  gamepad1.left_stick_x * 1.1; // counteract imperfect strafing\n            double rx =  gamepad1.right_stick_x;      // turn\n\n            // Keep the power ratios when any wheel would exceed |1|\n            double d = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);\n            fl.setPower((y + x + rx) / d);\n            bl.setPower((y - x + rx) / d);\n            fr.setPower((y - x - rx) / d);\n            br.setPower((y + x - rx) / d);\n\n            telemetry.addData(\"y/x/rx\", \"%.2f %.2f %.2f\", y, x, rx);\n            telemetry.update();\n        }\n    }\n}",
+    "source_url": "https://gm0.org/en/latest/docs/software/tutorials/mecanum-drive.html",
+    "notes": "The math is gm0's (verified in the gm0 source rst). The motor names match the SDK 10.3+ samples. The equivalent official sample is BasicOmniOpMode_Linear, which normalizes by the max |power| instead. Field-centric version: read h = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS), compute rotX = x*cos(-h) - y*sin(-h) and rotY = x*sin(-h) + y*cos(-h), then replace x,y with rotX*1.1 and rotY. Reset yaw on gamepad1.options. Initialize the IMU with RevHubOrientationOnRobot as in RobotTeleopMecanumFieldRelativeDrive."
+   },
+   {
+    "title": "First autonomous by encoder (RUN_TO_POSITION, correct call order)",
+    "code": "package org.firstinspires.ftc.teamcode;\n\nimport com.qualcomm.robotcore.eventloop.opmode.Autonomous;\nimport com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;\nimport com.qualcomm.robotcore.hardware.DcMotor;\nimport com.qualcomm.robotcore.util.ElapsedTime;\n\n@Autonomous(name = \"Drive Forward By Encoder\")\npublic class DriveByEncoder extends LinearOpMode {\n    // Look these up for YOUR motor/wheel. Example: goBILDA 312 RPM Yellow Jacket ~537.7 ticks/rev, 104 mm wheels.\n    static final double TICKS_PER_REV = 537.7;\n    static final double WHEEL_DIAMETER_IN = 104.0 / 25.4;\n    static final double TICKS_PER_INCH = TICKS_PER_REV / (WHEEL_DIAMETER_IN * Math.PI);\n\n    private DcMotor fl, fr, bl, br;\n\n    @Override\n    public void runOpMode() {\n        fl = hardwareMap.get(DcMotor.class, \"front_left_drive\");\n        fr = hardwareMap.get(DcMotor.class, \"front_right_drive\");\n        bl = hardwareMap.get(DcMotor.class, \"back_left_drive\");\n        br = hardwareMap.get(DcMotor.class, \"back_right_drive\");\n        fl.setDirection(DcMotor.Direction.REVERSE);\n        bl.setDirection(DcMotor.Direction.REVERSE);\n        for (DcMotor m : new DcMotor[]{fl, fr, bl, br}) {\n            m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);\n            m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // encoders do NOT reset on their own\n        }\n        waitForStart();\n        driveInches(24, 0.5, 4.0);\n        driveInches(-12, 0.5, 3.0);\n    }\n\n    private void driveInches(double inches, double power, double timeoutS) {\n        int ticks = (int) Math.round(inches * TICKS_PER_INCH);\n        DcMotor[] all = {fl, fr, bl, br};\n        for (DcMotor m : all) {\n            m.setTargetPosition(m.getCurrentPosition() + ticks); // 1) target FIRST\n            m.setMode(DcMotor.RunMode.RUN_TO_POSITION);         // 2) then mode (reverse order throws)\n            m.setPower(Math.abs(power));                         // 3) unsigned power; hub picks direction\n        }\n        ElapsedTime t = new ElapsedTime();\n        while (opModeIsActive() && t.seconds() < timeoutS\n                && (fl.isBusy() || fr.isBusy() || bl.isBusy() || br.isBusy())) {\n            telemetry.addData(\"FL\", \"%d / %d\", fl.getCurrentPosition(), fl.getTargetPosition());\n            telemetry.update();\n        }\n        for (DcMotor m : all) {\n            m.setPower(0);\n            m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);\n        }\n    }\n}",
+    "source_url": "https://github.com/FIRST-Tech-Challenge/FtcRobotController/blob/master/FtcRobotController/src/main/java/org/firstinspires/ftc/robotcontroller/external/samples/RobotAutoDriveByEncoder_Linear.java",
+    "notes": "Adapted from the SDK's RobotAutoDriveByEncoder_Linear (tank, TETRIX 1440 CPR) and gm0's Encoders page. The SDK sample stops when EITHER motor finishes ('&&' of isBusy); this version waits for all with '||' plus a timeout. Both are defensible. The 537.7 ticks/rev and 104 mm values are illustrative, so check the motor vendor's page. Teach RobotAutoDriveByTime_Linear first, then this, then RobotAutoDriveByGyro_Linear for IMU turns."
+   },
+   {
+    "title": "Minimal PID + gravity feedforward to position (lift/arm), own loop",
+    "code": "package org.firstinspires.ftc.teamcode;\n\nimport com.qualcomm.robotcore.eventloop.opmode.OpMode;\nimport com.qualcomm.robotcore.eventloop.opmode.TeleOp;\nimport com.qualcomm.robotcore.hardware.DcMotor;\nimport com.qualcomm.robotcore.hardware.DcMotorEx;\nimport com.qualcomm.robotcore.util.ElapsedTime;\nimport com.qualcomm.robotcore.util.Range;\n\n@TeleOp(name = \"Lift PID Demo\")\npublic class LiftPidDemo extends OpMode {\n    // Tune in this order: kG (hold against gravity with P=0), then kP, then kD; kI last if ever.\n    public static double kP = 0.005, kI = 0.0, kD = 0.0002, kG = 0.08;\n    public static int LOW = 0, HIGH = 1500;   // encoder ticks\n\n    private DcMotorEx lift;\n    private final ElapsedTime timer = new ElapsedTime();\n    private double integral = 0, lastError = 0;\n    private int target = LOW;\n\n    @Override public void init() {\n        lift = hardwareMap.get(DcMotorEx.class, \"lift\");\n        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);\n        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);\n        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // we close the loop; the encoder still counts\n    }\n\n    @Override public void start() { timer.reset(); }\n\n    @Override public void loop() {\n        int newTarget = target;\n        if (gamepad1.a) newTarget = LOW;\n        if (gamepad1.y) newTarget = HIGH;\n        if (newTarget != target) { target = newTarget; integral = 0; } // reset I on setpoint change\n\n        double dt = timer.seconds();\n        timer.reset();\n        int pos = lift.getCurrentPosition();\n        double error = target - pos;\n\n        integral = Range.clip(integral + error * dt, -500, 500);     // anti-windup clamp\n        double derivative = dt > 0 ? (error - lastError) / dt : 0;\n        lastError = error;\n\n        // Lift: constant gravity term. Arm: replace kG with kCos * Math.cos(angleRadians).\n        double power = kP * error + kI * integral + kD * derivative + kG;\n        lift.setPower(Range.clip(power, -1, 1));\n\n        telemetry.addData(\"target\", target);\n        telemetry.addData(\"pos\", pos);\n        telemetry.addData(\"power\", \"%.3f\", power);\n        telemetry.addData(\"loop ms\", \"%.1f\", dt * 1000);\n    }\n}",
+    "source_url": "https://gm0.org/en/latest/docs/software/concepts/control-loops.html",
+    "notes": "Written for this curriculum and not copied from any source; it follows the gm0 Control Loops pseudocode and CTRL ALT FTC's 'FTC motor control' and 'PID controller' chapters. The gains are placeholders. 'public static' fields can be live-tuned by adding @Config (FTC Dashboard) or @Configurable (Panels) to the class. Iterative OpMode sends telemetry automatically after each loop(). Compare with the built-in approach: setTargetPosition, then RUN_TO_POSITION, then setPower (P-only position stage per the javadoc). Enable bulk reads (LynxModule.BulkCachingMode.AUTO) once loops do several reads."
+   },
+   {
+    "title": "Pedro Pathing 3: minimal two-path autonomous without Ivy",
+    "code": "package org.firstinspires.ftc.teamcode.autos;\n\nimport static com.pedropathing.api.Paths.line;\n\nimport com.pedropathing.api.PoseFactory;\nimport com.pedropathing.follower.Follower;\nimport com.pedropathing.math.Pose;\nimport com.qualcomm.robotcore.eventloop.opmode.Autonomous;\nimport com.qualcomm.robotcore.eventloop.opmode.OpMode;\n\nimport org.firstinspires.ftc.teamcode.pedro.Constants;\n\n@Autonomous(name = \"Pedro3 Two Path Auto\")\npublic class TwoPathAuto extends OpMode {\n    private Follower follower;\n    private final PoseFactory p = PoseFactory.degrees();\n    private final Pose startPose = p.of(24, 24, 0);   // Pedro coordinates, not FTC official\n    private final Pose scorePose = p.of(48, 48, 90);\n    private final Pose parkPose  = p.of(72, 48, 90);\n    private int step = 0;\n\n    @Override public void init() {\n        follower = Constants.create(hardwareMap);  // from the tuned Constants file\n        follower.setPose(startPose);\n        follower.update();\n    }\n\n    @Override public void start() {\n        follower.follow(line(startPose, scorePose).linear(startPose, scorePose));\n        step = 1;\n    }\n\n    @Override public void loop() {\n        follower.update();                      // every loop, no exceptions\n        switch (step) {\n            case 1:\n                if (!follower.isBusy()) {       // arrived and settled\n                    // start a NON-blocking mechanism action here\n                    follower.follow(line(scorePose, parkPose).linear(scorePose, parkPose));\n                    step = 2;\n                }\n                break;\n            case 2:\n                if (!follower.isBusy()) step = 3;\n                break;\n        }\n        telemetry.addData(\"step\", step);\n        telemetry.addData(\"x\", follower.pose().x());\n        telemetry.addData(\"y\", follower.pose().y());\n        telemetry.addData(\"heading\", Math.toDegrees(follower.pose().heading()));\n    }\n}",
+    "source_url": "https://pedropathing.com/docs/pathing/guide/auto-usage",
+    "notes": "Targets Pedro 3.0.2 (com.pedropathing:revhub:3.0.2 + tuning:1.0.3) on SDK 12.0. PoseFactory, line(...).linear(...), setPose, update, isBusy and pose().x() are from the official guide pages. The non-Ivy call follower.follow(path) comes from the Quickstart's Tests.java (https://github.com/Pedro-Pathing/Quickstart/blob/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/pedro/procedures/Tests.java), because the guide only documents following through Ivy: schedule(follow(follower, path)) with Scheduler.execute() in loop(), using com.pedropathing.ivy:pedro:1.1.1. The Pedro docs strongly recommend Ivy over hand-written state machines. Requires a tuned Constants.create() and does not work in OnBot Java or Blocks. Compile-check against 3.0.2 before publishing."
+   },
+   {
+    "title": "SDK 12 AprilTag loop (singleton vs cluster)",
+    "code": "// aprilTag = AprilTagProcessor.easyCreateWithDefaults();\n// visionPortal = VisionPortal.easyCreateWithDefaults(hardwareMap.get(WebcamName.class, \"Webcam 1\"), aprilTag);\nfor (AprilTagDetection det : aprilTag.getDetections()) {\n    if (det instanceof AprilTagSingleDetection) {\n        AprilTagSingleDetection s = (AprilTagSingleDetection) det;\n        if (s.metadata != null) {\n            telemetry.addData(\"Tag \" + s.id, \"range %.1f in, bearing %.1f deg\", det.ftcPose.range, det.ftcPose.bearing);\n        }\n    } else {\n        AprilTagClusterDetection c = (AprilTagClusterDetection) det;\n        telemetry.addData(\"Cluster \" + c.metadata.name, \"%d%% seen, range %.1f, bearing %.1f\",\n                c.percentClusterFound, det.ftcPose.range, det.ftcPose.bearing);\n    }\n}",
+    "source_url": "https://github.com/FIRST-Tech-Challenge/FtcRobotController/blob/master/FtcRobotController/src/main/java/org/firstinspires/ftc/robotcontroller/external/samples/ConceptAprilTagEasy.java",
+    "notes": "Imports: org.firstinspires.ftc.vision.VisionPortal, org.firstinspires.ftc.vision.apriltag.{AprilTagProcessor, AprilTagDetection, AprilTagSingleDetection, AprilTagClusterDetection}, org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName. Code written for SDK 11 or earlier will not compile on 12.0 without the instanceof/cast. In BIOBUZZ, use clusters for aiming (range/bearing to the Cell opening), not for field localization, since the tags move. The tech tip suggests checking that the cluster name starts with the alliance letter ('R'/'B') and that |ftcPose.roll| < 90."
+   },
+   {
+    "title": "Pinpoint odometry readout (SDK built-in driver)",
+    "code": "GoBildaPinpointDriver pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, \"pinpoint\");\npinpoint.setOffsets(-84.0, -168.0, DistanceUnit.MM);   // measure YOUR pod offsets\npinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);\npinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD,\n                              GoBildaPinpointDriver.EncoderDirection.FORWARD);\npinpoint.resetPosAndIMU();                              // robot must be stationary\npinpoint.setPosition(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, 0));\n// in loop():\npinpoint.update();\nPose2D pose = pinpoint.getPosition();\ntelemetry.addData(\"x in\", pose.getX(DistanceUnit.INCH));\ntelemetry.addData(\"y in\", pose.getY(DistanceUnit.INCH));\ntelemetry.addData(\"heading deg\", pose.getHeading(AngleUnit.DEGREES));",
+    "source_url": "https://github.com/FIRST-Tech-Challenge/FtcRobotController/blob/master/FtcRobotController/src/main/java/org/firstinspires/ftc/robotcontroller/external/samples/SensorGoBildaPinpoint.java",
+    "notes": "Imports: com.qualcomm.hardware.gobilda.GoBildaPinpointDriver and org.firstinspires.ftc.robotcore.external.navigation.{Pose2D, DistanceUnit, AngleUnit}. Built into the SDK since 10.3, with V2 support since 11.1. Configure it in the Robot Configuration on an I2C port other than 0. A good lesson is 'push the robot around and watch x/y/heading' before any pathing library."
+   },
+   {
+    "title": "Limelight 3A minimal read",
+    "code": "Limelight3A limelight = hardwareMap.get(Limelight3A.class, \"limelight\");\nlimelight.pipelineSwitch(0);\nlimelight.start();                         // nothing is valid until start()\n// in loop():\nLLResult r = limelight.getLatestResult();  // never null since SDK 10.3\nif (r.isValid()) {\n    telemetry.addData(\"tx\", r.getTx());\n    telemetry.addData(\"ty\", r.getTy());\n    telemetry.addData(\"ta\", r.getTa());\n}\n// limelight.stop(); when done",
+    "source_url": "https://github.com/FIRST-Tech-Challenge/FtcRobotController/blob/master/FtcRobotController/src/main/java/org/firstinspires/ftc/robotcontroller/external/samples/SensorLimelight3A.java",
+    "notes": "Package com.qualcomm.hardware.limelightvision.{Limelight3A, LLResult}. Configure it as 'Ethernet Device' after a scan and rename it 'limelight'. Pipelines are set up in the web UI at http://limelight.local:5801. For MegaTag2, call limelight.updateRobotOrientation(yawDeg) each loop and read getBotpose_MT2()."
+   },
+   {
+    "title": "Gradle install lines (late 2026)",
+    "code": "// build.dependencies.gradle (standard SDK 12.0 template). Pick ONE pathing library.\nrepositories {\n    mavenCentral()\n    google()\n    maven { url = 'https://repo.dairy.foundation/releases' }   // Pedro tuning deps, Sloth, Panels (SDK 12)\n    maven { url = 'https://mymaven.bylazar.com/releases' }     // Panels\n    maven { url = 'https://maven.brott.dev/' }                 // FTC Dashboard, Road Runner\n}\ndependencies {\n    // ... the eight org.firstinspires.ftc:*:12.0.0 lines from the SDK template ...\n\n    // Pedro Pathing 3 (Maven Central)\n    implementation 'com.pedropathing:revhub:3.0.2'\n    implementation 'com.pedropathing:tuning:1.0.3'\n    implementation 'com.pedropathing.ivy:pedro:1.1.1'        // optional: Ivy commands\n\n    // Panels: fullpanels OR individual com.bylazar:<plugin> artifacts, never both\n    implementation 'com.bylazar:fullpanels:1.0.20'\n\n    // FTC Dashboard\n    implementation 'com.acmerobotics.dashboard:dashboard:0.6.0'\n\n    // Road Runner 1.0 (instead of Pedro; the quickstart puts these in TeamCode/build.gradle)\n    // implementation 'com.acmerobotics.roadrunner:ftc:0.1.25'\n    // implementation 'com.acmerobotics.roadrunner:core:1.0.1'\n    // implementation 'com.acmerobotics.roadrunner:actions:1.0.1'\n}\n\n// Sloth hot reload (TeamCode/build.gradle): buildscript { repositories { maven { url \"https://repo.dairy.foundation/releases\" } }\n//   dependencies { classpath \"dev.frozenmilk:Load:0.3.2\" } }\n// apply plugin: 'dev.frozenmilk.sinister.sloth.load'\n// implementation(\"dev.frozenmilk.sinister:Sloth:0.3.2\")   then add a 'deploySloth' Gradle run config",
+    "source_url": "https://pedropathing.com/docs/pathing/installation",
+    "notes": "Versions were checked against Maven Central, mymaven.bylazar.com, maven.brott.dev and repo.dairy.foundation metadata on 2026-11-10. Panels' docs put its repos in the root build.gradle allprojects block; build.dependencies.gradle is what Pedro and Dashboard use. The SDK template applies it to TeamCode, but this exact combined file was NOT build-tested. The RR quickstart pins dashboard 0.5.1, so mixing it with 0.6.0 is untested. Sloth's README still lists com.bylazar.sloth:fullpanels:0.3.2+1.0.13, but the Panels docs (newer) say to switch back to com.bylazar:* because they now support Sloth directly. Open Dashboard at 192.168.43.1:8080/dash, Panels at 192.168.43.1:8001 and Pedro AutoTune at 192.168.43.1:10158."
+   }
+  ],
+  "open_questions": [
+   "Pedro 3's guide documents path following only through Ivy; the non-Ivy follower.follow(path) usage comes from Quickstart Tests.java. Confirm the exact signature (Path versus PathChain/Curve) and whether holdEnd defaults to true by compiling against core 3.0.2.",
+   "Does Road Runner 1.0 (quickstart on SDK 11.0.0, ftc 0.1.25) build and run unchanged after bumping to SDK 12.0.0? Only the AprilTag API broke, so it probably does, but this is untested. Will acmerobotics update the quickstart for 2026-27 at all?",
+   "FTC Dashboard 0.6.0's release notes say 'Update to SDK v11'. The repo was pushed 2026-09-07, but whether there is an official SDK 12-tested release, and whether Dashboard and Panels can run side by side without conflict, was not verified.",
+   "Panels and Sloth docs conflict on whether the com.bylazar.sloth:* artifacts are still needed. Panels now needs the Dairy repo because it uses Sloth scanning; check how this interacts with teams that do not want Sloth.",
+   "There is no authoritative usage survey for Pedro versus Road Runner. The evidence is Pedro's self-claim, fork counts and repo-search counts. FTCScout or OpenAlliance-style data could strengthen it.",
+   "BIOBUZZ AprilTags move, so the AprilTag localization lesson (ConceptAprilTagLocalization) needs practice tags from a previous season or printed tags. Check whether getCurrentGameTagLibrary versus getSampleTagLibrary / older season libraries are still available in SDK 12.",
+   "The wireless ADB port 5555 and the 'Managing a Control Hub' page were seen only in a search summary; fetch that page to verify.",
+   "Licenses: Panels shows 'Other' on GitHub, and CTRL ALT FTC's license is not stated. Check both before reproducing their material in a free curriculum, especially for the Chinese translation.",
+   "What will Systemcore programming look like for FTC in 2027-28 (WPILib-based? Java SDK compatibility?). This determines how long the current SDK-based lessons stay valid beyond the guaranteed legacy window (through at least 2030-31).",
+   "Is the Homeostasis library (jitpack com.github.Thermal-Equilibrium:homeostasis-FTC:1.0.8), which CTRL ALT FTC references, still maintained? It looks legacy, so a curriculum should teach hand-written PID instead.",
+   "NextFTC ('nextv2') is mentioned in the Sloth README as popular in 2026-27. It is a command framework alternative to Ivy and FTCLib that was not investigated here."
+  ],
+  "recommendations": "Suggested ladder for a rookie curriculum, from \"first auto by time/encoder\" to \"pathing with Pedro or Road Runner\":\n\n**Stage 0 – Tooling (1 session).** Move from Blocks/OnBot Java to Android Studio early.\n- Pedro, FTC Dashboard, Panels and Sloth all need Gradle, and Pedro explicitly does not work in OnBot Java or Blocks.\n- Pin the toolchain: SDK 12.0 needs Android Studio Narwhal 3 Feature Drop or later (Gradle 9.1, AGP 8.13.2), and students must not accept the AGP downgrade prompt.\n- Use the built-in TestHardware and TestGamepad Utility OpModes (SDK 11.2+) to check wiring before writing any code.\n\n**Stage 1 – OpMode basics and drive (2–3 sessions).**\n- Topics: hardwareMap, telemetry, LinearOpMode vs OpMode, motor direction, ZeroPowerBehavior, gamepad.\n- Then robot-centric mecanum: the gm0 math with the denominator, cross-checked with the SDK's BasicOmniOpMode_Linear.\n- Teach \"test and flip a side\" rather than one fixed reversal, since gm0 and the SDK reverse opposite sides.\n- Field-centric comes in Stage 3, after the IMU.\n\n**Stage 2 – First autonomous (2–3 sessions).**\n- By time (RobotAutoDriveByTime_Linear), then by encoder. The rules to drill: STOP_AND_RESET_ENCODER, then setTargetPosition, then RUN_TO_POSITION, then unsigned setPower, then loop on isBusy with a timeout.\n- Then IMU turns (RobotAutoDriveByGyro_Linear).\n- Introduce finite state machines (gm0 FSM page) and iterative OpMode here, because every later stage needs a non-blocking loop.\n- **Depth:** must-master.\n\n**Stage 3 – Sensors (2 sessions).**\n- Universal IMU interface with RevHubOrientationOnRobot, then field-centric drive.\n- NormalizedColorSensor and distance sensors.\n- Pinpoint readout with SensorGoBildaPinpoint (I2C port ≠ 0, measure offsets, push the robot and watch x/y/heading).\n- Teach coordinate frames here, and flag that Pedro uses its own frame, different from FTC's official one.\n- Two- vs three-wheel dead-wheel theory can be one short reading. gm0's page is out of date on Pinpoint, OTOS and OctoQuad.\n\n**Stage 4 – Mechanism control (3–4 sessions).**\n- Built-in first: RUN_TO_POSITION for a lift, and setVelocity (ticks/s) for a flywheel or intake.\n- Then your own PID + gravity feedforward under RUN_WITHOUT_ENCODER. Reading: CTRL ALT FTC chapters 1–5, 7 and 'FTC motor control', plus gm0 Control Loops.\n- Add bulk reads (AUTO) and loop-time telemetry.\n- Tune live with Panels @Configurable or FTC Dashboard @Config.\n- **Depth:** P/D, kG/kCos and kS for everyone. I-term with clamping as optional. Trapezoidal motion profiles as a stretch topic. Skip full-state feedback, Kalman filters and gain scheduling for rookies.\n\n**Stage 5 – Vision (2 sessions).**\n- VisionPortal plus AprilTag, written against the SDK 12 cluster API from day one (instanceof single vs cluster). Old tutorials and AI-generated code will not compile on 12.0.\n- For BIOBUZZ, use clusters for aiming (range/bearing), not field localization, because the tags move.\n- Then the Color Locator and Predominant Color processors.\n- Limelight 3A as an optional module for teams that own one (simple tx/ty aiming, and MegaTag2 only as an advanced topic).\n\n**Stage 6 – Path following (3–4 sessions).**\n- Recommend Pedro Pathing 3 as the default for 2026-27:\n  - It is actively released (3.0.0 in September 2026, 3.0.2 in October).\n  - Its Quickstart is already on SDK 12.\n  - AutoTune turns tuning into a guided web flow (Drivetrain → Localizer → Foresight).\n  - It has first-class Pinpoint support and a Visualizer.\n  - Community momentum is clearly with it.\n- Teach it with Ivy, which the Pedro docs strongly recommend, but explain the underlying loop of update() and isBusy() so students understand what Ivy hides.\n- Present Road Runner 1.0 as the alternative for teams with RR-experienced mentors, tank drives, or a need for MeepMeep and the excellent 0.5 'tour' theory pages. Note its slowing maintenance (quickstart still on SDK 11.0.0, last push October 2025).\n- Do not teach both in one season.\n- **Prerequisite gate:** a working, tuned localizer verified by push tests. Pedro requires a holonomic drive (mecanum or swerve).\n\n**Stage 7 – Tools and stretch topics (as time allows).**\n- Sloth hot reload once students are comfortable with Gradle.\n- RobotLog plus logcat and Android Studio debugging (teach early, at the first crash).\n- AdvantageScope's experimental FTC support (Road Runner logs, FTC Dashboard streaming) as an \"explore\" activity, not a dependency.\n- Pick one dashboard and stay with it. Panels fits naturally with Pedro; FTC Dashboard is the mature, MIT-licensed choice that Road Runner depends on.\n\n**Trade-offs to state openly.**\n- Version churn is high: Pedro rewrote its API between 2.x and 3.0, and SDK 12 broke AprilTag code. Every lesson should therefore show the exact versions it was tested on (SDK 12.0, Pedro 3.0.2, Panels 1.0.20, Dashboard 0.6.0), and the curriculum should have a yearly review checklist.\n- FIRST's Systemcore arrives for FTC in 2027-28, but legacy hardware stays legal through at least 2030-31. Fundamentals like PID, odometry, FSMs and mecanum kinematics are hardware-agnostic and will carry over; library-specific lessons are the parts to version-tag.\n- For the Chinese edition, gm0 and FTC Docs have translations, some communities cannot reach Discord, and the Pedro and Panels docs are English-only, so budget translation time for Stage 6."
+ },
+ "research:command-based": {
+  "summary": "As of 10 Nov 2026, FTC has no official command-based framework. Six projects matter, and they fall into three families.\n\n1) The WPILib-port family:\n- FTCLib (org.ftclib.ftclib:core) is effectively abandoned. Its last release is 2.1.1 (22 Feb 2023), built against FTC SDK 7.1.0. Its docs domain, docs.ftclib.org, now 301-redirects to an unrelated website.\n- SolversLib (org.solverslib:core 0.3.6, 16 Sep 2026) is its maintained fork, run by FTC 23511 Seattle Solvers. It is BSD-3, with commits as recent as 9 Nov 2026, and is hosted on repo.dairy.foundation. It keeps the WPILib vocabulary: SubsystemBase, CommandScheduler, setDefaultCommand, GamepadEx/GamepadButton, CommandOpMode, and the WPILib-style factories Subsystem.run/runOnce/startEnd and Commands.sequence/parallel. It works with FTC SDK 12.0.0 and Pedro Pathing 3, and it claims \"500+ teams\". Its binding names are the pre-2023 WPILib ones (whenPressed/whileHeld/whenHeld), not onTrue/whileTrue.\n\n2) NextFTC (Kotlin-first, Java supported):\n- v1 (dev.nextftc:ftc 1.1.0, 23 Feb 2026, GPL-3.0) is stable. It uses Subsystem objects, NextFTCOpMode plus components, and NextBindings callbacks (whenBecomesTrue/whenBecomesFalse). Its Pedro extension is still pinned to Pedro 2.0.0.\n- The project's energy has moved to v2 (dev.nextftc.v2:robot 0.3.0, 17 Oct 2026), now the default at nextftc.dev. v2 has no command engine of its own and is built on Pedro Pathing's Ivy. It adds Mechanism (≈Subsystem), NextRobot (≈RobotContainer), annotation-registered NextOpMode, and CommandGamepad triggers with modern WPILib names (onTrue/whileTrue/toggleOnTrue). It is pre-1.0: the \"Your First Robot\" page says \"Content coming soon\" and the migration guide is \"coming soon\".\n\n3) Lightweight or alternative engines:\n- Ivy (com.pedropathing.ivy 1.1.1, 10 Sep 2026, BSD-3) is a static Scheduler with a Command builder, groups, and requirements that can be any object, plus priorities and interrupt/queue/suspend behaviors. It has no subsystem base class, no triggers, and no default commands.\n- Dairy Foundation's Mercurial 2 (MercurialFTC 2.0.1-beta1, 14 Oct 2026) is in beta and calls itself an alternative to command-based.\n\nOther names checked:\n- PsiKit is an AdvantageKit-style logging port.\n- Panels/FTControl is a dashboard.\n- \"Hermes\" only appears as a pathing-library link in NextFTC docs.\nNone of these is a command framework.\n\nAdoption signals (Discord invite counts on 2026-11-10):\n- Pedro Pathing: about 4,351 members.\n- SolversLib: about 545.\n- NextFTC: about 460.\n\nFor a rookie curriculum that mirrors WPILib command-based, SolversLib 0.3.6 maps almost 1:1 and is the safest choice.\n\nKey differences from FRC to teach:\n- No robotPeriodic: the scheduler runs only inside the OpMode loop. CommandOpMode does this and resets the singleton afterwards.\n- Each OpMode is a separate program.\n- hardwareMap exists only inside the OpMode.\n- The scheduler does not run during INIT.\n- The loop has no fixed 20 ms period.\n- Telemetry must be updated by hand.\n- Waits are in milliseconds.",
+  "facts": [
+   {
+    "topic": "FTCLib",
+    "claim": "Latest FTCLib release is org.ftclib.ftclib:core 2.1.1, published to Maven Central 2023-02-22 (versions 1.0.0..2.1.1; metadata lastUpdated 20230222170052). Optional vision artifact 2.1.0.",
+    "source_url": "https://repo1.maven.org/maven2/org/ftclib/ftclib/core/",
+    "confidence": "verified"
+   },
+   {
+    "topic": "FTCLib",
+    "claim": "FTCLib master's last commit is 'Release v2.1.1' (2023-02-22); the dev branch's last merge was 2024-03-04 and was never released. Repo is not archived: 229 stars, 125 forks, 35 open issues, led by Jackson Isenberg and the Alpharetta Robotics Club.",
+    "source_url": "https://github.com/FTCLib/FTCLib",
+    "confidence": "verified"
+   },
+   {
+    "topic": "FTCLib",
+    "claim": "FTCLib 2.1.1 compiles against FTC SDK 7.1.0 (compileOnly) and pulls in kotlin-stdlib-jdk8 1.6.10. Install: mavenCentral() + implementation 'org.ftclib.ftclib:core:2.1.1', with minSdkVersion 24 and Java 8 compileOptions.",
+    "source_url": "https://raw.githubusercontent.com/FTCLib/FTCLib/v2.1.1/core/build.gradle",
+    "confidence": "verified"
+   },
+   {
+    "topic": "FTCLib",
+    "claim": "docs.ftclib.org (and ftclib.gitbook.io, which 307-redirects to it) currently 301-redirects to an unrelated third-party site (espacobodoco.com). The domain looks lapsed or hijacked; do not link it. The docs source is still readable at github.com/FTCLib/FTCLib-Docs.",
+    "source_url": "https://docs.ftclib.org/ftclib",
+    "confidence": "verified"
+   },
+   {
+    "topic": "SolversLib",
+    "claim": "SolversLib is 'An updated and maintained fork of FTCLib'. Repo FTC-23511/SolversLib: BSD-3-Clause, created 2025-01-01, last push 2026-11-09, 26 stars, 27 forks. Leads are Arush Y and Saket T (FTC 23511 Seattle Solvers); contributors include Oscar C (Dairy Foundation). Vision module removed in favor of the SDK's EasyOpenCV.",
+    "source_url": "https://github.com/FTC-23511/SolversLib",
+    "confidence": "verified"
+   },
+   {
+    "topic": "SolversLib",
+    "claim": "Latest release is org.solverslib:core 0.3.6, uploaded 2026-09-16. Recent releases: 0.3.2 (2025-08-30), 0.3.3 (2025-10-19), 0.3.4 (2026-02-28), 0.3.5 (2026-08-18), 0.3.6 (2026-09-16). Artifacts: core, pedroPathing, photon.",
+    "source_url": "https://repo.dairy.foundation/releases/org/solverslib/core/maven-metadata.xml",
+    "confidence": "verified"
+   },
+   {
+    "topic": "SolversLib",
+    "claim": "Install: repositories { maven { url \"https://repo.dairy.foundation/releases\" } } plus implementation \"org.solverslib:core:0.3.6\" (optionally org.solverslib:pedroPathing:0.3.6, which needs Pedro Pathing 3.0.0+, and org.solverslib:photon:0.3.6). Do not install alongside FTCLib. Migrating means renaming packages from com.arcrobotics.ftclib to com.seattlesolvers.solverslib.",
+    "source_url": "https://docs.seattlesolvers.com/installation",
+    "confidence": "verified"
+   },
+   {
+    "topic": "SolversLib",
+    "claim": "0.3.5 changed the FTC SDK dependencies to compileOnly, so SolversLib no longer pins an SDK version. 0.3.5 also added CommandOpMode.preRun(), which runs once after Play and before the run() loop. 0.3.6 added Pedro Pathing 3 support; core is unchanged from 0.3.5. 0.3.4 added the Commands factory class, LambdaCommand and CallbackCommand.",
+    "source_url": "https://docs.seattlesolvers.com/changelog.md",
+    "confidence": "verified"
+   },
+   {
+    "topic": "SolversLib",
+    "claim": "The released 0.3.6 sources jar shows the Subsystem interface has WPILib-style default factories runOnce(Runnable), run(Runnable), startEnd, runEnd, startRun and defer, plus setDefaultCommand. The SubsystemBase constructor calls CommandScheduler.getInstance().registerSubsystem(this).",
+    "source_url": "https://repo.dairy.foundation/releases/org/solverslib/core/0.3.6/core-0.3.6-sources.jar",
+    "confidence": "verified"
+   },
+   {
+    "topic": "SolversLib",
+    "claim": "CommandOpMode extends LinearOpMode. runOpMode() calls initialize(), then loops initialize_loop() while in INIT (the scheduler is not run during INIT), then preRun() once, then run() (= CommandScheduler.getInstance().run()) while opModeIsActive(). In a finally block it calls end() and then reset(), which clears the scheduler singleton. Helper methods: schedule(...), register(...).",
+    "source_url": "https://github.com/FTC-23511/SolversLib/blob/master/core/src/main/java/com/seattlesolvers/solverslib/command/CommandOpMode.java",
+    "confidence": "verified"
+   },
+   {
+    "topic": "SolversLib",
+    "claim": "Button bindings use the pre-2023 WPILib names: whenPressed, whileHeld (schedules repeatedly while held, cancels on release, re-schedules if the command finishes), whenHeld (schedules on press, cancels on release, no re-schedule; this matches modern WPILib whileTrue), whenReleased, toggleWhenPressed, cancelWhenPressed. Trigger equivalents are whenActive, whileActiveContinuous, whileActiveOnce and so on, with and/or/negate. GamepadEx.getGamepadButton(GamepadKeys.Button.A) returns a GamepadButton.",
+    "source_url": "https://docs.seattlesolvers.com/command-base/command-system/binding-commands-to-triggers.md",
+    "confidence": "verified"
+   },
+   {
+    "topic": "SolversLib",
+    "claim": "Each scheduler run() does four steps in order: (1) periodic() of registered subsystems, (2) poll triggers/buttons and schedule bound commands, (3) execute()/isFinished()/end() for scheduled commands, (4) schedule default commands. The user must call CommandScheduler.getInstance().run() in the OpMode loop; CommandOpMode does this.",
+    "source_url": "https://docs.seattlesolvers.com/command-base/command-system/command-scheduler.md",
+    "confidence": "verified"
+   },
+   {
+    "topic": "SolversLib",
+    "claim": "The SolversLib Quickstart (FTC-23511/SolversLib-Quickstart, 55 forks, pushed 2026-09-16) uses FTC SDK 12.0.0, SolversLib 0.3.6, Pedro revhub 3.0.0, FTC Dashboard 0.5.1 and Panels (com.bylazar:fullpanels 1.0.12).",
+    "source_url": "https://github.com/FTC-23511/SolversLib-Quickstart",
+    "confidence": "verified"
+   },
+   {
+    "topic": "SolversLib",
+    "claim": "The docs claim SolversLib is 'used by 500+ teams worldwide'. This is a self-reported number and has not been independently verified.",
+    "source_url": "https://docs.seattlesolvers.com/",
+    "confidence": "likely"
+   },
+   {
+    "topic": "SolversLib",
+    "claim": "The SolversLib Discord invite (discord.com/invite/dJbSWcXsUp) reported approximate_member_count 545 on 2026-11-10.",
+    "source_url": "https://docs.seattlesolvers.com/support-solverslib.md",
+    "confidence": "verified"
+   },
+   {
+    "topic": "SolversLib",
+    "claim": "The SolversLib 0.3.6 core POM declares compile dependencies on kotlin-stdlib 2.3.0, ejml-simple 0.39 and androidx.core 1.2.0.",
+    "source_url": "https://repo.dairy.foundation/releases/org/solverslib/core/0.3.6/core-0.3.6.pom",
+    "confidence": "verified"
+   },
+   {
+    "topic": "NextFTC v1",
+    "claim": "NextFTC v1 artifacts are on Maven Central: dev.nextftc:ftc and dev.nextftc:hardware, latest 1.1.0 (2026-02-23). History: 1.0.0 (2025-09-10), 1.0.1 (2025-10-18), 1.1.0 betas Jan-Feb 2026. The v1 docs installation page still shows 1.0.1.",
+    "source_url": "https://repo1.maven.org/maven2/dev/nextftc/ftc/",
+    "confidence": "verified"
+   },
+   {
+    "topic": "NextFTC v1",
+    "claim": "The NextFTC/NextFTC repo (v1) is GPL-3.0 with 19 stars and 14 forks. Its last code release was the v1.1.0 tag (2026-02-23); the last commit (2026-05-30) is a README update. v1 docs moved to v1.nextftc.dev.",
+    "source_url": "https://github.com/NextFTC/NextFTC",
+    "confidence": "verified"
+   },
+   {
+    "topic": "NextFTC v1",
+    "claim": "The v1 API in Java: Subsystem interface (dev.nextftc.core.subsystems.Subsystem) with initialize(), periodic(), defaultCommand (getDefaultCommand() in Java), and instant(Runnable)/run(Runnable) helpers that call requires(this). Command (dev.nextftc.core.commands.Command) is an abstract class implementing Runnable, where run() calls schedule(); lifecycle start/update/isDone/stop; groups via then() (sequential) and and() (parallel). OpModes extend dev.nextftc.ftc.NextFTCOpMode, which extends LinearOpMode, with hooks onInit/onWaitForStart/onStartButtonPressed/onUpdate/onStop and addComponents(...).",
+    "source_url": "https://github.com/NextFTC/NextFTC/tree/main/core/src/main/kotlin/dev/nextftc/core",
+    "confidence": "verified"
+   },
+   {
+    "topic": "NextFTC v1",
+    "claim": "In v1, SubsystemComponent calls periodic() on each subsystem every loop (also during INIT) and schedules its defaultCommand whenever no command uses it. BindingsComponent updates the NextBindings BindingManager. Gamepads.gamepad1().a() returns a NextBindings Button with whenBecomesTrue/whenBecomesFalse/whenTrue/whenFalse(Runnable) and toggleOnBecomesTrue(). There is no whileTrue cancel-on-release binding.",
+    "source_url": "https://github.com/NextFTC/NextBindings/blob/main/src/main/kotlin/dev/nextftc/bindings/Button.kt",
+    "confidence": "verified"
+   },
+   {
+    "topic": "NextFTC v1",
+    "claim": "The NextFTC v1 Pedro extension (dev.nextftc.extensions:pedro 1.0.0, Sep 2025) depends on com.pedropathing:ftc 2.0.0, which is the Pedro 2 line, not Pedro 3.",
+    "source_url": "https://repo1.maven.org/maven2/dev/nextftc/extensions/pedro/1.0.0/pedro-1.0.0.pom",
+    "confidence": "verified"
+   },
+   {
+    "topic": "NextFTC v1",
+    "claim": "The NextFTC v1 Chief Delphi announcement was posted 2025-09-10 by rowanmcalpin. It claimed 'dozens of teams' had used NextFTC and that the Discord had over 250 members.",
+    "source_url": "https://www.chiefdelphi.com/t/introducing-nextftc-v1/506187",
+    "confidence": "verified"
+   },
+   {
+    "topic": "NextFTC v2",
+    "claim": "NextFTC v2 artifacts: dev.nextftc.v2:{units,linalg,control,hardware,robot} on Maven Central, latest 0.3.0 (2026-10-17). History: 0.1.0-rc.1 (2026-07-21), 0.1.0 (2026-07-28), 0.2.0 (2026-09-03), 0.2.1 (2026-09-17). Install: implementation 'dev.nextftc.v2:robot:0.3.0' plus maven { url 'https://repo.dairy.foundation/releases' } for the hardware/robot modules. Installing alongside v1 will break the build.",
+    "source_url": "https://nextftc.dev/introduction/installation/",
+    "confidence": "verified"
+   },
+   {
+    "topic": "NextFTC v2",
+    "claim": "The v2 robot module has no command framework of its own and uses Pedro Pathing's Ivy. The robot 0.3.0 POM depends on com.pedropathing.ivy:core 1.1.1, kotlin-stdlib 2.3.0, kotlin-reflect 2.3.0 and Dairy's dev.frozenmilk.sinister:Sloth 0.3.2 (which is why the Dairy repo is needed).",
+    "source_url": "https://repo1.maven.org/maven2/dev/nextftc/v2/robot/0.3.0/robot-0.3.0.pom",
+    "confidence": "verified"
+   },
+   {
+    "topic": "NextFTC v2",
+    "claim": "The v2 API: Mechanism interface (dev.nextftc.robot.Mechanism) with periodic(), getDefaultCommand() (scheduled at the lowest priority and resumed after other commands end) and instant/infinite helpers that call requiring(this). NextRobot (dev.nextftc.robot.NextRobot) has getMechanisms(); exactly one implementation must exist on the classpath, found by a scanner. NextOpMode (dev.nextftc.robot.opmode) uses the annotations @NextTeleop/@NextAutonomous/@NextUtility, a constructor taking your NextRobot type (or no args), and the hooks disabledPeriodic/start/periodic/end. It ticks triggers and Scheduler.execute() automatically.",
+    "source_url": "https://nextftc.dev/robot/nextopmode/",
+    "confidence": "verified"
+   },
+   {
+    "topic": "NextFTC v2",
+    "claim": "v2 CommandGamepad (dev.nextftc.robot.triggers.CommandGamepad) wraps a Gamepad. Buttons are Triggers (Java: gp.a(), gp.cross()) with onTrue/onFalse/onChange/whileTrue/whileFalse/toggleOnTrue/toggleOnFalse, and/or/negate, debounce and multiPress. Sticks and triggers are RangeTriggers with isOver(threshold).",
+    "source_url": "https://github.com/NextFTC/NextFTCSuite/blob/main/robot/src/main/kotlin/dev/nextftc/robot/triggers/Trigger.kt",
+    "confidence": "verified"
+   },
+   {
+    "topic": "NextFTC v2",
+    "claim": "v2 docs are incomplete: the 'Your First Robot' page body says only 'Content coming soon', and the v1-to-v2 migration guide is listed as 'coming soon'. NextFTCSuite repo: created 2026-04-13, last push 2026-11-10, 9 stars, BSD-style LICENSE.md. NextFTC org members visible: zachwaffle4, rowan-mcalpin, 28shettr.",
+    "source_url": "https://nextftc.dev/your-first-robot/",
+    "confidence": "verified"
+   },
+   {
+    "topic": "NextFTC",
+    "claim": "The NextFTC site says Java is 'treated as a first-class citizen, not an afterthought', with every sample in both Kotlin and Java. Exceptions: Kotlin-only coroutine commands in v2. The v1 docs recommend Kotlin Gradle Plugin 2.0.0.",
+    "source_url": "https://nextftc.dev/introduction/",
+    "confidence": "verified"
+   },
+   {
+    "topic": "NextFTC",
+    "claim": "The NextFTC Discord invite (nextftc.dev/discord resolves to discord.gg/PjP9Ze6fkX) reported approximate_member_count 460 on 2026-11-10.",
+    "source_url": "https://nextftc.dev/discord",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Ivy",
+    "claim": "Ivy is a command-based control-flow library maintained under the Pedro-Pathing GitHub org (Pedro-Pathing/Ivy). It is BSD-3-Clause, created 2025-12-07, last push 2026-09-10, 15 stars, with modules core and pedro. On Maven Central, com.pedropathing.ivy:core and :pedro are 1.0.1 (2026-07-10), 1.1.0 and 1.1.1 (2026-09-10, the same day Pedro Pathing 3.0.0 was released). The docs install line is implementation 'com.pedropathing.ivy:pedro:1.1.1'.",
+    "source_url": "https://pedropathing.com/docs/ivy",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Ivy",
+    "claim": "The Ivy API: Command interface (com.pedropathing.ivy.Command) with start/execute/done/end(EndCondition)/requirements/priority/behaviors, Command.build() returning CommandBuilder (setStart/setExecute/setDone/setEnd/requiring(Object...)/setPriority). Static Commands.instant/infinite/waitMs/waitUntil/conditional/branch/match/lazy, and Groups.sequential/parallel/race/deadline/repeat/loop. Static Scheduler.schedule/execute/reset/cancel/isRunning/isScheduled. Decorators: then/with/raceWith/until/unless/proxy.",
+    "source_url": "https://pedropathing.com/docs/ivy/creating-opmodes",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Ivy",
+    "claim": "Ivy requirements can be any object. Conflicts are resolved by integer priority with InterruptedBehavior (END/SUSPEND), BlockedBehavior (CANCEL/QUEUE) and ConflictBehavior (CANCEL/QUEUE/OVERRIDE). Ivy has no subsystem base class, no gamepad triggers and no default commands. Scheduler.reset() must be called at the top of each OpMode because the scheduler is static.",
+    "source_url": "https://pedropathing.com/docs/ivy/requirements-and-priorities",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Ivy",
+    "claim": "The Ivy docs list example repos from DECODE-season teams #365 MOE, #12649 Code Blooded and #22131 Traffic Cones. The official Pedro Quickstart (754 forks, FTC SDK 12.0.0, Pedro revhub 3.0.2) does not include Ivy by default. The Pedro Pathing Discord reported about 4,351 members on 2026-11-10.",
+    "source_url": "https://pedropathing.com/docs/ivy/example-repos",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Mercurial / Dairy",
+    "claim": "Dairy Foundation Mercurial 1.x (dev.frozenmilk.mercurial:Mercurial 1.0.3, last updated 2025-01-26; master's last commit Jan 2025) is inactive. Mercurial 2.0 is 'currently in beta' via dev.frozenmilk.dairy:MercurialFTC (latest 2.0.1-beta1, 2026-10-14, Kotlin, BSD-3-Clause-Clear). Its intro calls Mercurial 'a concurrency and control flow library for FTC, and an alternative to command based'.",
+    "source_url": "https://github.com/Dairy-Foundation/MercurialFTC",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Other names",
+    "claim": "PsiKit (PsiLynx/PsiKit) is described as an 'Advantagekit port for the First Tech Challenge', a logging tool rather than a command framework: 14 stars, last push 2026-07-07. No FTC library named 'Hermes' or 'FTCControl' was found as a command framework. 'Hermes' appears only as a pathing-library link in the NextFTC v1 docs, and Panels/FTControl (com.bylazar) is a dashboard.",
+    "source_url": "https://github.com/PsiLynx/PsiKit",
+    "confidence": "likely"
+   },
+   {
+    "topic": "FTC SDK",
+    "claim": "The current FTC SDK is 12.0.0 (Maven metadata lastUpdated 2026-09-12). The SDK Gamepad class has built-in edge detection: aWasPressed()/aWasReleased() and so on for every button, plus resetEdgeDetection().",
+    "source_url": "https://javadoc.io/static/org.firstinspires.ftc/RobotCore/12.0.0/com/qualcomm/robotcore/hardware/Gamepad.html",
+    "confidence": "verified"
+   },
+   {
+    "topic": "Pedro Pathing",
+    "claim": "Pedro Pathing 3 (com.pedropathing:revhub) release dates: 3.0.0 on 2026-09-10, 3.0.1 on 2026-09-18, 3.0.2 on 2026-10-16. The Pedro 2 artifact com.pedropathing:ftc ends at 2.1.2.",
+    "source_url": "https://repo1.maven.org/maven2/com/pedropathing/revhub/",
+    "confidence": "verified"
+   }
+  ],
+  "code_examples": [
+   {
+    "title": "Baseline: time-based LinearOpMode intake (the 'before' picture)",
+    "code": "package org.firstinspires.ftc.teamcode;\n\nimport com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;\nimport com.qualcomm.robotcore.eventloop.opmode.TeleOp;\nimport com.qualcomm.robotcore.hardware.DcMotor;\n\n@TeleOp(name = \"Intake (time-based)\")\npublic class IntakeLinear extends LinearOpMode {\n    @Override\n    public void runOpMode() {\n        DcMotor motor = hardwareMap.get(DcMotor.class, \"intake\");\n\n        waitForStart();\n\n        while (opModeIsActive()) {\n            if (gamepad1.a) {\n                motor.setPower(0.8);\n            } else {\n                motor.setPower(0);\n            }\n        }\n    }\n}",
+    "notes": "Plain FTC SDK 12.0.0, no library. This is the FTC equivalent of the FRC page's TimedRobot.teleopPeriodic example. Device name \"intake\" must match the Driver Station robot configuration.",
+    "source_url": "https://javadoc.io/static/org.firstinspires.ftc/RobotCore/12.0.0/com/qualcomm/robotcore/hardware/Gamepad.html"
+   },
+   {
+    "title": "SolversLib 0.3.6 (recommended): Intake subsystem + CommandOpMode, runs while A is held, stops otherwise",
+    "code": "// build.gradle (TeamCode)\n// repositories { maven { url \"https://repo.dairy.foundation/releases\" } }\n// dependencies { implementation \"org.solverslib:core:0.3.6\" }\n\n// ---------- subsystems/Intake.java ----------\npackage org.firstinspires.ftc.teamcode.subsystems;\n\nimport com.qualcomm.robotcore.hardware.DcMotor;\nimport com.qualcomm.robotcore.hardware.HardwareMap;\nimport com.seattlesolvers.solverslib.command.Command;\nimport com.seattlesolvers.solverslib.command.SubsystemBase;\n\npublic class Intake extends SubsystemBase {\n    private final DcMotor motor;\n\n    public Intake(HardwareMap hardwareMap) {\n        motor = hardwareMap.get(DcMotor.class, \"intake\");\n    }\n\n    // Runs the intake in until something cancels it (requires this subsystem)\n    public Command runIn() {\n        return run(() -> motor.setPower(0.8));\n    }\n\n    // Holds the intake still\n    public Command stop() {\n        return run(() -> motor.setPower(0));\n    }\n}\n\n// ---------- IntakeTeleOp.java ----------\npackage org.firstinspires.ftc.teamcode;\n\nimport com.qualcomm.robotcore.eventloop.opmode.TeleOp;\nimport com.seattlesolvers.solverslib.command.CommandOpMode;\nimport com.seattlesolvers.solverslib.gamepad.GamepadEx;\nimport com.seattlesolvers.solverslib.gamepad.GamepadKeys;\nimport org.firstinspires.ftc.teamcode.subsystems.Intake;\n\n@TeleOp(name = \"Intake (command-based)\")\npublic class IntakeTeleOp extends CommandOpMode {\n    @Override\n    public void initialize() {           // = RobotContainer constructor\n        Intake intake = new Intake(hardwareMap);   // SubsystemBase auto-registers\n        GamepadEx driver = new GamepadEx(gamepad1);\n\n        intake.setDefaultCommand(intake.stop());\n        driver.getGamepadButton(GamepadKeys.Button.A)\n              .whileHeld(intake.runIn());   // whenHeld(...) = exact WPILib whileTrue semantics\n    }\n\n    // Optional: CommandOpMode already calls run() every loop after Play.\n    // @Override public void run() { super.run(); telemetry.update(); }\n}",
+    "notes": "Subsystem.run(Runnable) is a default method on com.seattlesolvers.solverslib.command.Subsystem, checked in the 0.3.6 sources jar. Create subsystems inside initialize(), not as field initializers, because hardwareMap is not set when the OpMode object is built. The scheduler only runs after Play: no default commands or bindings act during INIT. whileHeld re-schedules a command that finishes while the button is still held. For a run() command that never finishes, it behaves like WPILib whileTrue.",
+    "source_url": "https://docs.seattlesolvers.com/command-base/command-system/binding-commands-to-triggers.md"
+   },
+   {
+    "title": "FTCLib 2.1.1 (legacy, for reading old team code): same intake",
+    "code": "// mavenCentral(); implementation 'org.ftclib.ftclib:core:2.1.1'\nimport com.arcrobotics.ftclib.command.Command;\nimport com.arcrobotics.ftclib.command.CommandOpMode;\nimport com.arcrobotics.ftclib.command.RunCommand;\nimport com.arcrobotics.ftclib.command.SubsystemBase;\nimport com.arcrobotics.ftclib.gamepad.GamepadEx;\nimport com.arcrobotics.ftclib.gamepad.GamepadKeys;\nimport com.qualcomm.robotcore.hardware.DcMotor;\nimport com.qualcomm.robotcore.hardware.HardwareMap;\n\npublic class Intake extends SubsystemBase {\n    private final DcMotor motor;\n    public Intake(HardwareMap hw) { motor = hw.get(DcMotor.class, \"intake\"); }\n    // FTCLib has no Subsystem.run() factory: use RunCommand(Runnable, Subsystem...)\n    public Command runIn() { return new RunCommand(() -> motor.setPower(0.8), this); }\n    public Command stop()  { return new RunCommand(() -> motor.setPower(0), this); }\n}\n\n// in a CommandOpMode subclass:\n// @Override public void initialize() {\n//     Intake intake = new Intake(hardwareMap);\n//     GamepadEx driver = new GamepadEx(gamepad1);\n//     intake.setDefaultCommand(intake.stop());\n//     driver.getGamepadButton(GamepadKeys.Button.A).whileHeld(intake.runIn());\n// }",
+    "notes": "FTCLib is unmaintained: the last release was Feb 2023, built against SDK 7.1.0. To move to SolversLib, rename com.arcrobotics.ftclib to com.seattlesolvers.solverslib.",
+    "source_url": "https://github.com/FTCLib/FTCLib/blob/v2.1.1/core/src/main/java/com/arcrobotics/ftclib/command/RunCommand.java"
+   },
+   {
+    "title": "NextFTC v1 (1.1.0, Java): Intake subsystem + NextFTCOpMode",
+    "code": "// implementation 'dev.nextftc:ftc:1.1.0'\n// implementation 'dev.nextftc:hardware:1.1.0'\n\n// ---------- Intake.java ----------\nimport dev.nextftc.core.commands.Command;\nimport dev.nextftc.core.subsystems.Subsystem;\nimport dev.nextftc.hardware.impl.MotorEx;\n\npublic class Intake implements Subsystem {\n    public static final Intake INSTANCE = new Intake();\n    private Intake() { }\n\n    private final MotorEx motor = new MotorEx(\"intake\");   // lazy: hardwareMap read on first use\n\n    public final Command runIn = run(() -> motor.setPower(0.8));   // perpetual, requires(this)\n    public final Command stop  = instant(() -> motor.setPower(0)); // instant, requires(this)\n}\n\n// ---------- IntakeTeleOp.java ----------\nimport com.qualcomm.robotcore.eventloop.opmode.TeleOp;\nimport dev.nextftc.core.components.BindingsComponent;\nimport dev.nextftc.core.components.SubsystemComponent;\nimport dev.nextftc.ftc.Gamepads;\nimport dev.nextftc.ftc.NextFTCOpMode;\nimport dev.nextftc.ftc.components.BulkReadComponent;\n\n@TeleOp(name = \"Intake (NextFTC v1)\")\npublic class IntakeTeleOp extends NextFTCOpMode {\n    public IntakeTeleOp() {\n        addComponents(\n            new SubsystemComponent(Intake.INSTANCE),\n            BulkReadComponent.INSTANCE,\n            BindingsComponent.INSTANCE\n        );\n    }\n\n    @Override\n    public void onStartButtonPressed() {\n        Gamepads.gamepad1().a()\n            .whenBecomesTrue(Intake.INSTANCE.runIn)\n            .whenBecomesFalse(Intake.INSTANCE.stop); // stop's requirement interrupts runIn\n    }\n}",
+    "notes": "Imports are taken from the v1.1.0 source tree; the v1 docs pages omit imports. Subsystem.run/instant helpers exist in 1.1.0. Binding callbacks take a Runnable; Command implements Runnable and its run() calls schedule(). There is no whileTrue, so hold-to-run means a press binding plus a release binding. The singleton INSTANCE pattern follows the v1 docs.",
+    "source_url": "https://v1.nextftc.dev/guide/opmodes/teleop.md"
+   },
+   {
+    "title": "NextFTC v2 (0.3.0, Java, built on Ivy): Mechanism + NextRobot + NextOpMode",
+    "code": "// repositories { maven { url 'https://repo.dairy.foundation/releases' } }\n// dependencies { implementation 'dev.nextftc.v2:robot:0.3.0' }\n\n// ---------- Intake.java ----------\nimport com.pedropathing.ivy.Command;\nimport dev.nextftc.hardware.actuators.NextMotor;\nimport dev.nextftc.robot.Mechanism;\n\npublic class Intake implements Mechanism {\n    private final NextMotor motor = new NextMotor(\"intake\");\n\n    public Command runIn() { return infinite(() -> motor.setThrottle(0.8)); }\n    public Command stop()  { return instant(() -> motor.setThrottle(0.0)); }\n\n    // Lowest-priority default; resumes whenever runIn() is cancelled\n    @Override\n    public Command getDefaultCommand() { return infinite(() -> motor.setThrottle(0.0)); }\n}\n\n// ---------- MyRobot.java (exactly one NextRobot on the classpath) ----------\nimport dev.nextftc.robot.Mechanism;\nimport dev.nextftc.robot.NextRobot;\nimport java.util.Collections;\nimport java.util.Set;\n\npublic class MyRobot implements NextRobot {\n    public final Intake intake = new Intake();\n    @Override public Set<Mechanism> getMechanisms() { return Collections.singleton(intake); }\n}\n\n// ---------- IntakeTeleOp.java ----------\nimport dev.nextftc.robot.opmode.NextOpMode;\nimport dev.nextftc.robot.opmode.NextTeleop;\nimport dev.nextftc.robot.triggers.CommandGamepad;\n\n@NextTeleop\npublic class IntakeTeleOp extends NextOpMode {\n    public IntakeTeleOp(MyRobot robot) {      // robot is injected by the scanner\n        super(robot);\n        CommandGamepad driver = new CommandGamepad(gamepad1);\n        driver.a().whileTrue(robot.intake.runIn());\n    }\n}",
+    "notes": "Pre-1.0 and the docs are incomplete. Class and package names come from NextFTCSuite main (robot/hardware modules) and the docs pages. The docs' Java NextRobot sample returns Set.of(...); Collections.singleton is used here to avoid any Android API-level concerns. Bindings may be made in the constructor or in start(). Not compiled or run by this research.",
+    "source_url": "https://nextftc.dev/robot/mechanisms/"
+   },
+   {
+    "title": "Ivy 1.1.1 alone in a LinearOpMode (no subsystem/trigger layer)",
+    "code": "// implementation 'com.pedropathing.ivy:core:1.1.1'   (docs use com.pedropathing.ivy:pedro:1.1.1)\nimport static com.pedropathing.ivy.commands.Commands.infinite;\nimport static com.pedropathing.ivy.commands.Commands.instant;\n\nimport com.pedropathing.ivy.Command;\nimport com.pedropathing.ivy.Scheduler;\nimport com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;\nimport com.qualcomm.robotcore.eventloop.opmode.TeleOp;\nimport com.qualcomm.robotcore.hardware.DcMotor;\nimport com.qualcomm.robotcore.hardware.HardwareMap;\n\nclass Intake {\n    private final DcMotor motor;\n    Intake(HardwareMap hw) { motor = hw.get(DcMotor.class, \"intake\"); }\n    Command runIn() { return infinite(() -> motor.setPower(0.8)).requiring(this); }\n    Command stop()  { return instant(() -> motor.setPower(0)).requiring(this); }\n}\n\n@TeleOp(name = \"Intake (Ivy)\")\npublic class IntakeIvy extends LinearOpMode {\n    @Override\n    public void runOpMode() {\n        Scheduler.reset();                 // static scheduler: clear leftovers\n        Intake intake = new Intake(hardwareMap);\n        waitForStart();\n        while (opModeIsActive()) {\n            if (gamepad1.aWasPressed())  Scheduler.schedule(intake.runIn());\n            if (gamepad1.aWasReleased()) Scheduler.schedule(intake.stop()); // OVERRIDE interrupts runIn\n            Scheduler.execute();           // one scheduler cycle per loop\n        }\n    }\n}",
+    "notes": "Ivy has no triggers or default commands, so bindings are hand-written using FTC SDK 12 gamepad edge methods (aWasPressed/aWasReleased). With equal default priority (0), the default ConflictBehavior.OVERRIDE makes the new stop() command interrupt runIn(). Intake is shown as a package-private class in the same file for brevity; in practice put it in its own file.",
+    "source_url": "https://pedropathing.com/docs/ivy/creating-opmodes"
+   }
+  ],
+  "resources": [
+   {
+    "name": "SolversLib docs",
+    "url": "https://docs.seattlesolvers.com/",
+    "what": "Main docs for the maintained FTCLib fork, versioned per release (0.3.6 latest). Command-based section: Command System (/command-base/command-system), Subsystems (/command-base/command-system/subsystems), Command (/command-base/command-system/command), Command Groups (/command-base/command-system/command-groups), Command Scheduler (/command-base/command-system/command-scheduler), Binding Commands to Triggers (/command-base/command-system/binding-commands-to-triggers), Robot and CommandOpMode (/command-base/command-system/robot-and-commandopmode), Convenience Features (/command-base/command-system/convenience-commands). Also: Installation (/installation), Changelog (/changelog), Gamepad (/features/gamepad-extensions), Pedro Commands (/pedro-pathing/pedro-commands). Append .md for raw markdown; full index at /llms.txt.",
+    "license": "BSD-3-Clause (library)",
+    "status": "maintained; 0.3.6 released 2026-09-16, commits 2026-11-09"
+   },
+   {
+    "name": "SolversLib GitHub",
+    "url": "https://github.com/FTC-23511/SolversLib",
+    "what": "Source, issues and examples module (e.g. examples/src/main/java/org/firstinspires/ftc/teamcode/PurePursuitSample.java). The command package is com.seattlesolvers.solverslib.command.",
+    "license": "BSD-3-Clause",
+    "status": "maintained (last push 2026-11-09)"
+   },
+   {
+    "name": "SolversLib Quickstart",
+    "url": "https://github.com/FTC-23511/SolversLib-Quickstart",
+    "what": "Preconfigured FTC SDK 12.0.0 project with SolversLib 0.3.6, Pedro Pathing 3, FTC Dashboard and Panels. A good template for the curriculum's starter repo; delete the Pedro files if not needed.",
+    "status": "maintained (pushed 2026-09-16)"
+   },
+   {
+    "name": "SolversLib Javadocs (core)",
+    "url": "https://repo.dairy.foundation/javadoc/releases/org/solverslib/core/latest",
+    "what": "API reference for SolversLib core."
+   },
+   {
+    "name": "NextFTC v2 docs",
+    "url": "https://nextftc.dev/",
+    "what": "Docs for the NextFTC v2 suite (0.3.0). Sections: Introduction (/introduction/), Installation (/introduction/installation/), Your First Robot (/your-first-robot/, empty 'coming soon'), Robot Module (/robot/) with Commands (/robot/commands/), Mechanisms (/robot/mechanisms/), NextRobot (/robot/nextrobot/), NextOpMode (/robot/nextopmode/), Command Gamepad (/robot/command-gamepad/), Triggers (/robot/triggers/), Drive Commands, Telemetry, Project Structure, Coroutine Commands, BlazeFTC; Hardware Module (/hardware/); Control Module (/control/); Example repos (/references/example-repos/). KDoc at https://kdoc.nextftc.dev/.",
+    "license": "BSD-style (NextFTCSuite LICENSE.md)",
+    "status": "active pre-1.0 beta; docs incomplete"
+   },
+   {
+    "name": "NextFTC v1 docs",
+    "url": "https://v1.nextftc.dev/",
+    "what": "Docs for stable NextFTC v1 (1.x). Guide: /guide/about, /guide/installation, /guide/subsystems/overview, /guide/subsystems/lift, /guide/subsystems/claw, /guide/opmodes/autonomous, /guide/opmodes/teleop. Concepts: /nextftc/concepts/commands, /subsystems, /components, /opmodes. Commands: /nextftc/commands/groups, /utilities, /conditionals, /delays, /custom-commands. Also hardware, NextControl, NextBindings (/bindings/) and the Pedro/RoadRunner/FateWeaver extensions. Index at /llms.txt.",
+    "license": "GPL-3.0 (library)",
+    "status": "stable but superseded by v2; last code release 1.1.0 on 2026-02-23"
+   },
+   {
+    "name": "NextFTCSuite GitHub (v2)",
+    "url": "https://github.com/NextFTC/NextFTCSuite",
+    "what": "Kotlin monorepo: units, linalg, control, hardware, telemetry, telemetry-ftc, robot (command-based framework on Ivy).",
+    "status": "very active (pushed 2026-11-10)"
+   },
+   {
+    "name": "Ivy docs (Pedro Pathing)",
+    "url": "https://pedropathing.com/docs/ivy",
+    "what": "Pages: Installation (/docs/ivy), What are commands? (/docs/ivy/what-are-commands), Requirements and Priorities (/docs/ivy/requirements-and-priorities), Command Builder (/docs/ivy/command-builder), Command Compositions (/docs/ivy/command-compositions), Utilities and Decorators (/docs/ivy/utilities-and-decorators), Class API (/docs/ivy/class-api), Scheduling and OpMode use (/docs/ivy/creating-opmodes), Pedro Commands (/docs/ivy/pedro-commands), Example Repos (/docs/ivy/example-repos).",
+    "license": "BSD-3-Clause",
+    "status": "maintained; 1.1.1 released 2026-09-10"
+   },
+   {
+    "name": "Ivy GitHub",
+    "url": "https://github.com/Pedro-Pathing/Ivy",
+    "what": "Source for Ivy core and pedro modules.",
+    "license": "BSD-3-Clause",
+    "status": "maintained (last push 2026-09-10)"
+   },
+   {
+    "name": "FTCLib GitHub",
+    "url": "https://github.com/FTCLib/FTCLib",
+    "what": "The original WPILib-port library. Useful only for reading older team code and for history.",
+    "license": "BSD-style (FIRST copyright notice in LICENSE.md)",
+    "status": "abandoned: last release 2.1.1 on 2023-02-22"
+   },
+   {
+    "name": "FTCLib docs source",
+    "url": "https://github.com/FTCLib/FTCLib-Docs",
+    "what": "Markdown source of the old FTCLib GitBook. Use this instead of docs.ftclib.org, which now redirects to an unrelated site.",
+    "status": "archival"
+   },
+   {
+    "name": "MercurialFTC (Mercurial 2 beta)",
+    "url": "https://github.com/Dairy-Foundation/MercurialFTC",
+    "what": "Dairy Foundation's continuation-based concurrency and control-flow library, presented as an alternative to command-based. Has Java and Kotlin examples (SequentialProgramming.java/.kt).",
+    "license": "BSD-3-Clause-Clear",
+    "status": "beta (2.0.1-beta1, 2026-10-14)"
+   },
+   {
+    "name": "WPILib command-based docs (for cross-reference)",
+    "url": "https://docs.wpilib.org/en/stable/docs/software/commandbased/index.html",
+    "what": "The FRC reference that SolversLib's docs are adapted from. Useful for showing students the shared vocabulary.",
+    "status": "maintained (not fetched in this research)"
+   }
+  ],
+  "recommendations": "TEACH: SolversLib 0.3.6, in Java, using CommandOpMode, for 2026-27.\n\nWhy:\n(1) It is the closest match to the FRC lesson. SubsystemBase, CommandScheduler, Subsystem.run()/runOnce()/startEnd(), setDefaultCommand(), Commands.sequence/parallel/race/deadline, and andThen/alongWith all have the same names as in WPILib. The FRC Intake example ports almost line for line: the default command is stop(), and A held runs runIn().\n(2) It is actively maintained: releases in Feb, Aug and Sep 2026 and commits in Nov 2026. It is BSD-3, works with FTC SDK 12.0.0 (SDK deps are compileOnly since 0.3.5), and has an official Quickstart on SDK 12 with Pedro Pathing 3. Pedro is the dominant FTC pathing library (Pedro Discord about 4.3k members).\n(3) It is Java-first, which matches the FRC curriculum's Java.\n(4) Teams with FTCLib code migrate by renaming packages.\n\nTrade-offs to state honestly:\n- Binding names are the pre-2023 WPILib ones, so FRC's whileTrue/onTrue become whileHeld or whenHeld/whenPressed. Put a mapping table in the lesson.\n- The version is still 0.x.\n- Wait times are in milliseconds (Commands.waitMillis, withTimeout(long millis)), not seconds.\n- The docs are partly copied from FTCLib and contain small errors (e.g. a sample imports 'com.seattlesolvers.solverslib..command').\n- It depends on the Dairy Maven repo.\n\nDO NOT TEACH:\n- FTCLib: dead since Feb 2023 and built for SDK 7.1. Its docs domain now redirects to an unrelated site, so never link docs.ftclib.org; use github.com/FTCLib/FTCLib-Docs if a link is needed.\n- NextFTC v2 as the main path this season: 0.3.0, docs explicitly unfinished, migration guide 'coming soon'.\n\nMENTION AS SIDEBARS:\n- NextFTC v1: stable and Java-capable, but superseded by v2, GPL-3.0, and its Pedro extension is pinned to Pedro 2.\n- NextFTC v2: its modern WPILib-style naming (onTrue/whileTrue, Mechanism≈Subsystem, NextRobot≈RobotContainer, periodic()) makes it the strongest candidate to revisit for 2027-28 if it reaches 1.0.\n- Ivy: lightweight, Pedro-backed, but no subsystem, trigger or default-command layer; its priority/behavior system is more complex than WPILib requirements.\n- Mercurial 2: beta and deliberately not command-based.\n\nLESSON 'From LinearOpMode to command-based' (mirrors the FRC 'time-based to command-based' page).\nStart from the time-based LinearOpMode (if gamepad1.a then setPower(0.8), else 0, inside while(opModeIsActive())). Then map:\n- TimedRobot → CommandOpMode (extends LinearOpMode). There is one class per Driver Station program, not one robot program.\n- robotPeriodic(){ CommandScheduler.getInstance().run(); } → already inside CommandOpMode: while(opModeIsActive()) run(), where run() calls CommandScheduler.getInstance().run(). Students override run() only to add telemetry: super.run(); telemetry.update();\n- RobotContainer constructor → initialize(), which creates subsystems with hardwareMap, sets default commands and declares bindings.\n- disabledPeriodic → initialize_loop() during INIT. The scheduler does NOT run during INIT, so defaults and bindings are inactive until Play.\n- teleopInit/autonomousInit → separate @TeleOp/@Autonomous classes; schedule the auto routine in preRun() (≥0.3.5), not initialize(), because schedule() calls the command's initialize() immediately.\n- CommandXboxController(0) → new GamepadEx(gamepad1); driver.a() → driver.getGamepadButton(GamepadKeys.Button.A).\n- Binding names: whileTrue → whenHeld (exact) or whileHeld; onTrue → whenPressed; onFalse → whenReleased; toggleOnTrue → toggleWhenPressed. new Trigger(supplier), and(), or() and negate() are the same.\n- Motors: new PWMSparkMax(0) → hardwareMap.get(DcMotor.class, \"intake\") or SolversLib MotorEx, created in initialize(), never in a field initializer.\n- The scheduler loop's four steps (subsystem periodic → poll triggers → run/finish commands → schedule defaults) are identical. The FRC diagram can be reused with '20 ms' replaced by 'every loop'.\n- Requirements and 'one command per subsystem' work exactly as in WPILib, because commands require Subsystem objects.\n\nFTC-specific concept differences to call out:\n- No robotPeriodic or always-on robot program. Each OpMode starts fresh, and CommandOpMode resets the scheduler singleton when it ends, so nothing carries over (use static fields to pass, e.g., pose from auto to teleop).\n- The loop period is not fixed. It runs as fast as hardware I/O allows, so teach bulk caching (CommandScheduler.getInstance().setBulkReading(hardwareMap, LynxModule.BulkCachingMode.AUTO) or the SDK's own bulk caching).\n- Telemetry is not automatic; call telemetry.update().\n- INIT vs PLAY phases replace disabled/enabled, and servos may move during INIT if a command is scheduled there.\n- There are only two gamepads, and their buttons have Xbox/PS aliases (A=CROSS).\n- In NextFTC v2 and Ivy, requirements can be any object (even a motor), and conflicts resolve by priority with SUSPEND/QUEUE behaviors. This is worth a one-paragraph 'you may see this elsewhere' note.\n\nKeep each SolversLib code sample pinned to 0.3.6 and re-verify the version each summer.",
+  "open_questions": [
+   "Will NextFTC v2 reach 1.0 with complete Java docs ('Your First Robot', migration guide) before or during the 2026-27 season? If so, it may map better to modern WPILib names (onTrue/whileTrue) than SolversLib does.",
+   "Do Java-only teams need the Kotlin Gradle plugin for NextFTC v1 or v2, or for SolversLib 0.3.6 (whose POM pulls kotlin-stdlib 2.3.0 at compile scope)? Could kotlin-stdlib 2.3.0 clash with other Kotlin libraries in a team's project? Not tested.",
+   "The NextFTC v2 Java docs use Set.of(...) in NextRobot.getMechanisms(). This relies on Android D8 backporting Java 9 collection factories on Control Hub (Android 7.1). Untested; Collections.singleton / HashSet is the safer form for the curriculum.",
+   "The SolversLib '500+ teams' figure is self-reported. Independent adoption data (e.g. a survey of DECODE 2025-26 team repos) was not found.",
+   "Who are Ivy's individual maintainers? The repo page lists no contributors; it is only known to be under the Pedro-Pathing org.",
+   "Will SolversLib add modern WPILib binding aliases (onTrue/whileTrue/toggleOnTrue)? Not on the changelog as of 0.3.6.",
+   "None of the code examples were compiled against SDK 12.0.0 in this research. The SolversLib, FTCLib and Ivy examples are built from verified source signatures; the NextFTC v2 example should be build-tested before publishing.",
+   "The FRC curriculum also mentions WPILib Commands v3 (2027). If the FRC side moves to v3, the FTC mapping table will need a second column."
+  ]
+ },
+ "write:command-based": {
+  "pages": [
+   {
+    "file": "E:\\DESKTOP\\RookieRobotics\\docs\\ftc\\software\\linear-to-command-based.md",
+    "summary": "Original lesson 'LinearOpMode to command-based' (SolversLib 0.3.6, FTC SDK 12.0). It follows the FRC time-based-to-command-based page section by section. Sections: intro (links the FRC page and its own names table); Versions note; 'Who runs the loop' (a simplified CommandOpMode.runOpMode() lifecycle, run() = CommandScheduler.getInstance().run(), the scheduler's four steps taken from the 0.3.6 source, no fixed 20 ms); 'The three pieces' table and the two rules; 'The simplest example' (a LinearOpMode code window; 'Add SolversLib to your project' with the TeamCode/build.gradle lines or the SolversLib Quickstart; a command-based code window with subsystems/Intake.java (SubsystemBase, hardwareMap in the constructor, runIn()/stop() via run()) and IntakeTeleOp.java (CommandOpMode, initialize(), setDefaultCommand, GamepadEx(gamepad1).getGamepadButton(GamepadKeys.Button.A).whenHeld(...)); a warning to create subsystems in initialize(); a collapsible import list that warns about the command.old package); 'Pressing A, loop by loop', traced from the CommandScheduler/Trigger source (the default command starts at the end of loop 1 and runs from loop 2; on release, stop() starts at the end of loop 9 and runs from loop 10, so the motor keeps its last power for one loop), plus a 'whenHeld or whileHeld?' note showing the difference with withTimeout; 'Inside a command' (initialize/execute/isFinished/end table, then runOnce, startEnd, withTimeout(ms), andThen, Commands.sequence/parallel/waitMillis, and the fact that a group holds every requirement its commands use); 'What's different on FTC' (comparison table plus subsections: one OpMode is one program and reset(); INIT vs PLAY with initialize_loop() and an @Autonomous example scheduled in preRun(), explaining why not initialize(); telemetry via a run() override with super.run(); bulk reads via CommandScheduler.getInstance().setBulkReading(hardwareMap, BulkCachingMode.AUTO), handing off to Mechanism control); a WPILib-to-SolversLib names table; 'Other frameworks you'll see' (FTCLib, NextFTC v1/v2, Ivy, one paragraph each, no docs.ftclib.org link); 'Try it' (a Claw subsystem with runOnce open/close on the bumpers via whenPressed, and a sequential auto in preRun(), with a 'You're done when...' checkpoint); 'Learn more' (six SolversLib docs pages, the SolversLib source, the Quickstart, the FRC page). Four TODO diagram comments: the loop, the pieces, the timeline and the CommandOpMode lifecycle. Every SolversLib API used was checked against the 0.3.6 git tag sources (CommandOpMode, CommandScheduler, Subsystem, SubsystemBase, Command, Commands, Button, Trigger, GamepadButton, GamepadEx, GamepadKeys, RunCommand, InstantCommand, StartEndCommand, WaitCommand, SequentialCommandGroup, ParallelCommandGroup, CommandGroupBase, Robot).",
+    "external_urls": [
+     "https://docs.seattlesolvers.com/changelog",
+     "https://github.com/FTC-23511/SolversLib-Quickstart",
+     "https://github.com/FTC-23511/SolversLib",
+     "https://github.com/FTCLib/FTCLib",
+     "https://nextftc.dev/",
+     "https://pedropathing.com/docs/ivy",
+     "https://docs.seattlesolvers.com/pedro-pathing/pedro-commands",
+     "https://docs.seattlesolvers.com/command-base/command-system",
+     "https://docs.seattlesolvers.com/command-base/command-system/subsystems",
+     "https://docs.seattlesolvers.com/command-base/command-system/command-groups",
+     "https://docs.seattlesolvers.com/command-base/command-system/command-scheduler",
+     "https://docs.seattlesolvers.com/command-base/command-system/binding-commands-to-triggers",
+     "https://docs.seattlesolvers.com/command-base/command-system/robot-and-commandopmode",
+     "https://repo.dairy.foundation/releases (Gradle repository URL inside a code block, not a link)"
+    ],
+    "uncertain": [
+     "None of the Java samples were compiled. They are built from the SolversLib 0.3.6 git-tag sources and FTC SDK 12.0 javadoc (DcMotorSimple.getPower/setPower), but they have not been built in Android Studio.",
+     "The Gradle snippet uses `url = \"...\"` (the form in the SolversLib Quickstart, which is on SDK 12 and Gradle 9.1) and goes in TeamCode/build.gradle, as SolversLib's installation page and the Quickstart do. The outline said build.dependencies.gradle and `url \"...\"`.",
+     "Android Studio UI labels ('Sync Now', 'build.gradle (Module: TeamCode)') come from the SolversLib docs title and general Android Studio behaviour. They were not checked against Narwhal 3.",
+     "FRC-side names in the tables (robotPeriodic runs while disabled, Commands.waitSeconds, Command.until, onTrue/whileTrue/toggleOnTrue, SmartDashboard sending values on its own) are from WPILib knowledge. They were not fetched in this session.",
+     "The advice to keep auto-to-teleop data in a static field comes from the research recommendation and was not tested.",
+     "The 'motor keeps its last power for one loop' detail in the walkthrough comes from reading the scheduler source (RunCommand.end does nothing, and the default command's first execute() runs in the next loop). It was not observed on a robot.",
+     "The SolversLib Quickstart ships Pedro revhub 3.0.0, while the course uses 3.0.2. The page only says the Quickstart 'includes Pedro Pathing'.",
+     "The advice not to accept AGP upgrade/downgrade prompts comes from the outline's version table, not from a source checked here."
+    ]
+   }
+  ],
+  "build_ok": true,
+  "notes": "Build command: cd /e/DESKTOP/RookieRobotics && .venv/Scripts/python.exe -m mkdocs build --strict -d /c/Users/zhang/AppData/Local/Temp/claude/841ff69920b481e9/7a84cfb4-6533-4950-b8d4-cdf6b797dfde/scratchpad/site-command-based. It finished with no WARNING or ERROR lines; the only grep hit is Material's end-of-life banner text. Only docs/ftc/software/linear-to-command-based.md was changed.\n\nSources: all SolversLib facts were read from the 0.3.6 git tag (raw.githubusercontent.com/FTC-23511/SolversLib/0.3.6/core/src/main/java/com/seattlesolvers/solverslib/...), the docs installation and robot-and-commandopmode pages, and the Quickstart's TeamCode/build.gradle. Every external link returned HTTP 200 on 2026-11-10.\n\nThings other pages should know:\n(1) The bindings are whenHeld (= WPILib whileTrue), whenPressed, whenReleased and toggleWhenPressed. Trigger has whenActive and whileActiveOnce. SolversLib has no until(); its equivalent is interruptOn(BooleanSupplier).\n(2) withTimeout(long millis) and Commands.waitMillis(long) take milliseconds.\n(3) Commands.parallel throws if two of its commands require the same subsystem.\n(4) setDefaultCommand throws if the command doesn't require that subsystem or if it is already finished.\n(5) CommandScheduler.setBulkReading(hardwareMap, mode) exists. With MANUAL, the scheduler clears every hub's cache at the end of each run(), but not during INIT. The page recommends AUTO and hands MANUAL off to mechanism-control.md.\n(6) The SolversLib source has a com.seattlesolvers.solverslib.command.old package that duplicates some class names. Alt+Enter can pick the wrong one, so the page warns about it.\n(7) The build.gradle lines are a plain groovy block, not part of the code window, because the window CSS gives every file a Java 'J' icon.\n\nCross-links go to first-opmode.md, first-autonomous.md, mechanism-control.md, path-following.md and the FRC page, all at page level. The only anchor link is #wpilib-to-solverslib-names, on this page.\n\nThe GitBook pages end with 'Agent Instructions' text that invites the reader to query the docs. I treated it as page content and did not act on it."
+ }
+}
